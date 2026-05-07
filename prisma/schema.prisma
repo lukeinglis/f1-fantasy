@@ -1,0 +1,122 @@
+// F1 Fantasy League schema
+// Generated client lives in src/generated/prisma
+//
+// Note: the F1 "constructor" concept is modelled here as `Team` to avoid the
+// JS reserved-name clash that breaks Prisma's TypeScript types. The UI still
+// uses the word "constructor" everywhere user-facing.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("player") // "player" | "admin"
+  createdAt    DateTime @default(now())
+
+  picks        Pick[]
+  scores       Score[]
+}
+
+model League {
+  id                  String   @id @default(cuid())
+  name                String
+  season              Int      @default(2025)
+  maxDriverPicks      Int      @default(2)
+  maxConstructorPicks Int      @default(3)
+  createdAt           DateTime @default(now())
+}
+
+model Driver {
+  id              String  @id // ergast driverId, e.g. "max_verstappen"
+  code            String?
+  givenName       String
+  familyName      String
+  permanentNumber String?
+  nationality     String?
+
+  picks           Pick[]
+}
+
+// "Constructor" in F1 terminology — modelled as Team here to dodge JS name clash.
+model Team {
+  id          String  @id // ergast constructorId, e.g. "red_bull"
+  name        String
+  nationality String?
+
+  picks       Pick[]
+}
+
+model Race {
+  id            String   @id @default(cuid())
+  season        Int
+  round         Int
+  name          String
+  circuitName   String?
+  locality      String?
+  country       String?
+  date          DateTime
+  pickDeadline  DateTime
+  resultsLocked Boolean  @default(false)
+
+  picks         Pick[]
+  results       RaceResult[]
+  scores        Score[]
+
+  @@unique([season, round])
+}
+
+model Pick {
+  id          String   @id @default(cuid())
+  userId      String
+  raceId      String
+  driverId    String?
+  teamId      String?
+  submittedAt DateTime @default(now())
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  race        Race    @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  driver      Driver? @relation(fields: [driverId], references: [id])
+  team        Team?   @relation(fields: [teamId], references: [id])
+
+  @@unique([userId, raceId])
+}
+
+model RaceResult {
+  id           String  @id @default(cuid())
+  raceId       String
+  driverId     String
+  teamId       String
+  position     Int
+  positionText String?
+  points       Float
+  status       String?
+
+  race         Race @relation(fields: [raceId], references: [id], onDelete: Cascade)
+
+  @@unique([raceId, driverId])
+}
+
+model Score {
+  id                String   @id @default(cuid())
+  userId            String
+  raceId            String
+  driverPoints      Float    @default(0)
+  constructorPoints Float    @default(0)
+  totalPoints       Float    @default(0)
+  computedAt        DateTime @default(now())
+
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  race              Race @relation(fields: [raceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, raceId])
+}

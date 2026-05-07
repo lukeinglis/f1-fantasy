@@ -1,0 +1,147 @@
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
+
+function fmtDate(d: Date) {
+  return d.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+}
+
+function shortDate(d: Date) {
+  return d.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export default async function RacesPage() {
+  const league = await prisma.league.findFirst();
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const races = await prisma.race.findMany({
+    where: { season },
+    orderBy: { round: "asc" },
+  });
+  const session = await auth();
+  const myUserId = session?.user?.id;
+
+  const myPicks = myUserId
+    ? await prisma.pick.findMany({
+        where: { userId: myUserId },
+        select: { raceId: true, driverId: true, teamId: true },
+      })
+    : [];
+  const pickByRace = new Map(myPicks.map((p) => [p.raceId, p]));
+
+  const now = new Date();
+
+  // Find the next upcoming race for highlight
+  const nextRaceIdx = races.findIndex(
+    (r) => r.pickDeadline.getTime() > now.getTime(),
+  );
+
+  return (
+    <div className="space-y-6">
+      <header>
+        <h1 className="text-3xl font-bold">{season} Race Calendar</h1>
+        <p className="text-zinc-400 mt-1">
+          {races.filter((r) => r.resultsLocked).length} of {races.length} races
+          scored.{" "}
+          {nextRaceIdx >= 0
+            ? `Next up: Round ${races[nextRaceIdx].round}.`
+            : "Season complete."}
+        </p>
+      </header>
+
+      {races.length === 0 ? (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+          <p>
+            No races loaded yet. Admin: go to{" "}
+            <Link href="/admin" className="text-red-400 underline">
+              Admin
+            </Link>{" "}
+            and click &quot;Sync season&quot;.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-2">
+          {races.map((r, idx) => {
+            const past = r.pickDeadline.getTime() < now.getTime();
+            const myPick = pickByRace.get(r.id);
+            const hasPick = !!(myPick?.driverId && myPick?.teamId);
+            const isNext = idx === nextRaceIdx;
+
+            return (
+              <Link
+                key={r.id}
+                href={`/races/${r.id}`}
+                className={`bg-zinc-900 border rounded-lg p-4 transition-colors flex justify-between items-center gap-4 ${
+                  isNext
+                    ? "border-red-600/60 ring-1 ring-red-600/20"
+                    : "border-zinc-800 hover:border-zinc-700"
+                }`}
+              >
+                <div className="flex items-center gap-4 min-w-0">
+                  <span
+                    className={`tabular-nums text-sm font-mono w-8 shrink-0 ${
+                      r.resultsLocked
+                        ? "text-zinc-600"
+                        : isNext
+                          ? "text-red-400 font-bold"
+                          : "text-zinc-500"
+                    }`}
+                  >
+                    R{r.round}
+                  </span>
+                  <div className="min-w-0">
+                    <div
+                      className={`font-semibold truncate ${
+                        r.resultsLocked ? "text-zinc-400" : ""
+                      }`}
+                    >
+                      {r.name}
+                    </div>
+                    <div className="text-xs text-zinc-500 mt-0.5">
+                      {r.country ? `${r.country} · ` : ""}
+                      {shortDate(r.date)}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {r.resultsLocked ? (
+                    <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
+                      Scored
+                    </span>
+                  ) : past ? (
+                    <span className="text-xs px-2 py-1 rounded bg-amber-900/40 text-amber-300 border border-amber-800">
+                      Awaiting results
+                    </span>
+                  ) : hasPick ? (
+                    <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
+                      Pick set
+                    </span>
+                  ) : isNext ? (
+                    <span className="text-xs px-2 py-1 rounded bg-red-900/40 text-red-300 border border-red-800 font-medium">
+                      Pick now
+                    </span>
+                  ) : (
+                    <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
+                      Open
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
