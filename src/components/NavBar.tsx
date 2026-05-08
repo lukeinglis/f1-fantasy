@@ -13,6 +13,7 @@ interface NavUser {
 
 const NAV_LINKS = [
   { href: "/", label: "Leaderboard" },
+  { href: "/grid", label: "Grid" },
   { href: "/races", label: "Races" },
   { href: "/picks", label: "My Picks" },
   { href: "/rules", label: "Rules" },
