@@ -380,17 +380,60 @@ export default function F1Game() {
 
     // RENDER
     ctx.clearRect(0, 0, s.w, s.h);
-    ctx.fillStyle = "#0a0a0a";
+
+    // Asphalt background
+    ctx.fillStyle = "#2a2a2a";
     ctx.fillRect(0, 0, s.w, s.h);
 
-    // Scrolling grid
-    ctx.strokeStyle = "rgba(255,255,255,0.03)";
-    ctx.lineWidth = 1;
-    for (let gx = -s.gridOffset; gx < s.w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, s.h); ctx.stroke(); }
-    for (let gy = 0; gy < s.h; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(s.w, gy); ctx.stroke(); }
+    // Asphalt grain texture (subtle noise)
+    ctx.fillStyle = "rgba(0,0,0,0.15)";
+    for (let tx = -s.gridOffset; tx < s.w; tx += 6) {
+      for (let ty = 0; ty < s.h; ty += 8) {
+        if ((tx + ty) % 12 === 0) ctx.fillRect(tx, ty, 2, 2);
+      }
+    }
 
-    // Speed lines
-    const speedAlpha = Math.min(0.35, (s.speed - INITIAL_SPEED) * 0.06);
+    // Green runoff strips at top and bottom
+    const runoffH = 18;
+    const grd1 = ctx.createLinearGradient(0, 0, 0, runoffH);
+    grd1.addColorStop(0, "#1a5c1a");
+    grd1.addColorStop(1, "rgba(42,42,42,0)");
+    ctx.fillStyle = grd1;
+    ctx.fillRect(0, 0, s.w, runoffH);
+    const grd2 = ctx.createLinearGradient(0, s.h - runoffH, 0, s.h);
+    grd2.addColorStop(0, "rgba(42,42,42,0)");
+    grd2.addColorStop(1, "#1a5c1a");
+    ctx.fillStyle = grd2;
+    ctx.fillRect(0, s.h - runoffH, s.w, runoffH);
+
+    // White dashed lane markings (scrolling)
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([20, 30]);
+    const laneCount = 4;
+    for (let i = 1; i < laneCount; i++) {
+      const ly = (s.h / laneCount) * i;
+      ctx.lineDashOffset = s.gridOffset * 2;
+      ctx.beginPath();
+      ctx.moveTo(0, ly);
+      ctx.lineTo(s.w, ly);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Tire marks (faint dark streaks on the track)
+    ctx.strokeStyle = "rgba(0,0,0,0.08)";
+    ctx.lineWidth = 3;
+    for (let tm = -s.gridOffset * 1.3; tm < s.w; tm += 120) {
+      const tmy = s.h * 0.35 + Math.sin(tm * 0.02) * 30;
+      ctx.beginPath();
+      ctx.moveTo(tm, tmy);
+      ctx.lineTo(tm + 60, tmy + 5);
+      ctx.stroke();
+    }
+
+    // Speed lines (more visible at high speed)
+    const speedAlpha = Math.min(0.25, (s.speed - INITIAL_SPEED) * 0.04);
     if (speedAlpha > 0.01) {
       ctx.strokeStyle = `rgba(255,255,255,${speedAlpha})`;
       ctx.lineWidth = 1;
@@ -555,12 +598,33 @@ export default function F1Game() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const s = stateRef.current;
-    ctx.fillStyle = "#0a0a0a";
+    // Asphalt
+    ctx.fillStyle = "#2a2a2a";
     ctx.fillRect(0, 0, s.w, s.h);
-    ctx.strokeStyle = "rgba(255,255,255,0.03)";
-    ctx.lineWidth = 1;
-    for (let gx = 0; gx < s.w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, s.h); ctx.stroke(); }
-    for (let gy = 0; gy < s.h; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(s.w, gy); ctx.stroke(); }
+    ctx.fillStyle = "rgba(0,0,0,0.15)";
+    for (let tx = 0; tx < s.w; tx += 6) {
+      for (let ty = 0; ty < s.h; ty += 8) {
+        if ((tx + ty) % 12 === 0) ctx.fillRect(tx, ty, 2, 2);
+      }
+    }
+    // Green runoff
+    const grd1 = ctx.createLinearGradient(0, 0, 0, 18);
+    grd1.addColorStop(0, "#1a5c1a");
+    grd1.addColorStop(1, "rgba(42,42,42,0)");
+    ctx.fillStyle = grd1;
+    ctx.fillRect(0, 0, s.w, 18);
+    const grd2 = ctx.createLinearGradient(0, s.h - 18, 0, s.h);
+    grd2.addColorStop(0, "rgba(42,42,42,0)");
+    grd2.addColorStop(1, "#1a5c1a");
+    ctx.fillStyle = grd2;
+    ctx.fillRect(0, s.h - 18, s.w, 18);
+    // Lane markings
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([20, 30]);
+    for (let i = 1; i < 4; i++) { const ly = (s.h / 4) * i; ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(s.w, ly); ctx.stroke(); }
+    ctx.setLineDash([]);
+    // Kerbs
     const kerbSize = 12;
     for (let kx = 0; kx < s.w; kx += kerbSize * 2) {
       ctx.fillStyle = "#E8002D"; ctx.fillRect(kx, 0, kerbSize, 4); ctx.fillRect(kx + kerbSize, s.h - 4, kerbSize, 4);
