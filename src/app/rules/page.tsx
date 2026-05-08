@@ -126,10 +126,9 @@ export default async function RulesPage() {
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 space-y-4">
         <h2 className="text-xl font-semibold">Mid-Season Start</h2>
         <p className="text-zinc-300">
-          Our league started at <strong>Round {FIRST_ACTIVE_ROUND}</strong>.
-          Races before that are shown in the calendar for reference but are
-          greyed out and don&apos;t count toward standings. Everyone starts on
-          equal footing from Round {FIRST_ACTIVE_ROUND} onward.
+          Our league starts at <strong>Round {FIRST_ACTIVE_ROUND}</strong>.
+          Earlier races are not shown. Everyone starts on equal footing
+          from Round {FIRST_ACTIVE_ROUND} onward.
         </p>
       </section>
 
