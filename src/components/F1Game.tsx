@@ -155,185 +155,179 @@ export default function F1Game() {
 
   function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, tilt: number, pressing: boolean, speed: number) {
     ctx.save();
-    // Apply tilt rotation around car center, flip horizontally so nose points right
     const centerX = x + CAR_W / 2;
     const centerY = y + CAR_H / 2;
     ctx.translate(centerX, centerY);
-    ctx.scale(-1, 1);
-    ctx.rotate(-tilt);
+    ctx.rotate(tilt);
     ctx.translate(-CAR_W / 2, -CAR_H / 2);
 
+    // Car drawn with NOSE at RIGHT (w), REAR at LEFT (0).
+    // This is the natural orientation for rightward travel.
     const w = CAR_W;
     const h = CAR_H;
 
-    // Exhaust flame (behind car, grows when pressing)
-    const flameLen = pressing ? 12 + Math.random() * 8 : 4 + Math.random() * 3;
+    // --- EXHAUST FLAME (LEFT/REAR of car) ---
+    const flameLen = pressing ? 14 + Math.random() * 10 : 4 + Math.random() * 3;
     const flameIntensity = pressing ? 0.8 : 0.3;
     const speedFactor = Math.min(1, (speed - INITIAL_SPEED) / (MAX_SPEED - INITIAL_SPEED));
-    const adjustedFlameLen = flameLen * (0.6 + speedFactor * 0.4);
-
-    // Outer glow
-    const flameGradient = ctx.createLinearGradient(w * 0.92, h * 0.5, w * 0.92 + adjustedFlameLen, h * 0.5);
-    flameGradient.addColorStop(0, `rgba(255, 100, 0, ${flameIntensity})`);
-    flameGradient.addColorStop(0.4, `rgba(255, 200, 0, ${flameIntensity * 0.7})`);
-    flameGradient.addColorStop(1, `rgba(255, 50, 0, 0)`);
-    ctx.fillStyle = flameGradient;
+    const afl = flameLen * (0.6 + speedFactor * 0.4);
+    const flameGrad = ctx.createLinearGradient(w * 0.08, h * 0.5, w * 0.08 - afl, h * 0.5);
+    flameGrad.addColorStop(0, `rgba(255, 100, 0, ${flameIntensity})`);
+    flameGrad.addColorStop(0.4, `rgba(255, 200, 0, ${flameIntensity * 0.7})`);
+    flameGrad.addColorStop(1, "rgba(255, 50, 0, 0)");
+    ctx.fillStyle = flameGrad;
     ctx.beginPath();
-    ctx.moveTo(w * 0.92, h * 0.35);
-    ctx.quadraticCurveTo(w * 0.92 + adjustedFlameLen * 0.7, h * 0.5, w * 0.92 + adjustedFlameLen, h * 0.5);
-    ctx.quadraticCurveTo(w * 0.92 + adjustedFlameLen * 0.7, h * 0.5, w * 0.92, h * 0.65);
+    ctx.moveTo(w * 0.08, h * 0.35);
+    ctx.quadraticCurveTo(w * 0.08 - afl * 0.7, h * 0.5, w * 0.08 - afl, h * 0.5);
+    ctx.quadraticCurveTo(w * 0.08 - afl * 0.7, h * 0.5, w * 0.08, h * 0.65);
     ctx.closePath();
     ctx.fill();
-
-    // Core flame (brighter, smaller)
     if (pressing) {
-      const coreLen = adjustedFlameLen * 0.6;
-      const coreGradient = ctx.createLinearGradient(w * 0.92, h * 0.5, w * 0.92 + coreLen, h * 0.5);
-      coreGradient.addColorStop(0, `rgba(255, 255, 200, ${flameIntensity})`);
-      coreGradient.addColorStop(1, `rgba(255, 200, 50, 0)`);
-      ctx.fillStyle = coreGradient;
+      const cl = afl * 0.6;
+      const coreGrad = ctx.createLinearGradient(w * 0.08, h * 0.5, w * 0.08 - cl, h * 0.5);
+      coreGrad.addColorStop(0, `rgba(255, 255, 200, ${flameIntensity})`);
+      coreGrad.addColorStop(1, "rgba(255, 200, 50, 0)");
+      ctx.fillStyle = coreGrad;
       ctx.beginPath();
-      ctx.moveTo(w * 0.92, h * 0.4);
-      ctx.quadraticCurveTo(w * 0.92 + coreLen * 0.7, h * 0.5, w * 0.92 + coreLen, h * 0.5);
-      ctx.quadraticCurveTo(w * 0.92 + coreLen * 0.7, h * 0.5, w * 0.92, h * 0.6);
+      ctx.moveTo(w * 0.08, h * 0.4);
+      ctx.quadraticCurveTo(w * 0.08 - cl * 0.7, h * 0.5, w * 0.08 - cl, h * 0.5);
+      ctx.quadraticCurveTo(w * 0.08 - cl * 0.7, h * 0.5, w * 0.08, h * 0.6);
       ctx.closePath();
       ctx.fill();
     }
 
-    // Rear wing (vertical plate)
+    // --- REAR WING (LEFT side) ---
     ctx.fillStyle = "#cc0022";
-    ctx.fillRect(w * 0.92, h * -0.15, 3, h * 0.3);
-    ctx.fillRect(w * 0.92, h * 0.85, 3, h * 0.3);
-    // Rear wing endplates
+    ctx.fillRect(w * 0.02, h * -0.15, 3, h * 0.3);
+    ctx.fillRect(w * 0.02, h * 0.85, 3, h * 0.3);
     ctx.fillStyle = "#E8002D";
-    ctx.fillRect(w * 0.88, h * -0.2, w * 0.12, 3);
-    ctx.fillRect(w * 0.88, h * 1.17, w * 0.12, 3);
+    ctx.fillRect(0, h * -0.2, w * 0.08, 3);
+    ctx.fillRect(0, h * 1.17, w * 0.08, 3);
 
-    // Engine cover / airbox (raised section behind cockpit)
+    // --- ENGINE COVER / AIRBOX ---
     ctx.fillStyle = "#b0001f";
     ctx.beginPath();
-    ctx.moveTo(w * 0.55, h * 0.2);
-    ctx.lineTo(w * 0.58, h * -0.05);
-    ctx.lineTo(w * 0.62, h * -0.05);
-    ctx.lineTo(w * 0.65, h * 0.15);
-    ctx.lineTo(w * 0.88, h * 0.25);
-    ctx.lineTo(w * 0.88, h * 0.75);
-    ctx.lineTo(w * 0.65, h * 0.85);
-    ctx.lineTo(w * 0.62, h * 1.05);
-    ctx.lineTo(w * 0.58, h * 1.05);
-    ctx.lineTo(w * 0.55, h * 0.8);
+    ctx.moveTo(w * 0.45, h * 0.2);
+    ctx.lineTo(w * 0.42, h * -0.05);
+    ctx.lineTo(w * 0.38, h * -0.05);
+    ctx.lineTo(w * 0.35, h * 0.15);
+    ctx.lineTo(w * 0.12, h * 0.25);
+    ctx.lineTo(w * 0.12, h * 0.75);
+    ctx.lineTo(w * 0.35, h * 0.85);
+    ctx.lineTo(w * 0.38, h * 1.05);
+    ctx.lineTo(w * 0.42, h * 1.05);
+    ctx.lineTo(w * 0.45, h * 0.8);
     ctx.closePath();
     ctx.fill();
 
-    // Main body (sidepods + nose)
+    // --- MAIN BODY (sidepods + nose pointing RIGHT) ---
     ctx.fillStyle = "#E8002D";
     ctx.beginPath();
-    ctx.moveTo(0, h * 0.4);
-    ctx.lineTo(w * 0.08, h * 0.25);
-    ctx.lineTo(w * 0.2, h * 0.15);
-    ctx.lineTo(w * 0.35, h * 0.12);
+    ctx.moveTo(w, h * 0.4);
+    ctx.lineTo(w * 0.92, h * 0.25);
+    ctx.lineTo(w * 0.8, h * 0.15);
+    ctx.lineTo(w * 0.65, h * 0.12);
     ctx.lineTo(w * 0.5, h * 0.18);
-    ctx.lineTo(w * 0.65, h * 0.22);
-    ctx.lineTo(w * 0.85, h * 0.3);
-    ctx.lineTo(w * 0.92, h * 0.35);
-    ctx.lineTo(w * 0.92, h * 0.65);
-    ctx.lineTo(w * 0.85, h * 0.7);
-    ctx.lineTo(w * 0.65, h * 0.78);
+    ctx.lineTo(w * 0.35, h * 0.22);
+    ctx.lineTo(w * 0.15, h * 0.3);
+    ctx.lineTo(w * 0.08, h * 0.35);
+    ctx.lineTo(w * 0.08, h * 0.65);
+    ctx.lineTo(w * 0.15, h * 0.7);
+    ctx.lineTo(w * 0.35, h * 0.78);
     ctx.lineTo(w * 0.5, h * 0.82);
-    ctx.lineTo(w * 0.35, h * 0.88);
-    ctx.lineTo(w * 0.2, h * 0.85);
-    ctx.lineTo(w * 0.08, h * 0.75);
-    ctx.lineTo(0, h * 0.6);
+    ctx.lineTo(w * 0.65, h * 0.88);
+    ctx.lineTo(w * 0.8, h * 0.85);
+    ctx.lineTo(w * 0.92, h * 0.75);
+    ctx.lineTo(w, h * 0.6);
     ctx.closePath();
     ctx.fill();
 
-    // Nose cone tip
+    // --- NOSE CONE (RIGHT tip) ---
     ctx.fillStyle = "#ff1a3a";
     ctx.beginPath();
-    ctx.moveTo(-w * 0.04, h * 0.45);
-    ctx.lineTo(0, h * 0.38);
-    ctx.lineTo(w * 0.06, h * 0.35);
-    ctx.lineTo(w * 0.06, h * 0.65);
-    ctx.lineTo(0, h * 0.62);
-    ctx.lineTo(-w * 0.04, h * 0.55);
+    ctx.moveTo(w * 1.04, h * 0.45);
+    ctx.lineTo(w, h * 0.38);
+    ctx.lineTo(w * 0.94, h * 0.35);
+    ctx.lineTo(w * 0.94, h * 0.65);
+    ctx.lineTo(w, h * 0.62);
+    ctx.lineTo(w * 1.04, h * 0.55);
     ctx.closePath();
     ctx.fill();
 
-    // Cockpit opening
+    // --- COCKPIT ---
     ctx.fillStyle = "#111";
     ctx.beginPath();
-    ctx.ellipse(w * 0.47, h * 0.5, w * 0.06, h * 0.18, 0, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.53, h * 0.5, w * 0.06, h * 0.18, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Halo (T-bar shape)
+    // --- HALO ---
     ctx.strokeStyle = "#888";
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(w * 0.38, h * 0.32);
-    ctx.quadraticCurveTo(w * 0.42, h * 0.15, w * 0.52, h * 0.22);
+    ctx.moveTo(w * 0.62, h * 0.32);
+    ctx.quadraticCurveTo(w * 0.58, h * 0.15, w * 0.48, h * 0.22);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(w * 0.38, h * 0.68);
-    ctx.quadraticCurveTo(w * 0.42, h * 0.85, w * 0.52, h * 0.78);
+    ctx.moveTo(w * 0.62, h * 0.68);
+    ctx.quadraticCurveTo(w * 0.58, h * 0.85, w * 0.48, h * 0.78);
     ctx.stroke();
 
-    // Driver helmet
+    // --- DRIVER HELMET ---
     ctx.fillStyle = "#E8002D";
     ctx.beginPath();
-    ctx.arc(w * 0.46, h * 0.5, h * 0.12, 0, Math.PI * 2);
+    ctx.arc(w * 0.54, h * 0.5, h * 0.12, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.arc(w * 0.45, h * 0.48, h * 0.04, 0, Math.PI * 2);
+    ctx.arc(w * 0.55, h * 0.48, h * 0.04, 0, Math.PI * 2);
     ctx.fill();
 
-    // Front wing elements
+    // --- FRONT WING (RIGHT side) ---
     ctx.fillStyle = "#cc0022";
-    ctx.fillRect(-w * 0.02, h * 0.05, w * 0.15, 2.5);
-    ctx.fillRect(-w * 0.02, h * 0.93, w * 0.15, 2.5);
+    ctx.fillRect(w * 0.87, h * 0.05, w * 0.15, 2.5);
+    ctx.fillRect(w * 0.87, h * 0.93, w * 0.15, 2.5);
     ctx.fillStyle = "#E8002D";
-    ctx.fillRect(-w * 0.04, h * -0.02, w * 0.12, 2);
-    ctx.fillRect(-w * 0.04, h * 1.0, w * 0.12, 2);
+    ctx.fillRect(w * 0.92, h * -0.02, w * 0.12, 2);
+    ctx.fillRect(w * 0.92, h * 1.0, w * 0.12, 2);
 
-    // Front wheels
+    // --- FRONT WHEELS (RIGHT side) ---
     ctx.fillStyle = "#1a1a1a";
     ctx.beginPath();
-    ctx.ellipse(w * 0.14, h * -0.08, w * 0.05, h * 0.16, 0, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.86, h * -0.08, w * 0.05, h * 0.16, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.ellipse(w * 0.14, h * 1.08, w * 0.05, h * 0.16, 0, 0, Math.PI * 2);
-    ctx.fill();
-    // Wheel rims
-    ctx.fillStyle = "#333";
-    ctx.beginPath();
-    ctx.ellipse(w * 0.14, h * -0.08, w * 0.025, h * 0.08, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(w * 0.14, h * 1.08, w * 0.025, h * 0.08, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Rear wheels
-    ctx.fillStyle = "#1a1a1a";
-    ctx.beginPath();
-    ctx.ellipse(w * 0.78, h * -0.06, w * 0.055, h * 0.18, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(w * 0.78, h * 1.06, w * 0.055, h * 0.18, 0, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.86, h * 1.08, w * 0.05, h * 0.16, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#333";
     ctx.beginPath();
-    ctx.ellipse(w * 0.78, h * -0.06, w * 0.028, h * 0.09, 0, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.86, h * -0.08, w * 0.025, h * 0.08, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.ellipse(w * 0.78, h * 1.06, w * 0.028, h * 0.09, 0, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.86, h * 1.08, w * 0.025, h * 0.08, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // White number on sidepod
+    // --- REAR WHEELS (LEFT side) ---
+    ctx.fillStyle = "#1a1a1a";
+    ctx.beginPath();
+    ctx.ellipse(w * 0.22, h * -0.06, w * 0.055, h * 0.18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(w * 0.22, h * 1.06, w * 0.055, h * 0.18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#333";
+    ctx.beginPath();
+    ctx.ellipse(w * 0.22, h * -0.06, w * 0.028, h * 0.09, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(w * 0.22, h * 1.06, w * 0.028, h * 0.09, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // --- NUMBER ---
     ctx.fillStyle = "rgba(255,255,255,0.6)";
     ctx.font = `bold ${Math.round(h * 0.45)}px sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("1", w * 0.65, h * 0.52);
+    ctx.fillText("1", w * 0.35, h * 0.52);
 
     ctx.restore();
   }
@@ -446,13 +440,13 @@ export default function F1Game() {
       });
     }
 
-    // Particles (dt-adjusted, spawn behind car which is now on the left side)
+    // Particles (dt-adjusted, spawn behind car at LEFT/rear)
     const carX = s.w * CAR_X_RATIO;
     if (Math.random() < PARTICLE_SPAWN_RATE * dtFactor) {
       const isSpark = Math.random() < 0.3;
       const life = isSpark ? 10 + Math.random() * 15 : 15 + Math.random() * 20;
       s.particles.push({
-        x: carX + CAR_W * 0.05, y: s.carY + CAR_H * 0.3 + Math.random() * CAR_H * 0.4,
+        x: carX + CAR_W * 0.08, y: s.carY + CAR_H * 0.3 + Math.random() * CAR_H * 0.4,
         vx: -(1 + Math.random() * 2), vy: (Math.random() - 0.5) * 1.5,
         life, maxLife: life,
         size: isSpark ? 1.5 + Math.random() * 2 : 2 + Math.random() * 3,
