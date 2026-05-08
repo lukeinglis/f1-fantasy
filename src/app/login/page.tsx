@@ -9,7 +9,7 @@ function LoginInner() {
   const router = useRouter();
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") || "/";
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,13 +19,13 @@ function LoginInner() {
     setLoading(true);
     setError(null);
     const res = await signIn("credentials", {
-      email,
+      name,
       password,
       redirect: false,
     });
     setLoading(false);
     if (res?.error) {
-      setError("Invalid email or password");
+      setError("Wrong name or password");
       return;
     }
     router.push(callbackUrl);
@@ -37,11 +37,12 @@ function LoginInner() {
       <h1 className="text-xl font-semibold mb-4">Sign in</h1>
       <form className="space-y-3" onSubmit={onSubmit}>
         <input
-          type="email"
-          value={email}
+          type="text"
+          value={name}
           required
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="email@example.com"
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Your name"
+          autoComplete="username"
           className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
         />
         <input
@@ -49,7 +50,8 @@ function LoginInner() {
           value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
+          placeholder="Password"
+          autoComplete="current-password"
           className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
         />
         {error && <p className="text-red-400 text-sm">{error}</p>}
@@ -63,7 +65,7 @@ function LoginInner() {
       <p className="text-sm text-zinc-400 mt-4">
         No account?{" "}
         <Link href="/register" className="text-red-400 hover:underline">
-          Register
+          Join the league
         </Link>
       </p>
     </div>

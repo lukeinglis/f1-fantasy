@@ -17,8 +17,8 @@ datasource db {
 
 model User {
   id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
+  email        String?  @unique
+  name         String   @unique
   passwordHash String
   role         String   @default("player") // "player" | "admin"
   createdAt    DateTime @default(now())

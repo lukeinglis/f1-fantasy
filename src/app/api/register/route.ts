@@ -4,9 +4,8 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 const Body = z.object({
-  email: z.string().email(),
   name: z.string().min(1).max(60),
-  password: z.string().min(6).max(200),
+  password: z.string().min(4).max(200),
 });
 
 export async function POST(req: Request) {
@@ -23,25 +22,23 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const { email, name, password } = parsed.data;
+  const { name, password } = parsed.data;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({ where: { name } });
   if (existing) {
-    return NextResponse.json({ error: "Email already registered" }, { status: 409 });
+    return NextResponse.json({ error: "Name already taken" }, { status: 409 });
   }
 
-  // First user becomes admin to make bootstrapping easy.
   const userCount = await prisma.user.count();
   const role = userCount === 0 ? "admin" : "player";
 
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
-    data: { email, name, passwordHash, role },
+    data: { name, passwordHash, role },
   });
 
   return NextResponse.json({
     id: user.id,
-    email: user.email,
     name: user.name,
     role: user.role,
   });
