@@ -38,6 +38,9 @@ export default function PickForm(props: Props) {
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
 
+  const hasSelection = driverId !== "" || consId !== "";
+  const isUpdate = !!(props.currentDriverId || props.currentConstructorId);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -62,18 +65,22 @@ export default function PickForm(props: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="grid sm:grid-cols-2 gap-4">
+    <form onSubmit={onSubmit} className="space-y-5">
+      <div className="grid sm:grid-cols-2 gap-5">
+        {/* Driver selector */}
         <div>
-          <label className="block text-sm font-medium mb-1 text-zinc-300">
+          <label className="block text-sm font-medium mb-2 text-zinc-300">
             Driver
           </label>
           <select
             value={driverId}
-            onChange={(e) => setDriverId(e.target.value)}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
+            onChange={(e) => {
+              setDriverId(e.target.value);
+              setSavedAt(null);
+            }}
+            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors"
           >
-            <option value="">— Select a driver —</option>
+            <option value="">Select a driver...</option>
             {props.drivers.map((d) => {
               const used = props.driverUses[d.id] ?? 0;
               const exhausted =
@@ -82,25 +89,36 @@ export default function PickForm(props: Props) {
                 <option key={d.id} value={d.id} disabled={exhausted}>
                   {d.familyName}, {d.givenName}
                   {d.code ? ` (${d.code})` : ""}
-                  {used > 0 ? ` — used ${used}/${props.maxDriverPicks}` : ""}
-                  {exhausted ? " — exhausted" : ""}
+                  {used > 0 ? ` [${used}/${props.maxDriverPicks}]` : ""}
+                  {exhausted ? " EXHAUSTED" : ""}
                 </option>
               );
             })}
           </select>
-          <UsageBar uses={props.driverUses} drivers={props.drivers} max={props.maxDriverPicks} kind="driver" />
+          <UsageSummary
+            uses={props.driverUses}
+            max={props.maxDriverPicks}
+            items={props.drivers.map((d) => ({
+              id: d.id,
+              label: d.code ?? d.familyName.slice(0, 3).toUpperCase(),
+            }))}
+          />
         </div>
 
+        {/* Constructor selector */}
         <div>
-          <label className="block text-sm font-medium mb-1 text-zinc-300">
+          <label className="block text-sm font-medium mb-2 text-zinc-300">
             Constructor
           </label>
           <select
             value={consId}
-            onChange={(e) => setConsId(e.target.value)}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
+            onChange={(e) => {
+              setConsId(e.target.value);
+              setSavedAt(null);
+            }}
+            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors"
           >
-            <option value="">— Select a constructor —</option>
+            <option value="">Select a constructor...</option>
             {props.constructors.map((c) => {
               const used = props.constructorUses[c.id] ?? 0;
               const exhausted =
@@ -109,92 +127,88 @@ export default function PickForm(props: Props) {
               return (
                 <option key={c.id} value={c.id} disabled={exhausted}>
                   {c.name}
-                  {used > 0
-                    ? ` — used ${used}/${props.maxConstructorPicks}`
-                    : ""}
-                  {exhausted ? " — exhausted" : ""}
+                  {used > 0 ? ` [${used}/${props.maxConstructorPicks}]` : ""}
+                  {exhausted ? " EXHAUSTED" : ""}
                 </option>
               );
             })}
           </select>
-          <UsageBar
+          <UsageSummary
             uses={props.constructorUses}
-            constructors={props.constructors}
             max={props.maxConstructorPicks}
-            kind="constructor"
+            items={props.constructors.map((c) => ({
+              id: c.id,
+              label: c.name,
+            }))}
           />
         </div>
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {/* Status messages */}
+      {error && (
+        <div className="bg-red-900/20 border border-red-800 rounded-lg px-4 py-2.5 text-sm text-red-300">
+          {error}
+        </div>
+      )}
       {savedAt && !error && (
-        <p className="text-emerald-400 text-sm">
-          Saved at {savedAt.toLocaleTimeString()}
-        </p>
+        <div className="bg-emerald-900/20 border border-emerald-800 rounded-lg px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
+          <span>&#10003;</span>
+          Pick saved at {savedAt.toLocaleTimeString()}
+        </div>
       )}
 
       <div className="flex items-center gap-3">
         <button
-          disabled={saving}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded font-medium"
+          disabled={saving || !hasSelection}
+          className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
         >
-          {saving ? "Saving..." : "Save pick"}
+          {saving ? "Saving..." : isUpdate ? "Update pick" : "Save pick"}
         </button>
-        <span className="text-sm text-zinc-400">
-          You can change your pick any time before the race start.
+        <span className="text-xs text-zinc-500">
+          You can change your pick any time before the race starts.
         </span>
       </div>
     </form>
   );
 }
 
-interface UsageProps {
+function UsageSummary({
+  uses,
+  max,
+  items,
+}: {
   uses: Record<string, number>;
   max: number;
-  kind: "driver" | "constructor";
-  drivers?: DriverOpt[];
-  constructors?: ConsOpt[];
-}
-
-function UsageBar(props: UsageProps) {
-  const items =
-    props.kind === "driver"
-      ? (props.drivers ?? []).map((d) => ({
-          id: d.id,
-          label: d.code ?? d.familyName.slice(0, 3).toUpperCase(),
-        }))
-      : (props.constructors ?? []).map((c) => ({
-          id: c.id,
-          label: c.name,
-        }));
-  const usedItems = items.filter((i) => (props.uses[i.id] ?? 0) > 0);
+  items: { id: string; label: string }[];
+}) {
+  const usedItems = items.filter((i) => (uses[i.id] ?? 0) > 0);
   if (usedItems.length === 0) {
     return (
-      <p className="text-xs text-zinc-500 mt-2">
-        Used: none yet. Cap: {props.max}.
+      <p className="text-xs text-zinc-600 mt-2">
+        No uses yet. Max {max} per selection.
       </p>
     );
   }
   return (
-    <p className="text-xs text-zinc-400 mt-2 flex flex-wrap gap-1">
-      <span className="text-zinc-500">Used:</span>
-      {usedItems.map((i) => {
-        const used = props.uses[i.id] ?? 0;
-        const exhausted = used >= props.max;
-        return (
-          <span
-            key={i.id}
-            className={`px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wide ${
-              exhausted
-                ? "bg-red-900/40 text-red-300 border border-red-800"
-                : "bg-zinc-800 border border-zinc-700"
-            }`}
-            title={`${i.label} used ${used}/${props.max}`}
-          >
-            {i.label} ({used}/{props.max})
-          </span>
-        );
-      })}
-    </p>
+    <div className="mt-2 flex flex-wrap gap-1">
+      {usedItems
+        .sort((a, b) => (uses[b.id] ?? 0) - (uses[a.id] ?? 0))
+        .map((i) => {
+          const used = uses[i.id] ?? 0;
+          const exhausted = used >= max;
+          return (
+            <span
+              key={i.id}
+              className={`text-[10px] px-1.5 py-0.5 rounded font-medium tracking-wide ${
+                exhausted
+                  ? "bg-red-900/40 text-red-400 border border-red-800 line-through"
+                  : "bg-zinc-800 text-zinc-400 border border-zinc-700"
+              }`}
+            >
+              {i.label} {used}/{max}
+            </span>
+          );
+        })}
+    </div>
   );
 }
