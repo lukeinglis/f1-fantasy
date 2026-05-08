@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
 import { teamShort } from "@/lib/f1-meta";
 import Countdown from "@/components/Countdown";
+import { ensureSeasonSynced } from "@/lib/autoSync";
 
 export const dynamic = "force-dynamic";
 
@@ -30,8 +31,9 @@ interface SeasonStat {
 }
 
 async function getHomeData() {
+  await ensureSeasonSynced();
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
   const [users, scores, races, picks, allScores] = await Promise.all([
     prisma.user.findMany({
