@@ -144,7 +144,7 @@ export default function F1Game() {
     return () => window.removeEventListener("resize", resize);
   }, [resize]);
 
-  // ── Draw top-down F1 car facing RIGHT ──
+  // ── Draw clean top-down F1 car facing RIGHT ──
   function drawCar(ctx: CanvasRenderingContext2D, cx: number, cy: number, tilt: number) {
     ctx.save();
     ctx.translate(cx, cy);
@@ -153,96 +153,60 @@ export default function F1Game() {
     const hw = CAR_W / 2;
     const hh = CAR_H / 2;
 
-    // Rear wing endplates (widest part, at the back/left)
+    // Rear wheels
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-hw * 0.5, -hh - 4, 9, 5);
+    ctx.fillRect(-hw * 0.5, hh - 1, 9, 5);
+
+    // Front wheels
+    ctx.fillRect(hw * 0.3, -hh - 3, 7, 4);
+    ctx.fillRect(hw * 0.3, hh - 1, 7, 4);
+
+    // Rear wing (white bar across the back)
+    ctx.fillStyle = "#ddd";
+    ctx.fillRect(-hw - 1, -hh * 0.8, 3, hh * 1.6);
+
+    // Body: smooth tapered shape
+    ctx.fillStyle = "#E8002D";
+    ctx.beginPath();
+    ctx.moveTo(hw + 5, 0);
+    ctx.bezierCurveTo(hw, -hh * 0.4, hw * 0.3, -hh * 0.7, -hw * 0.4, -hh * 0.8);
+    ctx.lineTo(-hw, -hh * 0.5);
+    ctx.lineTo(-hw, hh * 0.5);
+    ctx.lineTo(-hw * 0.4, hh * 0.8);
+    ctx.bezierCurveTo(hw * 0.3, hh * 0.7, hw, hh * 0.4, hw + 5, 0);
+    ctx.closePath();
+    ctx.fill();
+
+    // Engine cover (darker rear section)
+    ctx.fillStyle = "#b0001f";
+    ctx.beginPath();
+    ctx.moveTo(-hw, -hh * 0.5);
+    ctx.lineTo(-hw * 0.2, -hh * 0.7);
+    ctx.lineTo(-hw * 0.2, hh * 0.7);
+    ctx.lineTo(-hw, hh * 0.5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cockpit
+    ctx.fillStyle = "#111";
+    ctx.beginPath();
+    ctx.ellipse(hw * 0.15, 0, 5, 3.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Helmet
     ctx.fillStyle = "#fff";
-    ctx.fillRect(-hw - 2, -hh - 1, 3, hh * 2 + 2);
-
-    // Rear wheels (big, wide, at the back)
-    ctx.fillStyle = "#111";
-    ctx.fillRect(-hw * 0.55, -hh - 4, 10, 5);
-    ctx.fillRect(-hw * 0.55, hh - 1, 10, 5);
-    // Tire sidewall detail
-    ctx.fillStyle = "#222";
-    ctx.fillRect(-hw * 0.55 + 1, -hh - 3, 8, 3);
-    ctx.fillRect(-hw * 0.55 + 1, hh, 8, 3);
-
-    // Front wheels (smaller, further forward)
-    ctx.fillStyle = "#111";
-    ctx.fillRect(hw * 0.35, -hh - 3, 7, 4);
-    ctx.fillRect(hw * 0.35, hh - 1, 7, 4);
-    ctx.fillStyle = "#222";
-    ctx.fillRect(hw * 0.35 + 1, -hh - 2, 5, 2);
-    ctx.fillRect(hw * 0.35 + 1, hh, 5, 2);
-
-    // Engine cover / rear body (darker red, wider)
-    ctx.fillStyle = "#a00020";
     ctx.beginPath();
-    ctx.moveTo(-hw, -hh * 0.55);
-    ctx.lineTo(-hw * 0.3, -hh * 0.75);
-    ctx.lineTo(-hw * 0.3, hh * 0.75);
-    ctx.lineTo(-hw, hh * 0.55);
-    ctx.closePath();
+    ctx.arc(hw * 0.17, 0, 2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Main body (red, tapered toward nose)
-    ctx.fillStyle = "#E8002D";
-    ctx.beginPath();
-    ctx.moveTo(hw + 4, 0); // nose tip
-    ctx.lineTo(hw * 0.75, -hh * 0.35);
-    ctx.lineTo(hw * 0.4, -hh * 0.5);
-    ctx.lineTo(-hw * 0.1, -hh * 0.65);
-    ctx.lineTo(-hw * 0.3, -hh * 0.75);
-    ctx.lineTo(-hw * 0.3, hh * 0.75);
-    ctx.lineTo(-hw * 0.1, hh * 0.65);
-    ctx.lineTo(hw * 0.4, hh * 0.5);
-    ctx.lineTo(hw * 0.75, hh * 0.35);
-    ctx.closePath();
-    ctx.fill();
-
-    // Sidepod intakes (dark slots on the sides)
-    ctx.fillStyle = "#8a0018";
-    ctx.fillRect(hw * 0.05, -hh * 0.6, 8, 3);
-    ctx.fillRect(hw * 0.05, hh * 0.6 - 3, 8, 3);
-
-    // Cockpit opening (dark oval, slightly forward)
-    ctx.fillStyle = "#0a0a0a";
-    ctx.beginPath();
-    ctx.ellipse(hw * 0.2, 0, 6, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Halo (grey arc around cockpit)
-    ctx.strokeStyle = "#666";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(hw * 0.2, 0, 5.5, -1.2, 1.2);
-    ctx.stroke();
-
-    // Driver helmet (small colored dot)
-    ctx.fillStyle = "#E8002D";
-    ctx.beginPath();
-    ctx.arc(hw * 0.22, 0, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Front wing elements (lines at the nose)
+    // Front wing (thin red line)
     ctx.strokeStyle = "#cc0022";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(hw * 0.85, -hh * 0.85);
-    ctx.lineTo(hw * 0.85, hh * 0.85);
+    ctx.moveTo(hw * 0.9, -hh * 0.9);
+    ctx.lineTo(hw * 0.9, hh * 0.9);
     ctx.stroke();
-    ctx.strokeStyle = "#E8002D";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(hw * 0.95, -hh * 0.6);
-    ctx.lineTo(hw * 0.95, hh * 0.6);
-    ctx.stroke();
-
-    // Number on sidepod
-    ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.font = "bold 7px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("1", -hw * 0.1, 0);
 
     ctx.restore();
   }
@@ -315,33 +279,15 @@ export default function F1Game() {
         ctx.fillRect(kx + KERB_SIZE, h - KERB_SIZE, KERB_SIZE, KERB_SIZE);
       }
 
-      // ── Dashed center line scrolling left ──
-      ctx.strokeStyle = "rgba(255,255,255,0.15)";
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([20, 30]);
-      ctx.lineDashOffset = -s.scrollOffset;
-      ctx.beginPath();
-      ctx.moveTo(0, h / 2);
-      ctx.lineTo(w, h / 2);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // ── Speed lines at high speed ──
-      const speedRatio = (s.speed - INITIAL_SPEED) / (MAX_SPEED - INITIAL_SPEED);
-      if (speedRatio > 0.2) {
-        const alpha = Math.min(0.2, speedRatio * 0.25);
-        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-        ctx.lineWidth = 1;
+      // ── Track markings: subtle horizontal dashes scrolling left ──
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.lineWidth = 1;
+      const markSpacing = 80;
+      const markScroll = s.scrollOffset % markSpacing;
+      for (let mx = -markScroll; mx < w + markSpacing; mx += markSpacing) {
         ctx.beginPath();
-        // Deterministic speed lines based on scroll offset
-        for (let i = 0; i < 12; i++) {
-          const seed = (i * 7919 + Math.floor(s.scrollOffset * 0.1)) % 1000;
-          const ly = KERB_SIZE + ((seed * 31) % (h - KERB_SIZE * 2));
-          const lx = (seed * 17) % w;
-          const ll = 20 + (seed % 40);
-          ctx.moveTo(lx, ly);
-          ctx.lineTo(lx + ll, ly);
-        }
+        ctx.moveTo(mx, KERB_SIZE + 1);
+        ctx.lineTo(mx, h - KERB_SIZE - 1);
         ctx.stroke();
       }
 
@@ -431,7 +377,7 @@ export default function F1Game() {
       ctx.textBaseline = "top";
       ctx.fillText(`${s.score}m`, 12, KERB_SIZE + 8);
 
-      const speedPct = Math.round(speedRatio * 100);
+      const speedPct = Math.round(((s.speed - INITIAL_SPEED) / (MAX_SPEED - INITIAL_SPEED)) * 100);
       ctx.fillStyle = "rgba(255,255,255,0.4)";
       ctx.font = "11px monospace";
       ctx.fillText(`SPD ${speedPct}%`, 12, KERB_SIZE + 30);
