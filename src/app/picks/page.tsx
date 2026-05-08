@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
 
 export const dynamic = "force-dynamic";
 
@@ -43,12 +44,23 @@ export default async function MyPicksPage() {
   const maxDriver = league?.maxDriverPicks ?? 2;
   const maxConstructor = league?.maxConstructorPicks ?? 3;
 
+  // Compute season total
+  const seasonTotal = picks.reduce((sum, p) => {
+    const s = scoreByRace.get(p.raceId);
+    return sum + (s?.totalPoints ?? 0);
+  }, 0);
+
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold">My picks</h1>
-        <p className="text-zinc-400 mt-1">
+        <h1 className="text-3xl font-bold">My Picks</h1>
+        <p className="text-zinc-400 mt-1 text-sm">
           Track everything you&rsquo;ve used and what you have left.
+          {seasonTotal > 0 && (
+            <span className="text-red-400 font-medium ml-2">
+              Season total: {Math.round(seasonTotal * 10) / 10} pts
+            </span>
+          )}
         </p>
       </header>
 
@@ -69,6 +81,7 @@ export default async function MyPicksPage() {
           items={constructors.map((c) => ({ id: c.id, label: c.name }))}
           uses={consUses}
           max={maxConstructor}
+          showTeamColors
         />
       </section>
 
@@ -77,55 +90,75 @@ export default async function MyPicksPage() {
           By race
         </h2>
         {picks.length === 0 ? (
-          <p className="p-4 text-zinc-400">No picks yet — head to the calendar.</p>
+          <p className="p-4 text-zinc-400">
+            No picks yet.{" "}
+            <Link href="/races" className="text-red-400 hover:underline">
+              Head to the calendar
+            </Link>
+            .
+          </p>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-              <tr>
-                <th className="text-left px-4 py-2">Race</th>
-                <th className="text-left px-4 py-2">Driver</th>
-                <th className="text-left px-4 py-2">Constructor</th>
-                <th className="text-right px-4 py-2">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {picks.map((p) => {
-                const s = scoreByRace.get(p.raceId);
-                return (
-                  <tr
-                    key={p.id}
-                    className="border-t border-zinc-800 hover:bg-zinc-800/30"
-                  >
-                    <td className="px-4 py-2">
-                      <Link
-                        href={`/races/${p.raceId}`}
-                        className="hover:text-red-400"
-                      >
-                        R{p.race.round} · {p.race.name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-2">
-                      {p.driver
-                        ? `${p.driver.givenName} ${p.driver.familyName}`
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-2 text-zinc-300">
-                      {p.team?.name ?? "—"}
-                    </td>
-                    <td className="px-4 py-2 text-right tabular-nums">
-                      {s ? (
-                        <span className="text-red-400 font-medium">
-                          {s.totalPoints}
-                        </span>
-                      ) : (
-                        <span className="text-zinc-500">—</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
+                <tr>
+                  <th className="text-left px-4 py-2">Race</th>
+                  <th className="text-left px-4 py-2">Driver</th>
+                  <th className="text-left px-4 py-2">Constructor</th>
+                  <th className="text-right px-4 py-2">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {picks.map((p) => {
+                  const s = scoreByRace.get(p.raceId);
+                  return (
+                    <tr
+                      key={p.id}
+                      className="border-t border-zinc-800 hover:bg-zinc-800/30"
+                    >
+                      <td className="px-4 py-2.5">
+                        <Link
+                          href={`/races/${p.raceId}`}
+                          className="hover:text-red-400 transition-colors"
+                        >
+                          R{p.race.round} / {p.race.name}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        {p.driver
+                          ? `${p.driver.givenName} ${p.driver.familyName}`
+                          : "—"}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        {p.team ? (
+                          <span
+                            className="px-2 py-0.5 rounded text-[11px] font-bold"
+                            style={{
+                              backgroundColor: teamColor(p.team.id),
+                              color: teamTextColor(p.team.id),
+                            }}
+                          >
+                            {teamShort(p.team.id)}
+                          </span>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td className="px-4 py-2.5 text-right tabular-nums">
+                        {s ? (
+                          <span className="text-red-400 font-medium">
+                            {s.totalPoints}
+                          </span>
+                        ) : (
+                          <span className="text-zinc-500">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
     </div>
@@ -141,12 +174,14 @@ function UsagePanel({
   items,
   uses,
   max,
+  showTeamColors,
 }: {
   title: string;
   items: UsagePanelItem[];
   uses: Map<string, number>;
   max: number;
   totalAvailable: number;
+  showTeamColors?: boolean;
 }) {
   const usedItems = items.filter((i) => (uses.get(i.id) ?? 0) > 0);
   const exhaustedCount = usedItems.filter(
@@ -187,6 +222,25 @@ function UsagePanel({
               .map((i) => {
                 const used = uses.get(i.id) ?? 0;
                 const exhausted = used >= max;
+
+                if (showTeamColors) {
+                  return (
+                    <span
+                      key={i.id}
+                      className={`text-[11px] px-2 py-0.5 rounded font-bold ${
+                        exhausted ? "opacity-40 line-through" : ""
+                      }`}
+                      style={{
+                        backgroundColor: teamColor(i.id),
+                        color: teamTextColor(i.id),
+                      }}
+                      title={`${i.label}: ${used}/${max}`}
+                    >
+                      {teamShort(i.id)} {used}/{max}
+                    </span>
+                  );
+                }
+
                 return (
                   <span
                     key={i.id}

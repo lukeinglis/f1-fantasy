@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { TEAM_COLORS, teamTextColor, teamShort } from "@/lib/f1-meta";
+import { isPreSeasonRound } from "@/lib/season";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,14 @@ async function getGridData() {
     prisma.race.findMany({
       where: { season },
       orderBy: { round: "asc" },
-      select: { id: true, round: true, name: true, country: true, date: true, resultsLocked: true },
+      select: {
+        id: true,
+        round: true,
+        name: true,
+        country: true,
+        date: true,
+        resultsLocked: true,
+      },
     }),
     prisma.user.findMany({
       orderBy: { name: "asc" },
@@ -29,7 +37,14 @@ async function getGridData() {
     prisma.pick.findMany({
       where: { race: { season } },
       include: {
-        driver: { select: { id: true, code: true, givenName: true, familyName: true } },
+        driver: {
+          select: {
+            id: true,
+            code: true,
+            givenName: true,
+            familyName: true,
+          },
+        },
         team: { select: { id: true, name: true } },
       },
     }),
@@ -45,8 +60,13 @@ async function getGridData() {
     if (!pickMap.has(p.userId)) pickMap.set(p.userId, new Map());
     const userPicks = pickMap.get(p.userId)!;
     userPicks.set(p.raceId, {
-      driverCode: p.driver?.code ?? p.driver?.familyName?.substring(0, 3).toUpperCase() ?? null,
-      driverName: p.driver ? `${p.driver.givenName} ${p.driver.familyName}` : null,
+      driverCode:
+        p.driver?.code ??
+        p.driver?.familyName?.substring(0, 3).toUpperCase() ??
+        null,
+      driverName: p.driver
+        ? `${p.driver.givenName} ${p.driver.familyName}`
+        : null,
       constructorId: p.team?.id ?? null,
       constructorName: p.team?.name ?? null,
       totalPoints: null,
@@ -63,10 +83,17 @@ async function getGridData() {
     }
   }
 
-  // Compute season totals per user
+  // Compute season totals per user (active races only)
+  const activeRaceIds = new Set(
+    races.filter((r) => !isPreSeasonRound(r.round)).map((r) => r.id),
+  );
   const userTotals = new Map<string, number>();
   for (const s of scores) {
-    userTotals.set(s.userId, (userTotals.get(s.userId) ?? 0) + s.totalPoints);
+    if (!activeRaceIds.has(s.raceId)) continue;
+    userTotals.set(
+      s.userId,
+      (userTotals.get(s.userId) ?? 0) + s.totalPoints,
+    );
   }
 
   return { season, races, users, pickMap, userTotals };
@@ -75,17 +102,41 @@ async function getGridData() {
 // Country code to flag emoji
 function countryFlag(country: string | null): string {
   const flags: Record<string, string> = {
-    Australia: "AU", Bahrain: "BH", "Saudi Arabia": "SA", Japan: "JP",
-    China: "CN", USA: "US", Italy: "IT", Monaco: "MC", Canada: "CA",
-    Spain: "ES", Austria: "AT", UK: "GB", Hungary: "HU", Belgium: "BE",
-    Netherlands: "NL", Singapore: "SG", Azerbaijan: "AZ", Mexico: "MX",
-    Brazil: "BR", "United States": "US", Qatar: "QA", UAE: "AE",
-    "Abu Dhabi": "AE", Portugal: "PT", France: "FR", Germany: "DE",
-    Turkey: "TR", Russia: "RU", Emilia: "IT",
+    Australia: "AU",
+    Bahrain: "BH",
+    "Saudi Arabia": "SA",
+    Japan: "JP",
+    China: "CN",
+    USA: "US",
+    Italy: "IT",
+    Monaco: "MC",
+    Canada: "CA",
+    Spain: "ES",
+    Austria: "AT",
+    UK: "GB",
+    Hungary: "HU",
+    Belgium: "BE",
+    Netherlands: "NL",
+    Singapore: "SG",
+    Azerbaijan: "AZ",
+    Mexico: "MX",
+    Brazil: "BR",
+    "United States": "US",
+    Qatar: "QA",
+    UAE: "AE",
+    "Abu Dhabi": "AE",
+    Portugal: "PT",
+    France: "FR",
+    Germany: "DE",
+    Turkey: "TR",
+    Russia: "RU",
+    Emilia: "IT",
   };
   const code = flags[country ?? ""] ?? null;
   if (!code) return "";
-  return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+  return String.fromCodePoint(
+    ...[...code].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65),
+  );
 }
 
 export default async function GridPage() {
@@ -96,53 +147,64 @@ export default async function GridPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">Season Grid</h1>
-        <p className="text-zinc-400">No data yet. Sync the season from the admin panel first.</p>
+        <p className="text-zinc-400">
+          No data yet. Sync the season from the admin panel first.
+        </p>
       </div>
     );
   }
 
   // Sort users by total points descending
-  const sortedUsers = [...users].sort((a, b) =>
-    (userTotals.get(b.id) ?? 0) - (userTotals.get(a.id) ?? 0)
+  const sortedUsers = [...users].sort(
+    (a, b) =>
+      (userTotals.get(b.id) ?? 0) - (userTotals.get(a.id) ?? 0),
   );
 
+  // Split races into pre-season and active
+  const activeRaces = races.filter((r) => !isPreSeasonRound(r.round));
+  const preSeasonRaces = races.filter((r) => isPreSeasonRound(r.round));
+
   return (
-    <div className="space-y-4">
-      <header className="flex items-center justify-between">
+    <div className="space-y-6">
+      <header className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-3xl font-bold">
             Season Grid <span className="text-red-500">{season}</span>
           </h1>
-          <p className="text-zinc-400 mt-1">
-            Every pick at a glance. Driver code on constructor colors.
+          <p className="text-zinc-400 mt-1 text-sm">
+            Every pick at a glance. Hover for details.
           </p>
         </div>
       </header>
 
-      <div className="overflow-x-auto pb-4">
-        <table className="border-separate border-spacing-1 text-xs">
+      {/* Main grid: active races */}
+      <div className="overflow-x-auto pb-4 -mx-4 px-4">
+        <table className="border-separate border-spacing-[3px] text-xs w-auto">
           <thead>
             <tr>
-              <th className="sticky left-0 z-10 bg-zinc-950 px-3 py-2 text-left text-zinc-400 uppercase tracking-wide min-w-[100px]">
+              <th className="sticky left-0 z-20 bg-zinc-950 px-3 py-2 text-left text-zinc-400 uppercase tracking-wide text-[10px] min-w-[110px]">
                 Player
               </th>
-              <th className="sticky left-[100px] z-10 bg-zinc-950 px-2 py-2 text-right text-zinc-400 uppercase tracking-wide min-w-[40px]">
-                Pts
+              <th className="sticky left-[110px] z-20 bg-zinc-950 px-2 py-2 text-right text-zinc-400 uppercase tracking-wide text-[10px] min-w-[48px]">
+                Total
               </th>
-              {races.map((r) => {
+              {activeRaces.map((r) => {
                 const isPast = new Date(r.date) < now;
                 return (
                   <th
                     key={r.id}
-                    className={`px-1 py-2 text-center min-w-[64px] ${
-                      isPast ? "text-zinc-400" : "text-zinc-300"
+                    className={`px-1 py-2 text-center min-w-[72px] ${
+                      isPast ? "text-zinc-400" : "text-zinc-200"
                     }`}
                   >
-                    <Link href={`/races/${r.id}`} className="hover:text-red-400">
-                      <div className="text-[10px] leading-tight">
+                    <Link
+                      href={`/races/${r.id}`}
+                      className="hover:text-red-400 transition-colors"
+                    >
+                      <div className="text-sm leading-tight">
                         {countryFlag(r.country)}
                       </div>
-                      <div className="leading-tight font-medium">
+                      <div className="leading-tight font-bold text-xs">
                         R{r.round}
                       </div>
                     </Link>
@@ -152,61 +214,93 @@ export default async function GridPage() {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((user) => {
-              const total = Math.round((userTotals.get(user.id) ?? 0) * 10) / 10;
+            {sortedUsers.map((user, userIdx) => {
+              const total = Math.round(
+                (userTotals.get(user.id) ?? 0) * 10,
+              ) / 10;
               return (
                 <tr key={user.id}>
-                  <td className="sticky left-0 z-10 bg-zinc-950 px-3 py-1 font-medium text-sm whitespace-nowrap">
+                  <td className="sticky left-0 z-10 bg-zinc-950 px-3 py-2 font-medium text-sm whitespace-nowrap">
+                    {userIdx === 0 && total > 0 && (
+                      <span className="text-amber-400 mr-1.5">&#9733;</span>
+                    )}
                     {user.name}
                   </td>
-                  <td className="sticky left-[100px] z-10 bg-zinc-950 px-2 py-1 text-right font-bold text-red-400 tabular-nums">
+                  <td className="sticky left-[110px] z-10 bg-zinc-950 px-2 py-2 text-right font-bold text-red-400 tabular-nums text-sm">
                     {total || ""}
                   </td>
-                  {races.map((r) => {
+                  {activeRaces.map((r) => {
                     const cell = pickMap.get(user.id)?.get(r.id);
-                    if (!cell || (!cell.driverCode && !cell.constructorId)) {
+                    if (
+                      !cell ||
+                      (!cell.driverCode && !cell.constructorId)
+                    ) {
                       const isPast = new Date(r.date) < now;
                       return (
                         <td
                           key={r.id}
-                          className={`rounded text-center py-1 px-1 ${
+                          className={`rounded-md text-center py-2 px-1 min-h-[52px] ${
                             isPast
-                              ? "bg-zinc-900/50 text-zinc-600"
-                              : "bg-zinc-800/30 text-zinc-600"
+                              ? "bg-zinc-900/40 text-zinc-700"
+                              : "bg-zinc-800/20 text-zinc-700 border border-dashed border-zinc-800"
                           }`}
                         >
-                          {isPast ? "—" : ""}
+                          {isPast ? (
+                            <span className="text-zinc-700 text-[10px]">
+                              &mdash;
+                            </span>
+                          ) : (
+                            ""
+                          )}
                         </td>
                       );
                     }
 
                     const bgColor = cell.constructorId
-                      ? TEAM_COLORS[cell.constructorId] ?? "#555"
+                      ? (TEAM_COLORS[cell.constructorId] ?? "#555")
                       : "#555";
-                    const textColor = cell.constructorId
+                    const txtColor = cell.constructorId
                       ? teamTextColor(cell.constructorId)
                       : "#fff";
 
                     return (
                       <td
                         key={r.id}
-                        className="rounded text-center py-1 px-1 cursor-default"
-                        style={{ backgroundColor: bgColor, color: textColor }}
-                        title={`${cell.driverName ?? "No driver"} / ${cell.constructorName ?? "No constructor"}${
-                          cell.totalPoints != null ? ` = ${cell.totalPoints} pts` : ""
-                        }`}
+                        className="rounded-md text-center py-1.5 px-1 cursor-default transition-transform hover:scale-110 hover:z-10 hover:shadow-lg hover:shadow-black/40 relative group"
+                        style={{ backgroundColor: bgColor, color: txtColor }}
                       >
-                        <div className="font-bold text-[11px] leading-tight">
+                        <div className="font-bold text-xs leading-tight">
                           {cell.driverCode ?? "?"}
                         </div>
-                        <div className="text-[9px] leading-tight opacity-80">
-                          {cell.constructorId ? teamShort(cell.constructorId) : ""}
+                        <div className="text-[9px] leading-tight opacity-75 font-medium">
+                          {cell.constructorId
+                            ? teamShort(cell.constructorId)
+                            : ""}
                         </div>
                         {cell.totalPoints != null && (
-                          <div className="text-[9px] font-semibold leading-tight mt-0.5 opacity-90">
+                          <div className="text-[10px] font-bold leading-tight mt-0.5 opacity-90">
                             {cell.totalPoints}
                           </div>
                         )}
+                        {/* Tooltip */}
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
+                          <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap shadow-xl">
+                            <div className="text-zinc-200 font-medium">
+                              {cell.driverName ?? "No driver"}
+                            </div>
+                            <div className="text-zinc-400">
+                              {cell.constructorName ?? "No constructor"}
+                            </div>
+                            {cell.totalPoints != null && (
+                              <div className="text-red-400 font-bold mt-1">
+                                {cell.totalPoints} pts
+                              </div>
+                            )}
+                          </div>
+                          <div
+                            className="w-2 h-2 bg-zinc-900 border-b border-r border-zinc-700 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
+                          />
+                        </div>
                       </td>
                     );
                   })}
@@ -217,11 +311,12 @@ export default async function GridPage() {
         </table>
       </div>
 
+      {/* Constructor legend */}
       <div className="flex flex-wrap gap-2 text-[10px]">
         {Object.entries(TEAM_COLORS).map(([id, color]) => (
           <span
             key={id}
-            className="px-2 py-1 rounded font-medium"
+            className="px-2.5 py-1 rounded-md font-bold tracking-wide"
             style={{
               backgroundColor: color,
               color: teamTextColor(id),
@@ -231,6 +326,29 @@ export default async function GridPage() {
           </span>
         ))}
       </div>
+
+      {/* Pre-season races (collapsed) */}
+      {preSeasonRaces.length > 0 && (
+        <details className="bg-zinc-900/40 border border-zinc-800 rounded-lg">
+          <summary className="px-4 py-3 text-sm text-zinc-500 cursor-pointer hover:text-zinc-300 transition-colors select-none">
+            Pre-season races (R1&ndash;R{preSeasonRaces[preSeasonRaces.length - 1].round})
+            &mdash; before our league started
+          </summary>
+          <div className="px-4 pb-3">
+            <div className="flex flex-wrap gap-2 text-xs text-zinc-600">
+              {preSeasonRaces.map((r) => (
+                <Link
+                  key={r.id}
+                  href={`/races/${r.id}`}
+                  className="px-2 py-1 rounded bg-zinc-800/50 hover:bg-zinc-800 transition-colors"
+                >
+                  R{r.round} {countryFlag(r.country)} {r.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </details>
+      )}
     </div>
   );
 }
