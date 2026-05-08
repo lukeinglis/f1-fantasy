@@ -160,9 +160,7 @@ export default async function GridPage() {
       (userTotals.get(b.id) ?? 0) - (userTotals.get(a.id) ?? 0),
   );
 
-  // Split races into pre-season and active
   const activeRaces = races.filter((r) => !isPreSeasonRound(r.round));
-  const preSeasonRaces = races.filter((r) => isPreSeasonRound(r.round));
 
   return (
     <div className="space-y-6">
@@ -327,28 +325,6 @@ export default async function GridPage() {
         ))}
       </div>
 
-      {/* Pre-season races (collapsed) */}
-      {preSeasonRaces.length > 0 && (
-        <details className="bg-zinc-900/40 border border-zinc-800 rounded-lg">
-          <summary className="px-4 py-3 text-sm text-zinc-500 cursor-pointer hover:text-zinc-300 transition-colors select-none">
-            Pre-season races (R1&ndash;R{preSeasonRaces[preSeasonRaces.length - 1].round})
-            &mdash; before our league started
-          </summary>
-          <div className="px-4 pb-3">
-            <div className="flex flex-wrap gap-2 text-xs text-zinc-600">
-              {preSeasonRaces.map((r) => (
-                <Link
-                  key={r.id}
-                  href={`/races/${r.id}`}
-                  className="px-2 py-1 rounded bg-zinc-800/50 hover:bg-zinc-800 transition-colors"
-                >
-                  R{r.round} {countryFlag(r.country)} {r.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </details>
-      )}
     </div>
   );
 }

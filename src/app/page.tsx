@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { FIRST_ACTIVE_ROUND, isPreSeasonRound } from "@/lib/season";
+import { isPreSeasonRound } from "@/lib/season";
 import { teamShort } from "@/lib/f1-meta";
 import Countdown from "@/components/Countdown";
 
@@ -317,15 +317,6 @@ export default async function HomePage() {
         {/* Decorative */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full blur-3xl" />
       </section>
-
-      {/* Mid-season note */}
-      <div className="bg-zinc-900/60 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-400 flex items-center gap-3">
-        <span className="text-amber-400 text-lg">&#9432;</span>
-        <span>
-          We joined at <strong className="text-zinc-300">Round {FIRST_ACTIVE_ROUND}</strong>.
-          Earlier races are shown for reference but don&apos;t count toward the fantasy standings.
-        </span>
-      </div>
 
       {/* Fun stats */}
       {stats.length > 0 && (
