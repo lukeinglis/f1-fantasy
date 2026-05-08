@@ -144,69 +144,115 @@ export default function F1Game() {
     return () => window.removeEventListener("resize", resize);
   }, [resize]);
 
-  // ── Draw clean top-down F1 car facing RIGHT ──
+  // ── Draw top-down F1 car facing RIGHT ──
+  // F1 cars from above: narrow pointed nose, wider at sidepods, flat rear with wide wing
   function drawCar(ctx: CanvasRenderingContext2D, cx: number, cy: number, tilt: number) {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(tilt);
 
-    const hw = CAR_W / 2;
-    const hh = CAR_H / 2;
+    const hw = CAR_W / 2; // 25
+    const hh = CAR_H / 2; // 12
 
-    // Rear wheels
-    ctx.fillStyle = "#111";
-    ctx.fillRect(-hw * 0.5, -hh - 4, 9, 5);
-    ctx.fillRect(-hw * 0.5, hh - 1, 9, 5);
+    // -- Rear wheels (wider, at the back) --
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(-hw * 0.6, -hh - 5, 11, 6);
+    ctx.fillRect(-hw * 0.6, hh - 1, 11, 6);
 
-    // Front wheels
-    ctx.fillRect(hw * 0.3, -hh - 3, 7, 4);
-    ctx.fillRect(hw * 0.3, hh - 1, 7, 4);
+    // -- Front wheels (narrower, forward) --
+    ctx.fillRect(hw * 0.4, -hh - 4, 8, 5);
+    ctx.fillRect(hw * 0.4, hh - 1, 8, 5);
 
-    // Rear wing (white bar across the back)
-    ctx.fillStyle = "#ddd";
-    ctx.fillRect(-hw - 1, -hh * 0.8, 3, hh * 1.6);
+    // -- Rear wing (wide white bar at the very back) --
+    ctx.fillStyle = "#eee";
+    ctx.fillRect(-hw - 2, -hh * 1.1, 3, hh * 2.2);
 
-    // Body: smooth tapered shape
+    // -- Main body: angular F1 shape --
     ctx.fillStyle = "#E8002D";
     ctx.beginPath();
-    ctx.moveTo(hw + 5, 0);
-    ctx.bezierCurveTo(hw, -hh * 0.4, hw * 0.3, -hh * 0.7, -hw * 0.4, -hh * 0.8);
-    ctx.lineTo(-hw, -hh * 0.5);
-    ctx.lineTo(-hw, hh * 0.5);
-    ctx.lineTo(-hw * 0.4, hh * 0.8);
-    ctx.bezierCurveTo(hw * 0.3, hh * 0.7, hw, hh * 0.4, hw + 5, 0);
+    // Nose (sharp point to the right)
+    ctx.moveTo(hw + 6, 0);
+    // Top edge: nose to front wing area, then widens to sidepods
+    ctx.lineTo(hw * 0.6, -hh * 0.25);
+    ctx.lineTo(hw * 0.3, -hh * 0.3);
+    ctx.lineTo(hw * 0.1, -hh * 0.35);
+    // Sidepod bulge
+    ctx.lineTo(-hw * 0.15, -hh * 0.7);
+    ctx.lineTo(-hw * 0.5, -hh * 0.75);
+    // Rear taper to engine
+    ctx.lineTo(-hw * 0.8, -hh * 0.5);
+    ctx.lineTo(-hw, -hh * 0.35);
+    // Bottom (mirror)
+    ctx.lineTo(-hw, hh * 0.35);
+    ctx.lineTo(-hw * 0.8, hh * 0.5);
+    ctx.lineTo(-hw * 0.5, hh * 0.75);
+    ctx.lineTo(-hw * 0.15, hh * 0.7);
+    ctx.lineTo(hw * 0.1, hh * 0.35);
+    ctx.lineTo(hw * 0.3, hh * 0.3);
+    ctx.lineTo(hw * 0.6, hh * 0.25);
     ctx.closePath();
     ctx.fill();
 
-    // Engine cover (darker rear section)
+    // -- Engine cover (darker strip down the center-rear) --
     ctx.fillStyle = "#b0001f";
     ctx.beginPath();
-    ctx.moveTo(-hw, -hh * 0.5);
-    ctx.lineTo(-hw * 0.2, -hh * 0.7);
-    ctx.lineTo(-hw * 0.2, hh * 0.7);
-    ctx.lineTo(-hw, hh * 0.5);
+    ctx.moveTo(-hw, -hh * 0.25);
+    ctx.lineTo(-hw * 0.1, -hh * 0.3);
+    ctx.lineTo(-hw * 0.1, hh * 0.3);
+    ctx.lineTo(-hw, hh * 0.25);
     ctx.closePath();
     ctx.fill();
 
-    // Cockpit
-    ctx.fillStyle = "#111";
+    // -- Airbox (dark rectangle above engine, behind cockpit) --
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(-hw * 0.05, -2, 4, 4);
+
+    // -- Cockpit (dark opening) --
+    ctx.fillStyle = "#0a0a0a";
     ctx.beginPath();
-    ctx.ellipse(hw * 0.15, 0, 5, 3.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(hw * 0.15, 0, 5, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Helmet
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(hw * 0.17, 0, 2, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Front wing (thin red line)
-    ctx.strokeStyle = "#cc0022";
+    // -- Halo bar --
+    ctx.strokeStyle = "#555";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(hw * 0.9, -hh * 0.9);
-    ctx.lineTo(hw * 0.9, hh * 0.9);
+    ctx.moveTo(hw * 0.25, -3);
+    ctx.lineTo(hw * 0.08, -3);
     ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.25, 3);
+    ctx.lineTo(hw * 0.08, 3);
+    ctx.stroke();
+
+    // -- Driver helmet --
+    ctx.fillStyle = "#E8002D";
+    ctx.beginPath();
+    ctx.arc(hw * 0.18, 0, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(hw * 0.18, -0.5, 2, 1);
+
+    // -- Front wing endplates --
+    ctx.fillStyle = "#cc0022";
+    ctx.fillRect(hw * 0.7, -hh * 0.8, 2, hh * 0.5);
+    ctx.fillRect(hw * 0.7, hh * 0.3, 2, hh * 0.5);
+    // Front wing main planes
+    ctx.strokeStyle = "#E8002D";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.72, -hh * 0.8);
+    ctx.lineTo(hw * 0.72, -hh * 0.3);
+    ctx.moveTo(hw * 0.72, hh * 0.3);
+    ctx.lineTo(hw * 0.72, hh * 0.8);
+    ctx.stroke();
+
+    // -- White number --
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.font = "bold 7px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("1", -hw * 0.35, 0);
 
     ctx.restore();
   }
@@ -260,35 +306,72 @@ export default function F1Game() {
     (ctx: CanvasRenderingContext2D, s: typeof stateRef.current) => {
       const { w, h } = s;
 
-      // Dark asphalt background (full canvas)
-      ctx.fillStyle = "#1e1e1e";
+      const grandstandH = 22;
+      const kerbH = KERB_SIZE;
+      const trackTop = grandstandH + kerbH;
+      const trackBot = h - grandstandH - kerbH;
+
+      // ── Sky/background ──
+      ctx.fillStyle = "#0f0f0f";
       ctx.fillRect(0, 0, w, h);
 
-      // ── Kerb strips at top and bottom edges ──
-      const kerbScroll = s.scrollOffset % (KERB_SIZE * 2);
-      for (let kx = -kerbScroll; kx < w + KERB_SIZE * 2; kx += KERB_SIZE * 2) {
-        // Top kerb
+      // ── Grandstands (top) ──
+      ctx.fillStyle = "#2a2a2a";
+      ctx.fillRect(0, 0, w, grandstandH);
+      // Crowd: rows of colored dots
+      const crowdScroll = (s.scrollOffset * 0.3) % 12;
+      for (let row = 0; row < 3; row++) {
+        for (let cx = -crowdScroll; cx < w + 12; cx += 6) {
+          const colors = ["#e55", "#55e", "#ee5", "#5e5", "#e5e", "#5ee", "#fa0", "#fff"];
+          const ci = Math.floor((cx * 7 + row * 13) % colors.length);
+          ctx.fillStyle = colors[ci];
+          ctx.globalAlpha = 0.4;
+          ctx.fillRect(cx, 3 + row * 7, 3, 4);
+        }
+      }
+      ctx.globalAlpha = 1;
+      // Grandstand barrier wall
+      ctx.fillStyle = "#444";
+      ctx.fillRect(0, grandstandH - 2, w, 2);
+
+      // ── Grandstands (bottom) ──
+      ctx.fillStyle = "#2a2a2a";
+      ctx.fillRect(0, h - grandstandH, w, grandstandH);
+      for (let row = 0; row < 3; row++) {
+        for (let cx = -crowdScroll; cx < w + 12; cx += 6) {
+          const colors = ["#fa0", "#5e5", "#55e", "#e5e", "#ee5", "#e55", "#5ee", "#fff"];
+          const ci = Math.floor((cx * 11 + row * 17) % colors.length);
+          ctx.fillStyle = colors[ci];
+          ctx.globalAlpha = 0.4;
+          ctx.fillRect(cx, h - grandstandH + 3 + row * 7, 3, 4);
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#444";
+      ctx.fillRect(0, h - grandstandH, w, 2);
+
+      // ── Kerb strips ──
+      const kerbScroll = s.scrollOffset % (kerbH * 2);
+      for (let kx = -kerbScroll; kx < w + kerbH * 2; kx += kerbH * 2) {
         ctx.fillStyle = "#E8002D";
-        ctx.fillRect(kx, 0, KERB_SIZE, KERB_SIZE);
+        ctx.fillRect(kx, grandstandH, kerbH, kerbH);
         ctx.fillStyle = "#fff";
-        ctx.fillRect(kx + KERB_SIZE, 0, KERB_SIZE, KERB_SIZE);
-        // Bottom kerb
+        ctx.fillRect(kx + kerbH, grandstandH, kerbH, kerbH);
         ctx.fillStyle = "#fff";
-        ctx.fillRect(kx, h - KERB_SIZE, KERB_SIZE, KERB_SIZE);
+        ctx.fillRect(kx, h - grandstandH - kerbH, kerbH, kerbH);
         ctx.fillStyle = "#E8002D";
-        ctx.fillRect(kx + KERB_SIZE, h - KERB_SIZE, KERB_SIZE, KERB_SIZE);
+        ctx.fillRect(kx + kerbH, h - grandstandH - kerbH, kerbH, kerbH);
       }
 
-      // ── Track markings: subtle horizontal dashes scrolling left ──
-      ctx.strokeStyle = "rgba(255,255,255,0.06)";
-      ctx.lineWidth = 1;
-      const markSpacing = 80;
-      const markScroll = s.scrollOffset % markSpacing;
-      for (let mx = -markScroll; mx < w + markSpacing; mx += markSpacing) {
-        ctx.beginPath();
-        ctx.moveTo(mx, KERB_SIZE + 1);
-        ctx.lineTo(mx, h - KERB_SIZE - 1);
-        ctx.stroke();
+      // ── Asphalt track surface ──
+      ctx.fillStyle = "#222";
+      ctx.fillRect(0, trackTop, w, trackBot - trackTop);
+
+      // ── Track surface variation (subtle lighter patches) ──
+      ctx.fillStyle = "rgba(255,255,255,0.015)";
+      const patchScroll = s.scrollOffset % 120;
+      for (let px = -patchScroll; px < w + 120; px += 120) {
+        ctx.fillRect(px, trackTop, 60, trackBot - trackTop);
       }
 
       // ── Racing line ──
@@ -307,8 +390,8 @@ export default function F1Game() {
       ctx.globalAlpha = 1;
 
       // ── Barriers ──
-      const playTop = KERB_SIZE;
-      const playBot = h - KERB_SIZE;
+      const playTop = trackTop;
+      const playBot = trackBot;
 
       for (const b of s.barriers) {
         // Fade in as barrier enters from right
@@ -375,18 +458,18 @@ export default function F1Game() {
       ctx.font = "bold 18px monospace";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
-      ctx.fillText(`${s.score}m`, 12, KERB_SIZE + 8);
+      ctx.fillText(`${s.score}m`, 12, trackTop + 8);
 
       const speedPct = Math.round(((s.speed - INITIAL_SPEED) / (MAX_SPEED - INITIAL_SPEED)) * 100);
       ctx.fillStyle = "rgba(255,255,255,0.4)";
       ctx.font = "11px monospace";
-      ctx.fillText(`SPD ${speedPct}%`, 12, KERB_SIZE + 30);
+      ctx.fillText(`SPD ${speedPct}%`, 12, trackTop + 28);
 
       if (s.bestScore > 0) {
         ctx.fillStyle = "rgba(255,255,255,0.3)";
         ctx.font = "11px monospace";
         ctx.textAlign = "right";
-        ctx.fillText(`BEST: ${s.bestScore}m`, w - 12, KERB_SIZE + 8);
+        ctx.fillText(`BEST: ${s.bestScore}m`, w - 12, trackTop + 8);
       }
     },
     [],
@@ -402,8 +485,10 @@ export default function F1Game() {
     if (!s.running) return;
 
     const { w, h } = s;
-    const playTop = KERB_SIZE;
-    const playBot = h - KERB_SIZE;
+    const grandstandH = 22;
+    const kerbH = KERB_SIZE;
+    const playTop = grandstandH + kerbH;
+    const playBot = h - grandstandH - kerbH;
     const carX = w * CAR_X_RATIO;
 
     // ── Physics ──
