@@ -144,7 +144,7 @@ export default function F1Game() {
     return () => window.removeEventListener("resize", resize);
   }, [resize]);
 
-  // ── Draw car facing RIGHT ──
+  // ── Draw top-down F1 car facing RIGHT ──
   function drawCar(ctx: CanvasRenderingContext2D, cx: number, cy: number, tilt: number) {
     ctx.save();
     ctx.translate(cx, cy);
@@ -153,56 +153,141 @@ export default function F1Game() {
     const hw = CAR_W / 2;
     const hh = CAR_H / 2;
 
-    // Wheels (4 black rectangles sticking out)
-    ctx.fillStyle = "#111";
-    // Front wheels
-    ctx.fillRect(hw * 0.4, -hh - 3, 8, 4);
-    ctx.fillRect(hw * 0.4, hh - 1, 8, 4);
-    // Rear wheels
-    ctx.fillRect(-hw * 0.6, -hh - 3, 8, 4);
-    ctx.fillRect(-hw * 0.6, hh - 1, 8, 4);
+    // Rear wing endplates (widest part, at the back/left)
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(-hw - 2, -hh - 1, 3, hh * 2 + 2);
 
-    // Main body (red elongated shape)
-    ctx.fillStyle = "#E8002D";
+    // Rear wheels (big, wide, at the back)
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-hw * 0.55, -hh - 4, 10, 5);
+    ctx.fillRect(-hw * 0.55, hh - 1, 10, 5);
+    // Tire sidewall detail
+    ctx.fillStyle = "#222";
+    ctx.fillRect(-hw * 0.55 + 1, -hh - 3, 8, 3);
+    ctx.fillRect(-hw * 0.55 + 1, hh, 8, 3);
+
+    // Front wheels (smaller, further forward)
+    ctx.fillStyle = "#111";
+    ctx.fillRect(hw * 0.35, -hh - 3, 7, 4);
+    ctx.fillRect(hw * 0.35, hh - 1, 7, 4);
+    ctx.fillStyle = "#222";
+    ctx.fillRect(hw * 0.35 + 1, -hh - 2, 5, 2);
+    ctx.fillRect(hw * 0.35 + 1, hh, 5, 2);
+
+    // Engine cover / rear body (darker red, wider)
+    ctx.fillStyle = "#a00020";
     ctx.beginPath();
-    ctx.moveTo(hw, 0); // nose tip
-    ctx.lineTo(hw * 0.7, -hh * 0.5);
-    ctx.lineTo(-hw * 0.3, -hh * 0.7);
-    ctx.lineTo(-hw * 0.6, -hh * 0.8);
-    ctx.lineTo(-hw, -hh * 0.5);
-    ctx.lineTo(-hw, hh * 0.5);
-    ctx.lineTo(-hw * 0.6, hh * 0.8);
-    ctx.lineTo(-hw * 0.3, hh * 0.7);
-    ctx.lineTo(hw * 0.7, hh * 0.5);
+    ctx.moveTo(-hw, -hh * 0.55);
+    ctx.lineTo(-hw * 0.3, -hh * 0.75);
+    ctx.lineTo(-hw * 0.3, hh * 0.75);
+    ctx.lineTo(-hw, hh * 0.55);
     ctx.closePath();
     ctx.fill();
 
-    // Darker rear/engine area
-    ctx.fillStyle = "#b0001f";
-    ctx.fillRect(-hw, -hh * 0.4, hw * 0.5, hh * 0.8);
-
-    // Cockpit
-    ctx.fillStyle = "#111";
+    // Main body (red, tapered toward nose)
+    ctx.fillStyle = "#E8002D";
     ctx.beginPath();
-    ctx.ellipse(hw * 0.15, 0, 5, 4, 0, 0, Math.PI * 2);
+    ctx.moveTo(hw + 4, 0); // nose tip
+    ctx.lineTo(hw * 0.75, -hh * 0.35);
+    ctx.lineTo(hw * 0.4, -hh * 0.5);
+    ctx.lineTo(-hw * 0.1, -hh * 0.65);
+    ctx.lineTo(-hw * 0.3, -hh * 0.75);
+    ctx.lineTo(-hw * 0.3, hh * 0.75);
+    ctx.lineTo(-hw * 0.1, hh * 0.65);
+    ctx.lineTo(hw * 0.4, hh * 0.5);
+    ctx.lineTo(hw * 0.75, hh * 0.35);
+    ctx.closePath();
     ctx.fill();
 
-    // Rear wing (white line)
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 2;
+    // Sidepod intakes (dark slots on the sides)
+    ctx.fillStyle = "#8a0018";
+    ctx.fillRect(hw * 0.05, -hh * 0.6, 8, 3);
+    ctx.fillRect(hw * 0.05, hh * 0.6 - 3, 8, 3);
+
+    // Cockpit opening (dark oval, slightly forward)
+    ctx.fillStyle = "#0a0a0a";
     ctx.beginPath();
-    ctx.moveTo(-hw, -hh * 0.7);
-    ctx.lineTo(-hw, hh * 0.7);
+    ctx.ellipse(hw * 0.2, 0, 6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Halo (grey arc around cockpit)
+    ctx.strokeStyle = "#666";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(hw * 0.2, 0, 5.5, -1.2, 1.2);
     ctx.stroke();
 
-    // Front wing
+    // Driver helmet (small colored dot)
+    ctx.fillStyle = "#E8002D";
+    ctx.beginPath();
+    ctx.arc(hw * 0.22, 0, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Front wing elements (lines at the nose)
     ctx.strokeStyle = "#cc0022";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(hw * 0.85, -hh * 0.9);
-    ctx.lineTo(hw * 0.85, hh * 0.9);
+    ctx.moveTo(hw * 0.85, -hh * 0.85);
+    ctx.lineTo(hw * 0.85, hh * 0.85);
+    ctx.stroke();
+    ctx.strokeStyle = "#E8002D";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(hw * 0.95, -hh * 0.6);
+    ctx.lineTo(hw * 0.95, hh * 0.6);
     ctx.stroke();
 
+    // Number on sidepod
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.font = "bold 7px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("1", -hw * 0.1, 0);
+
+    ctx.restore();
+  }
+
+  // ── Compute racing line through upcoming barrier gaps ──
+  function computeRacingLine(s: typeof stateRef.current) {
+    const carX = s.w * CAR_X_RATIO;
+    const points: { x: number; y: number }[] = [];
+    points.push({ x: carX, y: s.carY });
+
+    const upcoming = s.barriers
+      .filter(b => b.x > carX - 20)
+      .sort((a, b) => a.x - b.x);
+
+    for (const b of upcoming) {
+      const gapCenter = b.gapY + b.gapH / 2;
+      points.push({ x: b.x, y: gapCenter });
+      points.push({ x: b.x + BARRIER_W, y: gapCenter });
+    }
+    if (points.length > 1) {
+      const last = points[points.length - 1];
+      points.push({ x: s.w + 50, y: last.y });
+    }
+    return points;
+  }
+
+  function drawRacingLine(ctx: CanvasRenderingContext2D, points: { x: number; y: number }[]) {
+    if (points.length < 2) return;
+    ctx.save();
+    ctx.strokeStyle = "rgba(0, 220, 80, 0.18)";
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([10, 14]);
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const midX = (prev.x + curr.x) / 2;
+      const midY = (prev.y + curr.y) / 2;
+      ctx.quadraticCurveTo(prev.x, prev.y, midX, midY);
+    }
+    const last = points[points.length - 1];
+    ctx.lineTo(last.x, last.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
     ctx.restore();
   }
 
@@ -259,6 +344,10 @@ export default function F1Game() {
         }
         ctx.stroke();
       }
+
+      // ── Racing line ──
+      const racingLinePoints = computeRacingLine(s);
+      drawRacingLine(ctx, racingLinePoints);
 
       // ── Particles ──
       for (const p of s.particles) {
