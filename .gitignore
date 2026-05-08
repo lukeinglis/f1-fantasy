@@ -51,3 +51,5 @@ prisma/dev.db-journal
 
 # Playwright MCP
 .playwright-mcp/
+.env.vercel
+.env.production
