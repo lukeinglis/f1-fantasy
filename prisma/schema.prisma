@@ -27,6 +27,7 @@ model User {
   scores           Score[]
   predictions      Prediction[]
   predictionScores PredictionScore[]
+  gameScores       GameScore[]
 }
 
 model League {
@@ -140,6 +141,17 @@ model Prediction {
   driver      Driver @relation(fields: [driverId], references: [id])
 
   @@unique([userId, raceId, position])
+}
+
+// High scores for the F1 helicopter mini-game.
+model GameScore {
+  id         String   @id @default(cuid())
+  userId     String?
+  playerName String
+  score      Int
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 // Aggregated prediction score per user per race.
