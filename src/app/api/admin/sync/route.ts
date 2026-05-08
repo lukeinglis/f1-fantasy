@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
   const league = await prisma.league.findFirst();
   const season =
-    parsed.data.season ?? league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+    parsed.data.season ?? league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
   if (parsed.data.scope === "season") {
     const result = await syncSeason(season);

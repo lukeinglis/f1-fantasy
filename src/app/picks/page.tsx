@@ -14,7 +14,7 @@ export default async function MyPicksPage() {
   const userId = session.user.id;
 
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
   const [picks, drivers, constructors, scores] = await Promise.all([
     prisma.pick.findMany({

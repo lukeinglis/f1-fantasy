@@ -14,7 +14,7 @@ function shortDate(d: Date) {
 
 export default async function RacesPage() {
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
   const races = await prisma.race.findMany({
     where: { season },
     orderBy: { round: "asc" },

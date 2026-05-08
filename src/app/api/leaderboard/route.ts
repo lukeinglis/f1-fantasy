@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 // where results have been locked. Players with no scores yet show 0.
 export async function GET() {
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
   const users = await prisma.user.findMany({
     select: { id: true, name: true, role: true },

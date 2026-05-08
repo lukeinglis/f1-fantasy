@@ -8,7 +8,7 @@ export default async function RulesPage() {
   const league = await prisma.league.findFirst();
   const maxDriver = league?.maxDriverPicks ?? 2;
   const maxConstructor = league?.maxConstructorPicks ?? 3;
-  const season = league?.season ?? 2025;
+  const season = league?.season ?? 2026;
 
   return (
     <div className="space-y-8 max-w-2xl">

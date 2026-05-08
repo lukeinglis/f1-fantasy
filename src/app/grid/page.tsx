@@ -15,7 +15,7 @@ interface CellData {
 
 async function getGridData() {
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2025);
+  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
   const [races, users, picks, scores] = await Promise.all([
     prisma.race.findMany({

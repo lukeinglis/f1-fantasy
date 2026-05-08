@@ -1,4 +1,4 @@
-// Constructor team colors (2025 season) keyed by ergast constructorId
+// Constructor team colors (2026 season) keyed by jolpica constructorId
 export const TEAM_COLORS: Record<string, string> = {
   red_bull: "#3671C6",
   ferrari: "#E8002D",
@@ -8,8 +8,9 @@ export const TEAM_COLORS: Record<string, string> = {
   alpine: "#0093CC",
   williams: "#64C4FF",
   rb: "#6692FF",
-  sauber: "#52E252",
   haas: "#B6BABD",
+  audi: "#DE3226",
+  cadillac: "#1B2D4B",
 };
 
 export function teamColor(constructorId: string): string {
@@ -17,7 +18,7 @@ export function teamColor(constructorId: string): string {
 }
 
 export function teamTextColor(constructorId: string): string {
-  const dark = ["mercedes", "sauber", "williams", "haas", "rb"];
+  const dark = ["mercedes", "williams", "haas", "rb"];
   return dark.includes(constructorId) ? "#111111" : "#FFFFFF";
 }
 
@@ -31,8 +32,9 @@ export const TEAM_SHORT: Record<string, string> = {
   alpine: "ALP",
   williams: "WIL",
   rb: "RB",
-  sauber: "SAU",
   haas: "HAS",
+  audi: "AUD",
+  cadillac: "CAD",
 };
 
 export function teamShort(constructorId: string): string {

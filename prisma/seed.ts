@@ -11,7 +11,7 @@ async function main() {
     console.log("League already exists:", existing.name);
     return;
   }
-  const season = Number(process.env.F1_SEASON ?? 2025);
+  const season = Number(process.env.F1_SEASON ?? 2026);
   const league = await prisma.league.create({
     data: {
       name: `F1 Fantasy ${season}`,
