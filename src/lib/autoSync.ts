@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { syncSeason, syncRaceResults } from "@/lib/sync";
-import { recomputeScoresForRace } from "@/lib/scoreCompute";
+import {
+  recomputeScoresForRace,
+  recomputePredictionScoresForRace,
+} from "@/lib/scoreCompute";
 
 const SYNC_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -39,6 +42,7 @@ export async function ensureSeasonSynced(): Promise<void> {
         const fetched = await syncRaceResults(season, race.round);
         if (fetched.available && fetched.results > 0) {
           await recomputeScoresForRace(race.id);
+          await recomputePredictionScoresForRace(race.id);
         }
       } catch {
         // API may not have results yet, skip silently

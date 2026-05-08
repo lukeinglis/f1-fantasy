@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminGuard";
-import { recomputeScoresForRace } from "@/lib/scoreCompute";
+import {
+  recomputeScoresForRace,
+  recomputePredictionScoresForRace,
+} from "@/lib/scoreCompute";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -24,6 +27,7 @@ export async function POST(req: Request) {
 
   if (parsed.data.raceId) {
     const result = await recomputeScoresForRace(parsed.data.raceId);
+    await recomputePredictionScoresForRace(parsed.data.raceId);
     return NextResponse.json({ ok: true, raceId: parsed.data.raceId, ...result });
   }
 
@@ -35,6 +39,7 @@ export async function POST(req: Request) {
   let total = 0;
   for (const r of races) {
     const out = await recomputeScoresForRace(r.id);
+    await recomputePredictionScoresForRace(r.id);
     total += out.updated;
   }
   return NextResponse.json({ ok: true, racesProcessed: races.length, totalScores: total });

@@ -16,6 +16,15 @@ interface BoardRow {
   racesScored: number;
 }
 
+interface PredictionBoardRow {
+  userId: string;
+  userName: string;
+  totalPoints: number;
+  exactMatches: number;
+  closeMatches: number;
+  racesScored: number;
+}
+
 interface NextRaceInfo {
   name: string;
   country: string | null;
@@ -35,7 +44,7 @@ async function getHomeData() {
   const league = await prisma.league.findFirst();
   const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
-  const [users, scores, races, picks, allScores] = await Promise.all([
+  const [users, scores, races, picks, allScores, predictionScores] = await Promise.all([
     prisma.user.findMany({
       select: { id: true, name: true },
       orderBy: { name: "asc" },
@@ -77,6 +86,15 @@ async function getHomeData() {
         race: { select: { round: true, name: true } },
       },
     }),
+    prisma.predictionScore.findMany({
+      where: { race: { season } },
+      select: {
+        userId: true,
+        totalPoints: true,
+        exactMatches: true,
+        closeMatches: true,
+      },
+    }),
   ]);
 
   const totalRaces = races.length;
@@ -111,6 +129,30 @@ async function getHomeData() {
       driverPoints: round1(r.driverPoints),
       constructorPoints: round1(r.constructorPoints),
     }))
+    .sort((a, b) => b.totalPoints - a.totalPoints);
+
+  // Prediction leaderboard
+  const pm = new Map<string, PredictionBoardRow>();
+  for (const u of users) {
+    pm.set(u.id, {
+      userId: u.id,
+      userName: u.name,
+      totalPoints: 0,
+      exactMatches: 0,
+      closeMatches: 0,
+      racesScored: 0,
+    });
+  }
+  for (const ps of predictionScores) {
+    const r = pm.get(ps.userId);
+    if (!r) continue;
+    r.totalPoints += ps.totalPoints;
+    r.exactMatches += ps.exactMatches;
+    r.closeMatches += ps.closeMatches;
+    r.racesScored += 1;
+  }
+  const predictionRows = Array.from(pm.values())
+    .filter((r) => r.racesScored > 0)
     .sort((a, b) => b.totalPoints - a.totalPoints);
 
   // Next race
@@ -236,6 +278,7 @@ async function getHomeData() {
   return {
     season,
     rows,
+    predictionRows,
     racesScored: racesScoredCount,
     totalRaces,
     activeRaceCount: activeRaces.length,
@@ -253,6 +296,7 @@ export default async function HomePage() {
   const {
     season,
     rows,
+    predictionRows,
     racesScored,
     activeRaceCount,
     nextRace,
@@ -415,6 +459,68 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {/* Prediction leaderboard */}
+      {predictionRows.length > 0 && (
+        <section>
+          <h2 className="text-xl font-semibold mb-3">
+            Prediction Standings
+          </h2>
+          <div className="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-lg">
+            <table className="w-full text-sm">
+              <thead className="bg-zinc-800/50 text-zinc-400 uppercase text-xs tracking-wide">
+                <tr>
+                  <th className="text-left px-4 py-3 w-12">#</th>
+                  <th className="text-left px-4 py-3">Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                    Exact
+                  </th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                    Close
+                  </th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                    Races
+                  </th>
+                  <th className="text-right px-4 py-3">Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {predictionRows.map((r, i) => (
+                  <tr
+                    key={r.userId}
+                    className={`border-t border-zinc-800 hover:bg-zinc-800/30 ${
+                      i === 0 && r.totalPoints > 0 ? "bg-amber-900/5" : ""
+                    }`}
+                  >
+                    <td className="px-4 py-3 tabular-nums">
+                      {i === 0 && r.totalPoints > 0 ? (
+                        <span className="text-amber-400 font-bold">{i + 1}</span>
+                      ) : i < 3 && r.totalPoints > 0 ? (
+                        <span className="text-zinc-300 font-bold">{i + 1}</span>
+                      ) : (
+                        <span className="text-zinc-500">{i + 1}</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 font-medium">{r.userName}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-emerald-400 hidden sm:table-cell">
+                      {r.exactMatches}
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums text-yellow-400 hidden sm:table-cell">
+                      {r.closeMatches}
+                    </td>
+                    <td className="px-4 py-3 text-right tabular-nums text-zinc-500 hidden sm:table-cell">
+                      {r.racesScored}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold tabular-nums text-red-400">
+                      {r.totalPoints}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       <div className="flex flex-wrap gap-3 text-sm">
         <Link

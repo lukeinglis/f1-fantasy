@@ -124,6 +124,70 @@ export default async function RulesPage() {
       </section>
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Prediction Challenge</h2>
+        <p className="text-zinc-300">
+          A separate competition: predict the top 10 finishing order before
+          each race.
+        </p>
+        <ul className="space-y-3 text-zinc-300">
+          <li className="flex gap-3">
+            <span className="text-red-500 font-bold shrink-0">1.</span>
+            <span>
+              Select 10 drivers and rank them P1 through P10 before the race
+              deadline (same as picks).
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-red-500 font-bold shrink-0">2.</span>
+            <span>
+              After the race, each predicted position is scored based on accuracy:
+            </span>
+          </li>
+        </ul>
+        <div className="grid grid-cols-4 gap-2 text-center text-sm">
+          <div className="bg-emerald-900/20 border border-emerald-800 rounded px-2 py-3">
+            <div className="text-emerald-400 text-xs">Exact</div>
+            <div className="font-bold text-2xl text-emerald-400 tabular-nums">5</div>
+            <div className="text-zinc-500 text-xs">points</div>
+          </div>
+          <div className="bg-yellow-900/20 border border-yellow-800 rounded px-2 py-3">
+            <div className="text-yellow-400 text-xs">Off by 1</div>
+            <div className="font-bold text-2xl text-yellow-400 tabular-nums">2</div>
+            <div className="text-zinc-500 text-xs">points</div>
+          </div>
+          <div className="bg-orange-900/20 border border-orange-800 rounded px-2 py-3">
+            <div className="text-orange-400 text-xs">Off by 2</div>
+            <div className="font-bold text-2xl text-orange-400 tabular-nums">1</div>
+            <div className="text-zinc-500 text-xs">point</div>
+          </div>
+          <div className="bg-zinc-800/50 border border-zinc-700 rounded px-2 py-3">
+            <div className="text-zinc-500 text-xs">Off by 3+</div>
+            <div className="font-bold text-2xl text-zinc-500 tabular-nums">0</div>
+            <div className="text-zinc-500 text-xs">points</div>
+          </div>
+        </div>
+        <ul className="space-y-3 text-zinc-300">
+          <li className="flex gap-3">
+            <span className="text-red-500 font-bold shrink-0">3.</span>
+            <span>
+              If a predicted driver finishes outside the top 10, that slot
+              scores 0 points.
+            </span>
+          </li>
+          <li className="flex gap-3">
+            <span className="text-red-500 font-bold shrink-0">4.</span>
+            <span>
+              Maximum 50 points per race (10 exact matches &times; 5 pts).
+              Predictions are tracked on a separate leaderboard.
+            </span>
+          </li>
+        </ul>
+        <p className="text-xs text-zinc-500">
+          Predictions are hidden from other players until after the deadline.
+        </p>
+      </section>
+
+      <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 space-y-4">
         <h2 className="text-xl font-semibold">Mid-Season Start</h2>
         <p className="text-zinc-300">
           Our league starts at <strong>Round {FIRST_ACTIVE_ROUND}</strong>.

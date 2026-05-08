@@ -23,8 +23,10 @@ model User {
   role         String   @default("player") // "player" | "admin"
   createdAt    DateTime @default(now())
 
-  picks        Pick[]
-  scores       Score[]
+  picks            Pick[]
+  scores           Score[]
+  predictions      Prediction[]
+  predictionScores PredictionScore[]
 }
 
 model League {
@@ -45,6 +47,7 @@ model Driver {
   nationality     String?
 
   picks           Pick[]
+  predictions     Prediction[]
 }
 
 // "Constructor" in F1 terminology — modelled as Team here to dodge JS name clash.
@@ -68,9 +71,11 @@ model Race {
   pickDeadline  DateTime
   resultsLocked Boolean  @default(false)
 
-  picks         Pick[]
-  results       RaceResult[]
-  scores        Score[]
+  picks            Pick[]
+  results          RaceResult[]
+  scores           Score[]
+  predictions      Prediction[]
+  predictionScores PredictionScore[]
 
   @@unique([season, round])
 }
@@ -117,6 +122,38 @@ model Score {
 
   user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
   race              Race @relation(fields: [raceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, raceId])
+}
+
+// Top 10 Prediction: each row is one predicted finishing position (1-10).
+model Prediction {
+  id          String   @id @default(cuid())
+  userId      String
+  raceId      String
+  position    Int      // 1-10
+  driverId    String
+  submittedAt DateTime @default(now())
+
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  race        Race   @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  driver      Driver @relation(fields: [driverId], references: [id])
+
+  @@unique([userId, raceId, position])
+}
+
+// Aggregated prediction score per user per race.
+model PredictionScore {
+  id           String   @id @default(cuid())
+  userId       String
+  raceId       String
+  totalPoints  Int      @default(0)
+  exactMatches Int      @default(0)
+  closeMatches Int      @default(0) // off-by-1 or off-by-2
+  computedAt   DateTime @default(now())
+
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  race         Race @relation(fields: [raceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, raceId])
 }

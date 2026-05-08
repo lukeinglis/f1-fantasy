@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminGuard";
 import { prisma } from "@/lib/prisma";
-import { recomputeScoresForRace } from "@/lib/scoreCompute";
+import {
+  recomputeScoresForRace,
+  recomputePredictionScoresForRace,
+} from "@/lib/scoreCompute";
 import { z } from "zod";
 
 // Body uses external "constructorId" naming, internally maps to teamId.
@@ -65,6 +68,7 @@ export async function POST(req: Request) {
   }
 
   const scored = await recomputeScoresForRace(raceId);
+  await recomputePredictionScoresForRace(raceId);
 
   return NextResponse.json({
     ok: true,

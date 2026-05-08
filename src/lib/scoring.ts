@@ -23,3 +23,24 @@ export function pointsForPosition(position: number | null | undefined): number {
   if (!position || position <= 0) return 0;
   return POSITION_POINTS[position] ?? 0;
 }
+
+// Top 10 Prediction scoring.
+// predictedPos: the position the player predicted (1-10)
+// actualPos:    the driver's actual finishing position (undefined = not classified / outside top 10)
+//
+// Exact match:  5 pts
+// Off by 1:     2 pts
+// Off by 2:     1 pt
+// Off by 3+:    0 pts
+// Not in top 10: 0 pts
+export function predictionPointsForSlot(
+  predictedPos: number,
+  actualPos: number | null | undefined,
+): number {
+  if (actualPos == null || actualPos <= 0 || actualPos > 10) return 0;
+  const diff = Math.abs(predictedPos - actualPos);
+  if (diff === 0) return 5;
+  if (diff === 1) return 2;
+  if (diff === 2) return 1;
+  return 0;
+}

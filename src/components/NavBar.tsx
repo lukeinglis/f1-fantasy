@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: "/grid", label: "Grid" },
   { href: "/races", label: "Races" },
   { href: "/picks", label: "My Picks" },
+  { href: "/predictions", label: "Predictions" },
   { href: "/stats", label: "Stats" },
   { href: "/rules", label: "Rules" },
 ];

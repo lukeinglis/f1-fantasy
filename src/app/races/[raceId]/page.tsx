@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
 import PickForm from "@/components/PickForm";
+import PredictionForm from "@/components/PredictionForm";
+import PredictionResults from "@/components/PredictionResults";
 import Countdown from "@/components/Countdown";
 
 export const dynamic = "force-dynamic";
@@ -98,6 +100,76 @@ export default async function RaceDetailPage(props: {
   const deadlinePassed = now >= race.pickDeadline;
   const role = (session?.user as { role?: string }).role;
   const isAdmin = role === "admin";
+
+  // Prediction data
+  const [myPredictions, allPredictions, predictionScores] = await Promise.all([
+    prisma.prediction.findMany({
+      where: { userId, raceId },
+      orderBy: { position: "asc" },
+    }),
+    deadlinePassed
+      ? prisma.prediction.findMany({
+          where: { raceId },
+          include: {
+            user: { select: { id: true, name: true } },
+            driver: {
+              select: { id: true, givenName: true, familyName: true, code: true },
+            },
+          },
+          orderBy: { position: "asc" },
+        })
+      : Promise.resolve([]),
+    prisma.predictionScore.findMany({
+      where: { raceId },
+      include: { user: { select: { id: true, name: true } } },
+    }),
+  ]);
+
+  // Build player prediction data for PredictionResults
+  const predScoreByUser = new Map(
+    predictionScores.map((s) => [s.userId, s]),
+  );
+  const predictionsByUser = new Map<
+    string,
+    {
+      userId: string;
+      userName: string;
+      predictions: {
+        position: number;
+        driverId: string;
+        driverName: string;
+        driverCode: string | null;
+      }[];
+      totalPoints: number | null;
+      exactMatches: number | null;
+      closeMatches: number | null;
+    }
+  >();
+
+  for (const pred of allPredictions) {
+    const user = pred.user;
+    if (!predictionsByUser.has(user.id)) {
+      const score = predScoreByUser.get(user.id);
+      predictionsByUser.set(user.id, {
+        userId: user.id,
+        userName: user.name,
+        predictions: [],
+        totalPoints: score?.totalPoints ?? null,
+        exactMatches: score?.exactMatches ?? null,
+        closeMatches: score?.closeMatches ?? null,
+      });
+    }
+    const entry = predictionsByUser.get(user.id)!;
+    entry.predictions.push({
+      position: pred.position,
+      driverId: pred.driverId,
+      driverName: `${pred.driver.givenName} ${pred.driver.familyName}`,
+      driverCode: pred.driver.code,
+    });
+  }
+
+  const predictionPlayers = Array.from(predictionsByUser.values());
+  const hasPredictionScores = predictionScores.length > 0;
 
   const scores = await prisma.score.findMany({
     where: { raceId },
@@ -219,6 +291,45 @@ export default async function RaceDetailPage(props: {
             maxDriverPicks={maxDriver}
             maxConstructorPicks={maxConstructor}
           />
+        </section>
+      )}
+
+      {/* Prediction form (only before deadline, not pre-season) */}
+      {!deadlinePassed && !preSeason && (
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+          <PredictionForm
+            raceId={race.id}
+            drivers={drivers.map((d) => ({
+              id: d.id,
+              code: d.code,
+              givenName: d.givenName,
+              familyName: d.familyName,
+            }))}
+            existing={myPredictions.map((p) => ({
+              position: p.position,
+              driverId: p.driverId,
+            }))}
+          />
+        </section>
+      )}
+
+      {/* Prediction results (shown after deadline) */}
+      {deadlinePassed && predictionPlayers.length > 0 && (
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+            {hasPredictionScores ? "Prediction scoreboard" : "All predictions"}
+          </h2>
+          <div className="p-4">
+            <PredictionResults
+              players={predictionPlayers}
+              results={race.results.map((r) => ({
+                driverId: r.driverId,
+                position: r.position,
+              }))}
+              currentUserId={userId}
+              hasScores={hasPredictionScores}
+            />
+          </div>
         </section>
       )}
 

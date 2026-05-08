@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/adminGuard";
 import { syncRaceResults, syncSeason } from "@/lib/sync";
-import { recomputeScoresForRace } from "@/lib/scoreCompute";
+import {
+  recomputeScoresForRace,
+  recomputePredictionScoresForRace,
+} from "@/lib/scoreCompute";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -65,6 +68,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Race row not found" }, { status: 404 });
   }
   const scored = await recomputeScoresForRace(race.id);
+  await recomputePredictionScoresForRace(race.id);
 
   return NextResponse.json({
     ok: true,
