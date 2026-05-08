@@ -4,6 +4,7 @@ import { isPreSeasonRound } from "@/lib/season";
 import { teamShort } from "@/lib/f1-meta";
 import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
+import F1Game from "@/components/F1Game";
 
 export const dynamic = "force-dynamic";
 
@@ -521,6 +522,14 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* F1 Mini Game */}
+      <section>
+        <h2 className="text-xl font-semibold mb-3">
+          <span className="text-red-500">F1</span> Dodge
+        </h2>
+        <F1Game />
+      </section>
 
       <div className="flex flex-wrap gap-3 text-sm">
         <Link

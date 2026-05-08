@@ -19,7 +19,6 @@ const NAV_LINKS = [
   { href: "/predictions", label: "Predictions" },
   { href: "/stats", label: "Stats" },
   { href: "/rules", label: "Rules" },
-  { href: "/play", label: "Play" },
 ];
 
 export default function NavBar({ user }: { user: NavUser | null }) {
