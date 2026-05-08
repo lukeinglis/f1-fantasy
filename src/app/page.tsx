@@ -443,6 +443,12 @@ export default async function HomePage() {
           My picks
         </Link>
         <Link
+          href="/stats"
+          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+        >
+          Stats
+        </Link>
+        <Link
           href="/rules"
           className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
         >
