@@ -49,13 +49,12 @@ const SPEED_LINE_COUNT = 15;
 const TARGET_DT = 1000 / 60;
 
 // How quickly velocity responds to input changes (0 = instant, 1 = no response).
-// Lower = snappier, higher = floatier.
-const VELOCITY_SMOOTHING = 0.88;
+const VELOCITY_SMOOTHING = 0.4;
 
 // Maximum car tilt in radians
-const MAX_TILT = 0.18;
+const MAX_TILT = 0.12;
 // How fast tilt catches up to target (0 = instant, 1 = never)
-const TILT_SMOOTHING = 0.85;
+const TILT_SMOOTHING = 0.7;
 
 // Barrier fade-in distance from right edge (pixels)
 const BARRIER_FADE_DISTANCE = 120;
@@ -156,11 +155,12 @@ export default function F1Game() {
 
   function drawCar(ctx: CanvasRenderingContext2D, x: number, y: number, tilt: number, pressing: boolean, speed: number) {
     ctx.save();
-    // Apply tilt rotation around car center
+    // Apply tilt rotation around car center, flip horizontally so nose points right
     const centerX = x + CAR_W / 2;
     const centerY = y + CAR_H / 2;
     ctx.translate(centerX, centerY);
-    ctx.rotate(tilt);
+    ctx.scale(-1, 1);
+    ctx.rotate(-tilt);
     ctx.translate(-CAR_W / 2, -CAR_H / 2);
 
     const w = CAR_W;
@@ -446,14 +446,14 @@ export default function F1Game() {
       });
     }
 
-    // Particles (dt-adjusted)
+    // Particles (dt-adjusted, spawn behind car which is now on the left side)
     const carX = s.w * CAR_X_RATIO;
     if (Math.random() < PARTICLE_SPAWN_RATE * dtFactor) {
       const isSpark = Math.random() < 0.3;
       const life = isSpark ? 10 + Math.random() * 15 : 15 + Math.random() * 20;
       s.particles.push({
-        x: carX + CAR_W * 0.95, y: s.carY + CAR_H * 0.3 + Math.random() * CAR_H * 0.4,
-        vx: 1 + Math.random() * 2, vy: (Math.random() - 0.5) * 1.5,
+        x: carX + CAR_W * 0.05, y: s.carY + CAR_H * 0.3 + Math.random() * CAR_H * 0.4,
+        vx: -(1 + Math.random() * 2), vy: (Math.random() - 0.5) * 1.5,
         life, maxLife: life,
         size: isSpark ? 1.5 + Math.random() * 2 : 2 + Math.random() * 3,
         color: isSpark ? "#FFD700" : "#E8002D",
