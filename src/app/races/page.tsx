@@ -4,17 +4,6 @@ import { auth } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-function fmtDate(d: Date) {
-  return d.toLocaleString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
-}
-
 function shortDate(d: Date) {
   return d.toLocaleString("en-US", {
     month: "short",

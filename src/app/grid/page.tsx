@@ -88,13 +88,6 @@ function countryFlag(country: string | null): string {
   return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
 }
 
-function raceShortName(name: string): string {
-  return name
-    .replace(/ Grand Prix$/, "")
-    .replace(/ GP$/, "")
-    .substring(0, 12);
-}
-
 export default async function GridPage() {
   const { season, races, users, pickMap, userTotals } = await getGridData();
   const now = new Date();

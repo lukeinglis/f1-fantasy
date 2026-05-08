@@ -38,7 +38,6 @@ async function getLeaderboard(): Promise<{
     prisma.race.count({ where: { season } }),
   ]);
 
-  const scoredRaceIds = new Set<string>();
   const m = new Map<string, BoardRow>();
   for (const u of users) {
     m.set(u.id, {
