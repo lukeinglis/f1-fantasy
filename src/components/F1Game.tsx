@@ -26,9 +26,9 @@ const RACE_NAMES = [
 ];
 
 // ── Physics ──
-const GRAVITY = 0.4;
-const LIFT = -0.6;
-const MAX_VEL = 7;
+const GRAVITY = 0.3;
+const LIFT = -0.5;
+const MAX_VEL = 5.5;
 
 // ── Car ──
 const CAR_W = 50;
@@ -124,6 +124,31 @@ export default function F1Game() {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
+  // Pre-rendered crowd strip (avoids hundreds of fillRect per frame)
+  const crowdCanvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const buildCrowdStrip = useCallback((width: number, stripH: number) => {
+    const offscreen = document.createElement("canvas");
+    // Make it wider than the viewport for seamless scrolling
+    offscreen.width = width + 100;
+    offscreen.height = stripH;
+    const octx = offscreen.getContext("2d");
+    if (!octx) return null;
+    octx.fillStyle = "#2a2a2a";
+    octx.fillRect(0, 0, offscreen.width, stripH);
+    const colors = ["#e55", "#55e", "#ee5", "#5e5", "#e5e", "#5ee", "#fa0", "#fff"];
+    for (let row = 0; row < 3; row++) {
+      for (let cx = 0; cx < offscreen.width; cx += 6) {
+        const ci = (cx * 7 + row * 13) % colors.length;
+        octx.fillStyle = colors[ci];
+        octx.globalAlpha = 0.4;
+        octx.fillRect(cx, 3 + row * 7, 3, 4);
+      }
+    }
+    octx.globalAlpha = 1;
+    return offscreen;
+  }, []);
+
   // ── Resize ──
   const resize = useCallback(() => {
     const canvas = canvasRef.current;
@@ -136,7 +161,8 @@ export default function F1Game() {
     canvas.height = h;
     stateRef.current.w = w;
     stateRef.current.h = h;
-  }, []);
+    crowdCanvasRef.current = buildCrowdStrip(w, 22);
+  }, [buildCrowdStrip]);
 
   useEffect(() => {
     resize();
@@ -315,39 +341,20 @@ export default function F1Game() {
       ctx.fillStyle = "#0f0f0f";
       ctx.fillRect(0, 0, w, h);
 
-      // ── Grandstands (top) ──
-      ctx.fillStyle = "#2a2a2a";
-      ctx.fillRect(0, 0, w, grandstandH);
-      // Crowd: rows of colored dots
-      const crowdScroll = (s.scrollOffset * 0.3) % 12;
-      for (let row = 0; row < 3; row++) {
-        for (let cx = -crowdScroll; cx < w + 12; cx += 6) {
-          const colors = ["#e55", "#55e", "#ee5", "#5e5", "#e5e", "#5ee", "#fa0", "#fff"];
-          const ci = Math.floor((cx * 7 + row * 13) % colors.length);
-          ctx.fillStyle = colors[ci];
-          ctx.globalAlpha = 0.4;
-          ctx.fillRect(cx, 3 + row * 7, 3, 4);
-        }
+      // ── Grandstands (pre-rendered crowd strip, single drawImage each) ──
+      const crowdCanvas = crowdCanvasRef.current;
+      const crowdScroll = Math.floor(s.scrollOffset * 0.3) % 100;
+      if (crowdCanvas) {
+        ctx.drawImage(crowdCanvas, crowdScroll, 0, w, grandstandH, 0, 0, w, grandstandH);
+        ctx.drawImage(crowdCanvas, crowdScroll, 0, w, grandstandH, 0, h - grandstandH, w, grandstandH);
+      } else {
+        ctx.fillStyle = "#2a2a2a";
+        ctx.fillRect(0, 0, w, grandstandH);
+        ctx.fillRect(0, h - grandstandH, w, grandstandH);
       }
-      ctx.globalAlpha = 1;
-      // Grandstand barrier wall
+      // Barrier walls
       ctx.fillStyle = "#444";
       ctx.fillRect(0, grandstandH - 2, w, 2);
-
-      // ── Grandstands (bottom) ──
-      ctx.fillStyle = "#2a2a2a";
-      ctx.fillRect(0, h - grandstandH, w, grandstandH);
-      for (let row = 0; row < 3; row++) {
-        for (let cx = -crowdScroll; cx < w + 12; cx += 6) {
-          const colors = ["#fa0", "#5e5", "#55e", "#e5e", "#ee5", "#e55", "#5ee", "#fff"];
-          const ci = Math.floor((cx * 11 + row * 17) % colors.length);
-          ctx.fillStyle = colors[ci];
-          ctx.globalAlpha = 0.4;
-          ctx.fillRect(cx, h - grandstandH + 3 + row * 7, 3, 4);
-        }
-      }
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "#444";
       ctx.fillRect(0, h - grandstandH, w, 2);
 
       // ── Kerb strips ──
@@ -367,12 +374,10 @@ export default function F1Game() {
       ctx.fillStyle = "#222";
       ctx.fillRect(0, trackTop, w, trackBot - trackTop);
 
-      // ── Track surface variation (subtle lighter patches) ──
-      ctx.fillStyle = "rgba(255,255,255,0.015)";
-      const patchScroll = s.scrollOffset % 120;
-      for (let px = -patchScroll; px < w + 120; px += 120) {
-        ctx.fillRect(px, trackTop, 60, trackBot - trackTop);
-      }
+      // ── Track edge white lines (continuous, like a real circuit) ──
+      ctx.fillStyle = "rgba(255,255,255,0.08)";
+      ctx.fillRect(0, trackTop, w, 1);
+      ctx.fillRect(0, trackBot - 1, w, 1);
 
       // ── Racing line ──
       const racingLinePoints = computeRacingLine(s);
