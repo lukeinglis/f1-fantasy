@@ -55,7 +55,7 @@ export default function RegisterPage() {
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
           autoComplete="username"
-          className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
         />
         <input
           type="password"
@@ -65,7 +65,7 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password (min 4 chars)"
           autoComplete="new-password"
-          className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2"
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
         />
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button

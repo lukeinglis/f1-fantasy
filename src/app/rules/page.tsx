@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { FIRST_ACTIVE_ROUND } from "@/lib/season";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export default async function RulesPage() {
         <h1 className="text-3xl font-bold">
           How to Play <span className="text-red-500">F1 Fantasy</span>
         </h1>
-        <p className="text-zinc-400 mt-1">
+        <p className="text-zinc-400 mt-1 text-sm">
           {season} season rules
         </p>
       </header>
@@ -119,6 +120,16 @@ export default async function RulesPage() {
           Your picks must be submitted before the race start time. You can
           change your pick as many times as you want before the deadline.
           Once the race begins, your pick is locked.
+        </p>
+      </section>
+
+      <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 space-y-4">
+        <h2 className="text-xl font-semibold">Mid-Season Start</h2>
+        <p className="text-zinc-300">
+          Our league started at <strong>Round {FIRST_ACTIVE_ROUND}</strong>.
+          Races before that are shown in the calendar for reference but are
+          greyed out and don&apos;t count toward standings. Everyone starts on
+          equal footing from Round {FIRST_ACTIVE_ROUND} onward.
         </p>
       </section>
 
