@@ -103,6 +103,7 @@ export default function F1Game() {
 
   const animRef = useRef<number>(0);
   const endGameRef = useRef<() => void>(() => {});
+  const gameTokenRef = useRef<string | null>(null);
   const [displayScore, setDisplayScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [started, setStarted] = useState(false);
@@ -649,19 +650,21 @@ export default function F1Game() {
 
     cancelAnimationFrame(animRef.current);
 
-    // Save score
-    if (session?.user?.id && s.score > 0) {
+    // Save score (include anti-cheat token)
+    const token = gameTokenRef.current;
+    if (session?.user?.id && s.score > 0 && token) {
       setScoreSaved(false);
       fetch("/api/game", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ score: s.score }),
+        body: JSON.stringify({ score: s.score, token }),
       })
         .then((r) => {
           if (r.ok) setScoreSaved(true);
           return fetchLeaderboard();
         })
         .catch(() => {});
+      gameTokenRef.current = null; // consume the token
     } else {
       fetchLeaderboard();
     }
@@ -670,6 +673,19 @@ export default function F1Game() {
   useEffect(() => {
     endGameRef.current = endGame;
   }, [endGame]);
+
+  // ── Fetch anti-cheat token (fire-and-forget; game still works without it) ──
+  const fetchGameToken = useCallback(async () => {
+    try {
+      const res = await fetch("/api/game/token");
+      if (res.ok) {
+        const data = await res.json();
+        gameTokenRef.current = data.token;
+      }
+    } catch {
+      /* game still plays, score just won't save */
+    }
+  }, []);
 
   // ── Start game ──
   const startGame = useCallback(() => {
@@ -692,9 +708,14 @@ export default function F1Game() {
     setGameOver(false);
     setStarted(true);
     setScoreSaved(false);
+
+    // Fetch a signed game token for this session
+    gameTokenRef.current = null;
+    fetchGameToken();
+
     cancelAnimationFrame(animRef.current);
     animRef.current = requestAnimationFrame(gameLoop);
-  }, [gameLoop]);
+  }, [gameLoop, fetchGameToken]);
 
   // ── Keyboard input ──
   useEffect(() => {
