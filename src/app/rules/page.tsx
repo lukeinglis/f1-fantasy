@@ -9,6 +9,9 @@ export default async function RulesPage() {
   const maxDriver = league?.maxDriverPicks ?? 2;
   const maxConstructor = league?.maxConstructorPicks ?? 3;
   const season = league?.season ?? 2026;
+  const activeRaceCount = await prisma.race.count({
+    where: { season, round: { gte: FIRST_ACTIVE_ROUND } },
+  });
 
   return (
     <div className="space-y-8 max-w-2xl">
@@ -78,7 +81,7 @@ export default async function RulesPage() {
             </div>
             <p className="text-xs text-zinc-500 mt-2">
               Constructors have a slightly higher cap, but choose wisely across
-              24 races.
+              {activeRaceCount} races.
             </p>
           </div>
         </div>

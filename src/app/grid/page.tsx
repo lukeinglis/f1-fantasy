@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import { TEAM_COLORS, teamTextColor, teamShort } from "@/lib/f1-meta";
 import { isPreSeasonRound } from "@/lib/season";
 
@@ -13,7 +14,7 @@ interface CellData {
   totalPoints: number | null;
 }
 
-async function getGridData() {
+async function getGridData(currentUserId: string | null) {
   const league = await prisma.league.findFirst();
   const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
@@ -27,6 +28,7 @@ async function getGridData() {
         name: true,
         country: true,
         date: true,
+        pickDeadline: true,
         resultsLocked: true,
       },
     }),
@@ -54,9 +56,21 @@ async function getGridData() {
     }),
   ]);
 
+  // Build a set of race IDs where the pick deadline has passed (picks are public)
+  const now = new Date();
+  const raceDeadlineMap = new Map(races.map((r) => [r.id, r.pickDeadline]));
+
   // Build lookup: picksByUserRace[userId][raceId]
+  // Only include other players' picks for races where the deadline has passed
   const pickMap = new Map<string, Map<string, CellData>>();
   for (const p of picks) {
+    const deadline = raceDeadlineMap.get(p.raceId);
+    const isOwn = p.userId === currentUserId;
+    const deadlinePassed = deadline ? now >= deadline : false;
+
+    // Skip other players' picks for races where the deadline hasn't passed
+    if (!isOwn && !deadlinePassed) continue;
+
     if (!pickMap.has(p.userId)) pickMap.set(p.userId, new Map());
     const userPicks = pickMap.get(p.userId)!;
     userPicks.set(p.raceId, {
@@ -140,7 +154,9 @@ function countryFlag(country: string | null): string {
 }
 
 export default async function GridPage() {
-  const { season, races, users, pickMap, userTotals } = await getGridData();
+  const session = await auth();
+  const currentUserId = session?.user?.id ?? null;
+  const { season, races, users, pickMap, userTotals } = await getGridData(currentUserId);
   const now = new Date();
 
   if (users.length === 0 || races.length === 0) {
