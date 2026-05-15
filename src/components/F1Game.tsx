@@ -73,7 +73,7 @@ interface LeaderboardEntry {
   id: string;
   playerName: string;
   score: number;
-  createdAt: string;
+  updatedAt: string;
 }
 
 export default function F1Game() {
@@ -104,6 +104,7 @@ export default function F1Game() {
   const animRef = useRef<number>(0);
   const endGameRef = useRef<() => void>(() => {});
   const gameTokenRef = useRef<string | null>(null);
+  const activePointerRef = useRef<number | null>(null); // track single pointer
   const [displayScore, setDisplayScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [started, setStarted] = useState(false);
@@ -659,8 +660,16 @@ export default function F1Game() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ score: s.score, token }),
       })
-        .then((r) => {
-          if (r.ok) setScoreSaved(true);
+        .then(async (r) => {
+          if (r.ok) {
+            setScoreSaved(true);
+            // Sync best score from server (the source of truth)
+            const data = await r.json();
+            if (typeof data.bestScore === "number" && data.bestScore > s.bestScore) {
+              s.bestScore = data.bestScore;
+              setBestScore(data.bestScore);
+            }
+          }
           return fetchLeaderboard();
         })
         .catch(() => {});
@@ -747,9 +756,19 @@ export default function F1Game() {
   }, [startGame]);
 
   // ── Pointer (mouse/touch) input ──
+  // Track a single pointer to prevent multi-touch exploits on mobile.
+  // Only the first pointer down is honoured; additional fingers are ignored.
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
       e.preventDefault();
+
+      // Ignore if we already have an active pointer (multi-touch block)
+      if (activePointerRef.current !== null) return;
+      activePointerRef.current = e.pointerId;
+
+      // Capture so we get pointerup even if finger moves off canvas
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+
       if (!stateRef.current.running) {
         startGame();
         // Also set holding so the car moves up immediately
@@ -761,11 +780,22 @@ export default function F1Game() {
     [startGame],
   );
 
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    // Only release if this is the tracked pointer
+    if (e.pointerId !== activePointerRef.current) return;
+    activePointerRef.current = null;
     stateRef.current.holding = false;
   }, []);
 
-  const handlePointerLeave = useCallback(() => {
+  const handlePointerLeave = useCallback((e: React.PointerEvent) => {
+    if (e.pointerId !== activePointerRef.current) return;
+    activePointerRef.current = null;
+    stateRef.current.holding = false;
+  }, []);
+
+  const handlePointerCancel = useCallback((e: React.PointerEvent) => {
+    if (e.pointerId !== activePointerRef.current) return;
+    activePointerRef.current = null;
     stateRef.current.holding = false;
   }, []);
 
@@ -796,6 +826,8 @@ export default function F1Game() {
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerLeave}
+          onPointerCancel={handlePointerCancel}
+          onTouchStart={(e) => e.preventDefault()}
           onContextMenu={(e) => e.preventDefault()}
         />
 

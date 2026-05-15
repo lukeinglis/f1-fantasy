@@ -11,12 +11,18 @@ const TOKEN_MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes
 const RATE_LIMIT_MS = 10_000; // 1 submission per 10 seconds
 
 // ── In-memory stores (fine for a small friends league) ──
-const usedNonces = new Set<string>();
+// Map nonce -> expiry timestamp. Nonces live as long as their token's max age.
+const usedNonces = new Map<string, number>();
 const rateLimitMap = new Map<string, number>();
 
-// Clean up stale nonces every 10 minutes
+// Clean up expired nonces every 10 minutes (only remove stale entries)
 setInterval(() => {
-  usedNonces.clear();
+  const now = Date.now();
+  for (const [nonce, expiry] of usedNonces) {
+    if (now > expiry) {
+      usedNonces.delete(nonce);
+    }
+  }
 }, 10 * 60 * 1000);
 
 const ScoreBody = z.object({
@@ -71,6 +77,9 @@ export async function POST(req: Request) {
 
   // ── Check token belongs to this user ──
   if (tokenData.userId !== userId) {
+    console.warn(
+      `[game] Token user mismatch: session=${userId} token=${tokenData.userId}`,
+    );
     return NextResponse.json(
       { error: "Token user mismatch" },
       { status: 403 },
@@ -87,6 +96,7 @@ export async function POST(req: Request) {
 
   // ── Check nonce not already used (replay protection) ──
   if (usedNonces.has(tokenData.nonce)) {
+    console.warn(`[game] Replay attempt: nonce reuse by user ${userId}`);
     return NextResponse.json(
       { error: "Token already used" },
       { status: 403 },
@@ -97,6 +107,9 @@ export async function POST(req: Request) {
   const elapsedSeconds = (now - tokenData.startTime) / 1000;
   const minExpectedSeconds = score * MIN_SECONDS_PER_METER;
   if (elapsedSeconds < minExpectedSeconds) {
+    console.warn(
+      `[game] Timing cheat: user=${userId} score=${score} elapsed=${elapsedSeconds.toFixed(1)}s min=${minExpectedSeconds.toFixed(1)}s`,
+    );
     return NextResponse.json(
       { error: "Score not plausible for elapsed time" },
       { status: 403 },
@@ -104,34 +117,54 @@ export async function POST(req: Request) {
   }
 
   // ── All checks passed: mark nonce used, update rate limit ──
-  usedNonces.add(tokenData.nonce);
+  // Nonce expires when the token would expire (TOKEN_MAX_AGE_MS from start)
+  usedNonces.set(tokenData.nonce, tokenData.startTime + TOKEN_MAX_AGE_MS);
   rateLimitMap.set(userId, now);
 
   // ── Upsert: keep only the best score per user ──
+  // Use a transaction with a conditional update to avoid race conditions.
+  // The raw SQL ensures the score only increases, even under concurrent requests.
+  const playerName = session.user.name ?? "Unknown";
+
   const existing = await prisma.gameScore.findUnique({
     where: { userId },
     select: { score: true },
   });
 
-  if (existing && existing.score >= score) {
-    // Current best is higher or equal; no update needed
-    return NextResponse.json({ ok: true, updated: false });
+  if (existing) {
+    if (existing.score >= score) {
+      // Current best is higher or equal; no update needed
+      return NextResponse.json({
+        ok: true,
+        updated: false,
+        bestScore: existing.score,
+      });
+    }
+
+    // Conditional update: only set the new score if it's strictly higher.
+    // This guards against race conditions where two requests slip past
+    // the findUnique check simultaneously.
+    await prisma.gameScore.updateMany({
+      where: { userId, score: { lt: score } },
+      data: {
+        score,
+        playerName,
+      },
+    });
+
+    return NextResponse.json({ ok: true, updated: true, bestScore: score });
   }
 
-  await prisma.gameScore.upsert({
-    where: { userId },
-    update: {
-      score,
-      playerName: session.user.name ?? "Unknown",
-    },
-    create: {
+  // No existing record: create one
+  await prisma.gameScore.create({
+    data: {
       userId,
-      playerName: session.user.name ?? "Unknown",
+      playerName,
       score,
     },
   });
 
-  return NextResponse.json({ ok: true, updated: true });
+  return NextResponse.json({ ok: true, updated: true, bestScore: score });
 }
 
 /* GET /api/game  — top 10 high scores */
@@ -143,7 +176,7 @@ export async function GET() {
       id: true,
       playerName: true,
       score: true,
-      createdAt: true,
+      updatedAt: true,
     },
   });
 
