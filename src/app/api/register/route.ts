@@ -3,8 +3,16 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
+// Alphanumeric, spaces, dots, hyphens, underscores, and apostrophes only.
+// Rejects HTML tags, angle brackets, quotes, and other injection characters.
+const SAFE_NAME = /^[a-zA-Z0-9 .\-_']+$/;
+
 const Body = z.object({
-  name: z.string().min(1).max(60),
+  name: z
+    .string()
+    .min(1)
+    .max(60)
+    .regex(SAFE_NAME, "Name contains invalid characters"),
   password: z.string().min(4).max(200),
 });
 

@@ -33,7 +33,7 @@ model User {
 model League {
   id                  String   @id @default(cuid())
   name                String
-  season              Int      @default(2025)
+  season              Int      @default(2026)
   maxDriverPicks      Int      @default(2)
   maxConstructorPicks Int      @default(3)
   createdAt           DateTime @default(now())
