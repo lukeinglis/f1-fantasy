@@ -41,9 +41,21 @@ export async function POST(req: Request) {
   const role = userCount === 0 ? "admin" : "player";
 
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: { name, passwordHash, role },
-  });
+
+  let user;
+  try {
+    user = await prisma.user.create({
+      data: { name, passwordHash, role },
+    });
+  } catch (err: unknown) {
+    // Handle race condition: two concurrent registrations with the same name.
+    // The unique constraint on User.name will reject the second insert.
+    const code = (err as { code?: string })?.code;
+    if (code === "P2002") {
+      return NextResponse.json({ error: "Name already taken" }, { status: 409 });
+    }
+    throw err;
+  }
 
   return NextResponse.json({
     id: user.id,
