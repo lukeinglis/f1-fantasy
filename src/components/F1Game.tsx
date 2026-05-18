@@ -99,6 +99,7 @@ export default function F1Game() {
     bestScore: 0,
     raceIndex: 0,
     shakeUntil: 0,
+    lastTime: 0, // for delta-time
   });
 
   const animRef = useRef<number>(0);
@@ -482,14 +483,19 @@ export default function F1Game() {
     [],
   );
 
-  // ── Game loop ──
-  const gameLoop = useCallback(() => {
+  // ── Game loop (delta-time corrected: same speed at any refresh rate) ──
+  const gameLoop = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const s = stateRef.current;
     if (!s.running) return;
+
+    // Delta-time: normalize to 60fps baseline. Clamp to prevent spiral on tab-switch.
+    const rawDt = s.lastTime === 0 ? 16.67 : timestamp - s.lastTime;
+    s.lastTime = timestamp;
+    const dt = Math.min(rawDt, 50) / 16.67; // 1.0 at 60fps, 0.5 at 120fps, 2.0 at 30fps
 
     const { w, h } = s;
     const grandstandH = 22;
@@ -498,25 +504,25 @@ export default function F1Game() {
     const playBot = h - grandstandH - kerbH;
     const carX = w * CAR_X_RATIO;
 
-    // ── Physics ──
+    // ── Physics (all multiplied by dt) ──
     if (s.holding) {
-      s.vel += LIFT;
+      s.vel += LIFT * dt;
     } else {
-      s.vel += GRAVITY;
+      s.vel += GRAVITY * dt;
     }
     s.vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, s.vel));
-    s.carY += s.vel;
+    s.carY += s.vel * dt;
 
     // ── Difficulty ramp ──
-    s.distance += s.speed;
+    s.distance += s.speed * dt;
     s.speed = Math.min(MAX_SPEED, INITIAL_SPEED + s.distance * 0.0003);
     s.gapSize = Math.max(MIN_GAP, INITIAL_GAP - s.distance * 0.008);
     s.score = Math.floor(s.distance / 10);
-    s.scrollOffset += s.speed;
+    s.scrollOffset += s.speed * dt;
 
     // ── Move barriers left ──
     for (const b of s.barriers) {
-      b.x -= s.speed;
+      b.x -= s.speed * dt;
     }
     s.barriers = s.barriers.filter((b) => b.x + BARRIER_W > -10);
 
@@ -544,8 +550,8 @@ export default function F1Game() {
       });
     }
 
-    // ── Particles (exhaust trail to the LEFT from rear of car) ──
-    if (Math.random() < 0.6) {
+    // ── Particles (exhaust trail, dt-adjusted spawn rate) ──
+    if (Math.random() < 0.6 * dt) {
       const isSpark = Math.random() < 0.3;
       const life = isSpark ? 12 : 18;
       s.particles.push({
@@ -560,9 +566,9 @@ export default function F1Game() {
       });
     }
     for (const p of s.particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life -= 1;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
     }
     s.particles = s.particles.filter((p) => p.life > 0);
 
@@ -713,6 +719,7 @@ export default function F1Game() {
     s.scrollOffset = 0;
     s.raceIndex = Math.floor(Math.random() * RACE_NAMES.length);
     s.shakeUntil = 0;
+    s.lastTime = 0;
 
     setGameOver(false);
     setStarted(true);
