@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
+import { DriverAvatar } from "@/components/DriverAvatar";
 
 export const dynamic = "force-dynamic";
 
@@ -361,6 +362,7 @@ export default async function StatsPage() {
                 const pct = maxPick > 0 ? (d.count / maxPick) * 100 : 0;
                 return (
                   <div key={d.driverId} className="flex items-center gap-2">
+                    <DriverAvatar driverId={d.driverId} size={20} />
                     <span className="text-xs font-mono text-zinc-400 w-10">
                       {d.code}
                     </span>
