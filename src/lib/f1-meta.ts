@@ -52,3 +52,7 @@ export function teamShort(constructorId: string): string {
   }
   return short ?? constructorId.substring(0, 3).toUpperCase();
 }
+
+export function driverImage(driverId: string): string {
+  return `/drivers/${driverId}.png`;
+}
