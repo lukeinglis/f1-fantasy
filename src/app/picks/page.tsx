@@ -219,6 +219,15 @@ export default async function MyPicksPage() {
                     style={{ backgroundColor: color }}
                   />
 
+                  {p.team && (
+                    <span
+                      className="absolute right-[-0.25rem] top-1/2 -translate-y-1/2 text-4xl font-black uppercase pointer-events-none select-none leading-none"
+                      style={{ color: `${color}28` }}
+                    >
+                      {teamShort(p.team.id)}
+                    </span>
+                  )}
+
                   <div className="p-3 pl-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-1.5">
