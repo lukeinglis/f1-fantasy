@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DriverAvatar } from "@/components/DriverAvatar";
 
 interface PredictionSlot {
   position: number;
@@ -195,6 +196,7 @@ export default function PredictionResults({
                     <span className="font-bold w-8 text-right tabular-nums">
                       P{pos}
                     </span>
+                    <DriverAvatar driverId={pred.driverId} size={24} className="shrink-0" />
                     <span className="flex-1 truncate">
                       {pred.driverName}
                       {pred.driverCode && (
