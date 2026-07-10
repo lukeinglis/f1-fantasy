@@ -8,6 +8,7 @@ import PickForm from "@/components/PickForm";
 import PredictionForm from "@/components/PredictionForm";
 import PredictionResults from "@/components/PredictionResults";
 import Countdown from "@/components/Countdown";
+import { DriverAvatar } from "@/components/DriverAvatar";
 
 export const dynamic = "force-dynamic";
 
@@ -394,14 +395,19 @@ export default async function RaceDetailPage(props: {
                         )}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        {p.driver
-                          ? `${p.driver.givenName} ${p.driver.familyName}`
-                          : "—"}
-                        {p.driver?.code && (
-                          <span className="text-zinc-500 text-xs ml-1">
-                            {p.driver.code}
-                          </span>
-                        )}
+                        <span className="inline-flex items-center gap-1.5">
+                          {p.driver && (
+                            <DriverAvatar driverId={p.driver.id} size={28} className="shrink-0" />
+                          )}
+                          {p.driver
+                            ? `${p.driver.givenName} ${p.driver.familyName}`
+                            : "—"}
+                          {p.driver?.code && (
+                            <span className="text-zinc-500 text-xs ml-1">
+                              {p.driver.code}
+                            </span>
+                          )}
+                        </span>
                       </td>
                       <td className="px-4 py-3">
                         {p.team ? (
@@ -496,7 +502,10 @@ export default async function RaceDetailPage(props: {
                         )}
                       </td>
                       <td className="px-4 py-2.5">
-                        {d ? `${d.givenName} ${d.familyName}` : r.driverId}
+                        <span className="inline-flex items-center gap-1.5">
+                          <DriverAvatar driverId={r.driverId} size={24} className="shrink-0" />
+                          {d ? `${d.givenName} ${d.familyName}` : r.driverId}
+                        </span>
                       </td>
                       <td className="px-4 py-2.5">
                         {c ? (
