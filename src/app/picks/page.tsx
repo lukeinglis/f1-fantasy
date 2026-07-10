@@ -156,13 +156,18 @@ export default async function MyPicksPage() {
                         )}
                       </td>
                       <td className="px-4 py-2.5 whitespace-nowrap">
-                        {p.driver
-                          ? `${p.driver.givenName} ${p.driver.familyName}`
-                          : "—"}
-                        {p.driver?.code && (
-                          <span className="text-zinc-500 text-xs ml-1">
-                            {p.driver.code}
+                        {p.driver ? (
+                          <span className="inline-flex items-center gap-1.5">
+                            <DriverAvatar driverId={p.driver.id} size={24} />
+                            {p.driver.givenName} {p.driver.familyName}
+                            {p.driver.code && (
+                              <span className="text-zinc-500 text-xs">
+                                {p.driver.code}
+                              </span>
+                            )}
                           </span>
+                        ) : (
+                          "—"
                         )}
                       </td>
                       <td className="px-4 py-2.5">

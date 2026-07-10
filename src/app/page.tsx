@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
-import { teamShort } from "@/lib/f1-meta";
+import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
+import { DriverAvatar } from "@/components/DriverAvatar";
 import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
 import { auth } from "@/lib/auth";
@@ -40,6 +41,8 @@ interface SeasonStat {
   value: string;
   sub?: string;
   color?: string;
+  driverId?: string;
+  constructorId?: string;
 }
 
 interface PickBannerData {
@@ -58,7 +61,9 @@ interface PickBannerData {
 
 interface ExistingPickInfo {
   driverCode: string | null;
+  driverId: string | null;
   constructorShort: string;
+  constructorId: string | null;
   raceId: string;
 }
 
@@ -223,15 +228,16 @@ async function getHomeData() {
       });
     }
   }
-  const topDriver = Array.from(driverCounts.values()).sort(
-    (a, b) => b.count - a.count,
+  const topDriverEntry = Array.from(driverCounts.entries()).sort(
+    (a, b) => b[1].count - a[1].count,
   )[0];
-  if (topDriver) {
+  if (topDriverEntry) {
     stats.push({
       label: "Most picked driver",
-      value: topDriver.name,
-      sub: `${topDriver.count} picks`,
+      value: topDriverEntry[1].name,
+      sub: `${topDriverEntry[1].count} picks`,
       color: "text-emerald-400",
+      driverId: topDriverEntry[0],
     });
   }
 
@@ -259,7 +265,7 @@ async function getHomeData() {
       label: "Most picked constructor",
       value: teamShort(topCons.id),
       sub: `${topCons.count} picks`,
-      color: "text-blue-400",
+      constructorId: topCons.id,
     });
   }
 
@@ -309,7 +315,7 @@ async function getHomeData() {
     const myPickForNext = await prisma.pick.findUnique({
       where: { userId_raceId: { userId, raceId: nextRace.id } },
       include: {
-        driver: { select: { code: true } },
+        driver: { select: { id: true, code: true } },
         team: { select: { id: true } },
       },
     });
@@ -317,7 +323,9 @@ async function getHomeData() {
     if (myPickForNext && (myPickForNext.driverId || myPickForNext.teamId)) {
       existingPick = {
         driverCode: myPickForNext.driver?.code ?? null,
+        driverId: myPickForNext.driver?.id ?? null,
         constructorShort: myPickForNext.team ? teamShort(myPickForNext.team.id) : "—",
+        constructorId: myPickForNext.team?.id ?? null,
         raceId: nextRace.id,
       };
     } else {
@@ -422,16 +430,31 @@ export default async function HomePage() {
                 />
               </div>
               {existingPick && (
-                <div className="mt-2 text-sm text-zinc-400">
-                  You picked{" "}
-                  <span className="text-zinc-200 font-medium">
-                    {existingPick.driverCode ?? "—"}
+                <div className="mt-2 text-sm text-zinc-400 flex items-center gap-1.5 flex-wrap">
+                  <span>You picked</span>
+                  <span className="inline-flex items-center gap-1">
+                    {existingPick.driverId && (
+                      <DriverAvatar driverId={existingPick.driverId} size={20} />
+                    )}
+                    <span className="text-zinc-200 font-medium">
+                      {existingPick.driverCode ?? "—"}
+                    </span>
                   </span>
-                  {" + "}
-                  <span className="text-zinc-200 font-medium">
-                    {existingPick.constructorShort}
-                  </span>
-                  {" for this race "}
+                  <span>+</span>
+                  {existingPick.constructorId ? (
+                    <span
+                      className="px-1.5 py-0.5 rounded text-[11px] font-bold"
+                      style={{
+                        backgroundColor: teamColor(existingPick.constructorId),
+                        color: teamTextColor(existingPick.constructorId),
+                      }}
+                    >
+                      {existingPick.constructorShort}
+                    </span>
+                  ) : (
+                    <span className="text-zinc-200 font-medium">—</span>
+                  )}
+                  <span>for this race</span>
                   <Link
                     href={`/races/${existingPick.raceId}`}
                     className="text-red-400 hover:text-red-300 underline underline-offset-2"
@@ -507,9 +530,28 @@ export default async function HomePage() {
               <div className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
                 {s.label}
               </div>
-              <div className={`text-xl font-bold ${s.color ?? "text-white"}`}>
-                {s.value}
-              </div>
+              {s.driverId ? (
+                <div className="flex items-center gap-2">
+                  <DriverAvatar driverId={s.driverId} size={24} />
+                  <span className={`text-xl font-bold ${s.color ?? "text-white"}`}>
+                    {s.value}
+                  </span>
+                </div>
+              ) : s.constructorId ? (
+                <span
+                  className="inline-block px-2 py-0.5 rounded text-sm font-bold"
+                  style={{
+                    backgroundColor: teamColor(s.constructorId),
+                    color: teamTextColor(s.constructorId),
+                  }}
+                >
+                  {s.value}
+                </span>
+              ) : (
+                <div className={`text-xl font-bold ${s.color ?? "text-white"}`}>
+                  {s.value}
+                </div>
+              )}
               {s.sub && (
                 <div className="text-xs text-zinc-400 mt-0.5">{s.sub}</div>
               )}
