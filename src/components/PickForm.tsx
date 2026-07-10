@@ -139,7 +139,7 @@ export default function PickForm(props: Props) {
                       ? "ring-2 ring-red-500 border-red-500 cursor-pointer"
                       : "border-zinc-600 hover:border-zinc-500 cursor-pointer"
                 }`}
-                style={{ borderLeftColor: color }}
+                style={{ borderLeftColor: exhausted ? '#52525b' : selected ? '#ef4444' : color }}
               >
                 <div
                   className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
