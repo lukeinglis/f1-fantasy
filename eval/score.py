@@ -39,7 +39,7 @@ def eval_lint() -> dict:
             "score": score,
             "weight": 0.6666666666666666,
             "passed": passed,
-            "details": (result.stdout or result.stderr).strip()[-500:],
+            "details": (result.stdout + '\n' + result.stderr).strip()[-500:],
         }
     except subprocess.TimeoutExpired:
         return {
@@ -74,7 +74,7 @@ def eval_type_check() -> dict:
             "score": score,
             "weight": 0.19999999999999998,
             "passed": passed,
-            "details": (result.stdout or result.stderr).strip()[-500:],
+            "details": (result.stdout + '\n' + result.stderr).strip()[-500:],
         }
     except subprocess.TimeoutExpired:
         return {
@@ -132,6 +132,8 @@ def eval_observability() -> dict:
         fn_names = []
         for pat in fn_pats:
             fn_names.extend(re.findall(pat, code))
+        js_keywords = {'if', 'else', 'while', 'for', 'switch', 'catch', 'return', 'do', 'throw', 'new', 'typeof', 'instanceof', 'delete', 'void', 'in', 'of'}
+        fn_names = [n for n in fn_names if n not in js_keywords]
         fn_count = len(set(fn_names))
         total_fn += fn_count
 

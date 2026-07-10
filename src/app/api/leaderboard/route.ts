@@ -7,7 +7,7 @@ const log = createModuleLogger("api/leaderboard");
 // Aggregate season leaderboard. Sums Score.totalPoints across all races
 // where results have been locked. Players with no scores yet show 0.
 export async function GET() {
-  log.info("GET leaderboard");
+  log.info({ path: '/api/leaderboard' }, 'GET leaderboard');
   const league = await prisma.league.findFirst();
   const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 

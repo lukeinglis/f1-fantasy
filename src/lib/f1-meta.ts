@@ -20,7 +20,7 @@ export const TEAM_COLORS: Record<string, string> = {
 export function teamColor(constructorId: string): string {
   const color = TEAM_COLORS[constructorId];
   if (!color) {
-    log.warn({ constructorId }, "unknown team color, using fallback");
+    log.debug({ constructorId }, "unknown team color, using fallback");
   }
   return color ?? "#555555";
 }
@@ -48,7 +48,7 @@ export const TEAM_SHORT: Record<string, string> = {
 export function teamShort(constructorId: string): string {
   const short = TEAM_SHORT[constructorId];
   if (!short) {
-    log.warn({ constructorId }, "unknown team short name, using fallback");
+    log.debug({ constructorId }, "unknown team short name, using fallback");
   }
   return short ?? constructorId.substring(0, 3).toUpperCase();
 }

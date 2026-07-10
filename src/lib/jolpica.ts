@@ -66,29 +66,29 @@ async function get(path: string): Promise<unknown> {
 }
 
 export async function fetchSeasonRaces(season: number): Promise<JolpicaRace[]> {
-  log.info({ season }, "fetchSeasonRaces");
+  log.debug({ season }, "fetchSeasonRaces");
   type Resp = { MRData: { RaceTable: { Races: JolpicaRace[] } } };
   const data = (await get(`${season}.json?limit=100`)) as Resp;
   const races = data.MRData.RaceTable.Races;
-  log.info({ season, count: races.length }, "fetchSeasonRaces complete");
+  log.debug({ season, count: races.length }, "fetchSeasonRaces complete");
   return races;
 }
 
 export async function fetchSeasonDrivers(
   season: number,
 ): Promise<JolpicaDriver[]> {
-  log.info({ season }, "fetchSeasonDrivers");
+  log.debug({ season }, "fetchSeasonDrivers");
   type Resp = { MRData: { DriverTable: { Drivers: JolpicaDriver[] } } };
   const data = (await get(`${season}/drivers.json?limit=60`)) as Resp;
   const drivers = data.MRData.DriverTable.Drivers;
-  log.info({ season, count: drivers.length }, "fetchSeasonDrivers complete");
+  log.debug({ season, count: drivers.length }, "fetchSeasonDrivers complete");
   return drivers;
 }
 
 export async function fetchSeasonConstructors(
   season: number,
 ): Promise<JolpicaConstructor[]> {
-  log.info({ season }, "fetchSeasonConstructors");
+  log.debug({ season }, "fetchSeasonConstructors");
   type Resp = {
     MRData: { ConstructorTable: { Constructors: JolpicaConstructor[] } };
   };
@@ -96,7 +96,7 @@ export async function fetchSeasonConstructors(
     `${season}/constructors.json?limit=30`,
   )) as Resp;
   const constructors = data.MRData.ConstructorTable.Constructors;
-  log.info({ season, count: constructors.length }, "fetchSeasonConstructors complete");
+  log.debug({ season, count: constructors.length }, "fetchSeasonConstructors complete");
   return constructors;
 }
 
@@ -104,7 +104,7 @@ export async function fetchRaceResults(
   season: number,
   round: number,
 ): Promise<{ race: JolpicaRace; results: JolpicaResult[] } | null> {
-  log.info({ season, round }, "fetchRaceResults");
+  log.debug({ season, round }, "fetchRaceResults");
   type Resp = {
     MRData: {
       RaceTable: {
@@ -119,7 +119,7 @@ export async function fetchRaceResults(
     return null;
   }
   const results = r.Results ?? [];
-  log.info({ season, round, resultCount: results.length }, "fetchRaceResults complete");
+  log.debug({ season, round, resultCount: results.length }, "fetchRaceResults complete");
   return { race: r, results };
 }
 
