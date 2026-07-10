@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { DriverAvatar } from "@/components/DriverAvatar";
+import { teamColor, teamTextColor, teamShort } from "@/lib/f1-meta";
 
 interface DriverOpt {
   id: string;
@@ -66,81 +68,101 @@ export default function PickForm(props: Props) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      <div className="grid sm:grid-cols-2 gap-5">
-        {/* Driver selector */}
-        <div>
-          <label className="block text-sm font-medium mb-2 text-zinc-300">
-            Driver
-          </label>
-          <select
-            value={driverId}
-            onChange={(e) => {
-              setDriverId(e.target.value);
-              setSavedAt(null);
-            }}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors"
-          >
-            <option value="">Select a driver...</option>
-            {props.drivers.map((d) => {
-              const used = props.driverUses[d.id] ?? 0;
-              const exhausted =
-                used >= props.maxDriverPicks && d.id !== props.currentDriverId;
-              return (
-                <option key={d.id} value={d.id} disabled={exhausted}>
-                  {d.familyName}, {d.givenName}
-                  {d.code ? ` (${d.code})` : ""}
-                  {used > 0 ? ` [${used}/${props.maxDriverPicks}]` : ""}
-                  {exhausted ? " EXHAUSTED" : ""}
-                </option>
-              );
-            })}
-          </select>
-          <UsageSummary
-            uses={props.driverUses}
-            max={props.maxDriverPicks}
-            items={props.drivers.map((d) => ({
-              id: d.id,
-              label: d.code ?? d.familyName.slice(0, 3).toUpperCase(),
-            }))}
-          />
+      {/* Driver card grid */}
+      <div>
+        <p className="text-sm font-medium text-zinc-300 mb-2">Driver</p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+          {props.drivers.map((d) => {
+            const used = props.driverUses[d.id] ?? 0;
+            const exhausted =
+              used >= props.maxDriverPicks && d.id !== props.currentDriverId;
+            const selected = driverId === d.id;
+            return (
+              <button
+                type="button"
+                key={d.id}
+                disabled={exhausted}
+                onClick={() => {
+                  if (exhausted) return;
+                  setDriverId(selected ? "" : d.id);
+                  setSavedAt(null);
+                }}
+                className={`flex flex-col items-center bg-zinc-800 border rounded-lg px-2 py-2 text-center transition-all ${
+                  exhausted
+                    ? "opacity-30 cursor-not-allowed border-zinc-600"
+                    : selected
+                      ? "ring-2 ring-red-500 border-red-500 bg-red-900/10 cursor-pointer"
+                      : "border-zinc-600 hover:border-zinc-500 cursor-pointer"
+                }`}
+              >
+                <DriverAvatar driverId={d.id} size={32} className="shrink-0" />
+                <span className="text-xs font-bold text-zinc-200 mt-1">
+                  {d.code ?? d.id.substring(0, 3).toUpperCase()}
+                </span>
+                <span className="text-[10px] text-zinc-500 truncate w-full">
+                  {d.familyName}
+                </span>
+                <span className="text-[9px] text-zinc-600 mt-0.5">
+                  {used}/{props.maxDriverPicks}
+                </span>
+              </button>
+            );
+          })}
         </div>
+      </div>
 
-        {/* Constructor selector */}
-        <div>
-          <label className="block text-sm font-medium mb-2 text-zinc-300">
-            Constructor
-          </label>
-          <select
-            value={consId}
-            onChange={(e) => {
-              setConsId(e.target.value);
-              setSavedAt(null);
-            }}
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2.5 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors"
-          >
-            <option value="">Select a constructor...</option>
-            {props.constructors.map((c) => {
-              const used = props.constructorUses[c.id] ?? 0;
-              const exhausted =
-                used >= props.maxConstructorPicks &&
-                c.id !== props.currentConstructorId;
-              return (
-                <option key={c.id} value={c.id} disabled={exhausted}>
-                  {c.name}
-                  {used > 0 ? ` [${used}/${props.maxConstructorPicks}]` : ""}
-                  {exhausted ? " EXHAUSTED" : ""}
-                </option>
-              );
-            })}
-          </select>
-          <UsageSummary
-            uses={props.constructorUses}
-            max={props.maxConstructorPicks}
-            items={props.constructors.map((c) => ({
-              id: c.id,
-              label: c.name,
-            }))}
-          />
+      {/* Constructor card grid */}
+      <div>
+        <p className="text-sm font-medium text-zinc-300 mb-2">Constructor</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+          {props.constructors.map((c) => {
+            const used = props.constructorUses[c.id] ?? 0;
+            const exhausted =
+              used >= props.maxConstructorPicks &&
+              c.id !== props.currentConstructorId;
+            const selected = consId === c.id;
+            const color = teamColor(c.id);
+            return (
+              <button
+                type="button"
+                key={c.id}
+                disabled={exhausted}
+                onClick={() => {
+                  if (exhausted) return;
+                  setConsId(selected ? "" : c.id);
+                  setSavedAt(null);
+                }}
+                className={`flex items-center gap-2 bg-zinc-800 border rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
+                  exhausted
+                    ? "opacity-30 cursor-not-allowed border-zinc-600"
+                    : selected
+                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer"
+                      : "border-zinc-600 hover:border-zinc-500 cursor-pointer"
+                }`}
+                style={{ borderLeftColor: color }}
+              >
+                <div
+                  className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
+                  style={{
+                    backgroundColor: color,
+                    color: teamTextColor(c.id),
+                  }}
+                >
+                  <span className="text-[10px] font-bold">
+                    {teamShort(c.id)}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-xs font-medium text-zinc-200 block truncate">
+                    {c.name}
+                  </span>
+                  <span className="text-[9px] text-zinc-600">
+                    {used}/{props.maxConstructorPicks}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -169,46 +191,5 @@ export default function PickForm(props: Props) {
         </span>
       </div>
     </form>
-  );
-}
-
-function UsageSummary({
-  uses,
-  max,
-  items,
-}: {
-  uses: Record<string, number>;
-  max: number;
-  items: { id: string; label: string }[];
-}) {
-  const usedItems = items.filter((i) => (uses[i.id] ?? 0) > 0);
-  if (usedItems.length === 0) {
-    return (
-      <p className="text-xs text-zinc-600 mt-2">
-        No uses yet. Max {max} per selection.
-      </p>
-    );
-  }
-  return (
-    <div className="mt-2 flex flex-wrap gap-1">
-      {usedItems
-        .sort((a, b) => (uses[b.id] ?? 0) - (uses[a.id] ?? 0))
-        .map((i) => {
-          const used = uses[i.id] ?? 0;
-          const exhausted = used >= max;
-          return (
-            <span
-              key={i.id}
-              className={`text-[10px] px-1.5 py-0.5 rounded font-medium tracking-wide ${
-                exhausted
-                  ? "bg-red-900/40 text-red-400 border border-red-800 line-through"
-                  : "bg-zinc-800 text-zinc-400 border border-zinc-700"
-              }`}
-            >
-              {i.label} {used}/{max}
-            </span>
-          );
-        })}
-    </div>
   );
 }
