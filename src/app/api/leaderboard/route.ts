@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("api/leaderboard");
 
 // Aggregate season leaderboard. Sums Score.totalPoints across all races
 // where results have been locked. Players with no scores yet show 0.
 export async function GET() {
+  log.info({ path: '/api/leaderboard' }, 'GET leaderboard');
   const league = await prisma.league.findFirst();
   const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
@@ -59,6 +63,7 @@ export async function GET() {
     })
     .sort((a, b) => b.totalPoints - a.totalPoints);
 
+  log.info({ season, playerCount: rows.length }, "GET leaderboard complete");
   return NextResponse.json({ season, leaderboard: rows });
 }
 

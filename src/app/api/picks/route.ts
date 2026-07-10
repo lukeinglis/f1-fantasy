@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("api/picks");
 
 // API contract uses "constructorId" externally (the F1 term).
 // Internally the DB column is "teamId" because "constructor" clashes with JS prototype names.
@@ -14,6 +17,7 @@ const Body = z.object({
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user?.id) {
+    log.warn("POST picks: unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const userId = session.user.id;
@@ -32,7 +36,8 @@ export async function POST(req: Request) {
     );
   }
   const { raceId, driverId, constructorId } = parsed.data;
-  const teamId = constructorId; // map external name to internal field
+  const teamId = constructorId;
+  log.info({ userId, raceId, driverId, constructorId }, "POST pick submission");
 
   const race = await prisma.race.findUnique({ where: { id: raceId } });
   if (!race) {
@@ -100,6 +105,7 @@ export async function POST(req: Request) {
     },
   });
 
+  log.info({ userId, raceId, pickId: pick.id, replaced: !!existing }, "POST pick saved");
   return NextResponse.json({
     pick: {
       id: pick.id,
@@ -116,9 +122,11 @@ export async function POST(req: Request) {
 export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
+    log.warn("GET picks: unauthorized");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const userId = session.user.id;
+  log.info({ userId }, "GET picks");
   const picks = await prisma.pick.findMany({
     where: { userId },
     include: {
@@ -149,5 +157,6 @@ export async function GET() {
     constructor: p.team,
     submittedAt: p.submittedAt,
   }));
+  log.info({ userId, count: shaped.length }, "GET picks complete");
   return NextResponse.json({ picks: shaped });
 }

@@ -4,6 +4,10 @@
 // We only fetch the small set of endpoints we need for this MVP and
 // shape the responses into plain JS objects the rest of the app uses.
 
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("jolpica");
+
 const BASE = process.env.JOLPICA_BASE_URL || "https://api.jolpi.ca/ergast/f1";
 
 export interface JolpicaRace {
@@ -46,47 +50,61 @@ export interface JolpicaResult {
 
 async function get(path: string): Promise<unknown> {
   const url = `${BASE}/${path}`;
+  const start = Date.now();
+  log.info({ url }, "jolpica request");
   const res = await fetch(url, {
-    // Avoid Next.js default caching for live data
     cache: "no-store",
     headers: { Accept: "application/json" },
   });
+  const durationMs = Date.now() - start;
   if (!res.ok) {
+    log.error({ url, status: res.status, durationMs }, "jolpica request failed");
     throw new Error(`Jolpica ${url} -> ${res.status}`);
   }
+  log.info({ url, status: res.status, durationMs }, "jolpica request ok");
   return res.json();
 }
 
 export async function fetchSeasonRaces(season: number): Promise<JolpicaRace[]> {
+  log.debug({ season }, "fetchSeasonRaces");
   type Resp = { MRData: { RaceTable: { Races: JolpicaRace[] } } };
   const data = (await get(`${season}.json?limit=100`)) as Resp;
-  return data.MRData.RaceTable.Races;
+  const races = data.MRData.RaceTable.Races;
+  log.debug({ season, count: races.length }, "fetchSeasonRaces complete");
+  return races;
 }
 
 export async function fetchSeasonDrivers(
   season: number,
 ): Promise<JolpicaDriver[]> {
+  log.debug({ season }, "fetchSeasonDrivers");
   type Resp = { MRData: { DriverTable: { Drivers: JolpicaDriver[] } } };
   const data = (await get(`${season}/drivers.json?limit=60`)) as Resp;
-  return data.MRData.DriverTable.Drivers;
+  const drivers = data.MRData.DriverTable.Drivers;
+  log.debug({ season, count: drivers.length }, "fetchSeasonDrivers complete");
+  return drivers;
 }
 
 export async function fetchSeasonConstructors(
   season: number,
 ): Promise<JolpicaConstructor[]> {
+  log.debug({ season }, "fetchSeasonConstructors");
   type Resp = {
     MRData: { ConstructorTable: { Constructors: JolpicaConstructor[] } };
   };
   const data = (await get(
     `${season}/constructors.json?limit=30`,
   )) as Resp;
-  return data.MRData.ConstructorTable.Constructors;
+  const constructors = data.MRData.ConstructorTable.Constructors;
+  log.debug({ season, count: constructors.length }, "fetchSeasonConstructors complete");
+  return constructors;
 }
 
 export async function fetchRaceResults(
   season: number,
   round: number,
 ): Promise<{ race: JolpicaRace; results: JolpicaResult[] } | null> {
+  log.debug({ season, round }, "fetchRaceResults");
   type Resp = {
     MRData: {
       RaceTable: {
@@ -96,8 +114,13 @@ export async function fetchRaceResults(
   };
   const data = (await get(`${season}/${round}/results.json`)) as Resp;
   const r = data.MRData.RaceTable.Races[0];
-  if (!r) return null;
-  return { race: r, results: r.Results ?? [] };
+  if (!r) {
+    log.warn({ season, round }, "fetchRaceResults: no race found");
+    return null;
+  }
+  const results = r.Results ?? [];
+  log.debug({ season, round, resultCount: results.length }, "fetchRaceResults complete");
+  return { race: r, results };
 }
 
 // Combine the date + time fields from the API into a JS Date.

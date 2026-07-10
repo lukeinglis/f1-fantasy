@@ -1,3 +1,7 @@
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("f1-meta");
+
 // Constructor team colors (2026 season) keyed by jolpica constructorId
 export const TEAM_COLORS: Record<string, string> = {
   red_bull: "#3671C6",
@@ -14,7 +18,11 @@ export const TEAM_COLORS: Record<string, string> = {
 };
 
 export function teamColor(constructorId: string): string {
-  return TEAM_COLORS[constructorId] ?? "#555555";
+  const color = TEAM_COLORS[constructorId];
+  if (!color) {
+    log.debug({ constructorId }, "unknown team color, using fallback");
+  }
+  return color ?? "#555555";
 }
 
 export function teamTextColor(constructorId: string): string {
@@ -38,5 +46,9 @@ export const TEAM_SHORT: Record<string, string> = {
 };
 
 export function teamShort(constructorId: string): string {
-  return TEAM_SHORT[constructorId] ?? constructorId.substring(0, 3).toUpperCase();
+  const short = TEAM_SHORT[constructorId];
+  if (!short) {
+    log.debug({ constructorId }, "unknown team short name, using fallback");
+  }
+  return short ?? constructorId.substring(0, 3).toUpperCase();
 }

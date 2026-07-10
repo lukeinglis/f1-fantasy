@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("picks/page");
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +19,9 @@ export default async function MyPicksPage() {
   const league = await prisma.league.findFirst();
   const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
 
-  const [picks, drivers, constructors, scores] = await Promise.all([
+  const now = new Date();
+
+  const [picks, drivers, constructors, scores, currentRace] = await Promise.all([
     prisma.pick.findMany({
       where: { userId, race: { season } },
       include: {
@@ -29,7 +34,30 @@ export default async function MyPicksPage() {
     prisma.driver.findMany(),
     prisma.team.findMany(),
     prisma.score.findMany({ where: { userId } }),
+    prisma.race.findFirst({
+      where: { season, pickDeadline: { lte: now } },
+      orderBy: { round: "desc" },
+    }),
   ]);
+
+  const currentRacePicks = currentRace
+    ? await prisma.pick.findMany({
+        where: { raceId: currentRace.id },
+        include: {
+          user: { select: { id: true, name: true } },
+          driver: {
+            select: { id: true, givenName: true, familyName: true, code: true },
+          },
+          team: { select: { id: true, name: true } },
+        },
+        orderBy: { user: { name: "asc" } },
+      })
+    : [];
+
+  log.info(
+    { userId, currentRaceId: currentRace?.id, leaguePickCount: currentRacePicks.length },
+    "picks page loaded",
+  );
 
   const scoreByRace = new Map(scores.map((s) => [s.raceId, s]));
 
@@ -84,6 +112,81 @@ export default async function MyPicksPage() {
           showTeamColors
         />
       </section>
+
+      {/* Current race league picks (visible only after deadline) */}
+      {currentRace && currentRacePicks.length > 0 && (
+        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+            <Link
+              href={`/races/${currentRace.id}`}
+              className="hover:text-red-400 transition-colors"
+            >
+              R{currentRace.round} / {currentRace.name}
+            </Link>
+            <span className="text-sm text-zinc-400 font-normal ml-2">
+              League picks
+            </span>
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
+                <tr>
+                  <th className="text-left px-4 py-2">Player</th>
+                  <th className="text-left px-4 py-2">Driver</th>
+                  <th className="text-left px-4 py-2">Constructor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentRacePicks.map((p) => {
+                  const isMe = p.userId === userId;
+                  return (
+                    <tr
+                      key={p.id}
+                      className={`border-t border-zinc-800 ${
+                        isMe ? "bg-red-900/5" : "hover:bg-zinc-800/30"
+                      }`}
+                    >
+                      <td className="px-4 py-2.5 font-medium whitespace-nowrap">
+                        {p.user.name}
+                        {isMe && (
+                          <span className="text-zinc-500 text-xs ml-1.5">
+                            (you)
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        {p.driver
+                          ? `${p.driver.givenName} ${p.driver.familyName}`
+                          : "—"}
+                        {p.driver?.code && (
+                          <span className="text-zinc-500 text-xs ml-1">
+                            {p.driver.code}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        {p.team ? (
+                          <span
+                            className="px-2 py-0.5 rounded text-[11px] font-bold"
+                            style={{
+                              backgroundColor: teamColor(p.team.id),
+                              color: teamTextColor(p.team.id),
+                            }}
+                          >
+                            {teamShort(p.team.id)}
+                          </span>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
         <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">

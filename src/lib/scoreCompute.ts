@@ -1,5 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { pointsForPosition, predictionPointsForSlot } from "@/lib/scoring";
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("scoreCompute");
 
 // Recompute Score rows for every player for a single race.
 // Driver pick = position-points for picked driver.
@@ -7,8 +10,10 @@ import { pointsForPosition, predictionPointsForSlot } from "@/lib/scoring";
 export async function recomputeScoresForRace(
   raceId: string,
 ): Promise<{ updated: number }> {
+  log.info({ raceId }, "recomputeScoresForRace start");
   const results = await prisma.raceResult.findMany({ where: { raceId } });
   if (results.length === 0) {
+    log.info({ raceId }, "recomputeScoresForRace: no results");
     return { updated: 0 };
   }
 
@@ -63,6 +68,7 @@ export async function recomputeScoresForRace(
     data: { resultsLocked: true },
   });
 
+  log.info({ raceId, updated }, "recomputeScoresForRace complete");
   return { updated };
 }
 
@@ -70,8 +76,10 @@ export async function recomputeScoresForRace(
 export async function recomputePredictionScoresForRace(
   raceId: string,
 ): Promise<{ updated: number }> {
+  log.info({ raceId }, "recomputePredictionScoresForRace start");
   const results = await prisma.raceResult.findMany({ where: { raceId } });
   if (results.length === 0) {
+    log.info({ raceId }, "recomputePredictionScoresForRace: no results");
     return { updated: 0 };
   }
 
@@ -112,5 +120,6 @@ export async function recomputePredictionScoresForRace(
     updated += 1;
   }
 
+  log.info({ raceId, updated }, "recomputePredictionScoresForRace complete");
   return { updated };
 }
