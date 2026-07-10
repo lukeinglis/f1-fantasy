@@ -3,10 +3,12 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { TEAM_COLORS, teamTextColor, teamShort } from "@/lib/f1-meta";
 import { isPreSeasonRound } from "@/lib/season";
+import { DriverAvatar } from "@/components/DriverAvatar";
 
 export const dynamic = "force-dynamic";
 
 interface CellData {
+  driverId: string | null;
   driverCode: string | null;
   driverName: string | null;
   constructorId: string | null;
@@ -74,6 +76,7 @@ async function getGridData(currentUserId: string | null) {
     if (!pickMap.has(p.userId)) pickMap.set(p.userId, new Map());
     const userPicks = pickMap.get(p.userId)!;
     userPicks.set(p.raceId, {
+      driverId: p.driver?.id ?? null,
       driverCode:
         p.driver?.code ??
         p.driver?.familyName?.substring(0, 3).toUpperCase() ??
@@ -277,25 +280,44 @@ export default async function GridPage() {
                       ? teamTextColor(cell.constructorId)
                       : "#fff";
 
+                    const shortName = cell.constructorId
+                      ? teamShort(cell.constructorId)
+                      : "";
+
                     return (
                       <td
                         key={r.id}
-                        className="rounded-md text-center py-1.5 px-1 cursor-default transition-transform hover:scale-110 hover:z-10 hover:shadow-lg hover:shadow-black/40 relative group"
+                        className="rounded-md text-center py-1.5 px-1 cursor-default transition-transform hover:scale-110 hover:z-10 hover:shadow-lg hover:shadow-black/40 relative group overflow-hidden"
                         style={{ backgroundColor: bgColor, color: txtColor }}
                       >
-                        <div className="font-bold text-xs leading-tight">
-                          {cell.driverCode ?? "?"}
-                        </div>
-                        <div className="text-[9px] leading-tight opacity-75 font-medium">
-                          {cell.constructorId
-                            ? teamShort(cell.constructorId)
-                            : ""}
-                        </div>
-                        {cell.totalPoints != null && (
-                          <div className="text-[10px] font-bold leading-tight mt-0.5 opacity-90">
-                            {cell.totalPoints}
+                        {shortName && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none select-none text-xl font-black leading-none"
+                            style={{ color: txtColor, opacity: 0.12 }}
+                          >
+                            {shortName}
                           </div>
                         )}
+                        <div className="relative z-[1] flex flex-col items-center gap-0.5">
+                          {cell.driverId && (
+                            <DriverAvatar
+                              driverId={cell.driverId}
+                              size={28}
+                              className="ring-1 ring-white/20"
+                            />
+                          )}
+                          <div className="font-bold text-[10px] leading-tight">
+                            {cell.driverCode ?? "?"}
+                          </div>
+                          <div className="text-[8px] leading-tight opacity-70 font-semibold">
+                            {shortName}
+                          </div>
+                          {cell.totalPoints != null && (
+                            <div className="text-[10px] font-bold leading-tight opacity-90">
+                              {cell.totalPoints}
+                            </div>
+                          )}
+                        </div>
                         {/* Tooltip */}
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
                           <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap shadow-xl">
