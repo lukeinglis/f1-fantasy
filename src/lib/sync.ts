@@ -6,6 +6,9 @@ import {
   fetchSeasonDrivers,
   fetchSeasonRaces,
 } from "@/lib/jolpica";
+import { createModuleLogger } from "@/lib/logger";
+
+const log = createModuleLogger("sync");
 
 // Pull the calendar, drivers, and constructors for a season from jolpica
 // and upsert into the local DB.
@@ -14,6 +17,7 @@ export async function syncSeason(season: number): Promise<{
   drivers: number;
   constructors: number;
 }> {
+  log.info({ season }, "syncSeason start");
   const [races, drivers, constructors] = await Promise.all([
     fetchSeasonRaces(season),
     fetchSeasonDrivers(season),
@@ -81,11 +85,13 @@ export async function syncSeason(season: number): Promise<{
     });
   }
 
-  return {
+  const result = {
     races: races.length,
     drivers: drivers.length,
     constructors: constructors.length,
   };
+  log.info({ season, ...result }, "syncSeason complete");
+  return result;
 }
 
 // Pull race results for one round.
@@ -93,8 +99,10 @@ export async function syncRaceResults(
   season: number,
   round: number,
 ): Promise<{ results: number; available: boolean }> {
+  log.info({ season, round }, "syncRaceResults start");
   const data = await fetchRaceResults(season, round);
   if (!data || data.results.length === 0) {
+    log.info({ season, round }, "syncRaceResults: no results available");
     return { results: 0, available: false };
   }
 
@@ -152,5 +160,6 @@ export async function syncRaceResults(
     });
   }
 
+  log.info({ season, round, results: data.results.length }, "syncRaceResults complete");
   return { results: data.results.length, available: true };
 }
