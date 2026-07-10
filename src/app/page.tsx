@@ -4,6 +4,8 @@ import { isPreSeasonRound } from "@/lib/season";
 import { teamShort } from "@/lib/f1-meta";
 import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
+import { auth } from "@/lib/auth";
+import PickForm from "@/components/PickForm";
 import F1Game from "@/components/F1Game";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +40,26 @@ interface SeasonStat {
   value: string;
   sub?: string;
   color?: string;
+}
+
+interface PickBannerData {
+  raceId: string;
+  raceName: string;
+  raceRound: number;
+  drivers: { id: string; code: string | null; givenName: string; familyName: string }[];
+  constructors: { id: string; name: string }[];
+  currentDriverId: string | null;
+  currentConstructorId: string | null;
+  driverUses: Record<string, number>;
+  constructorUses: Record<string, number>;
+  maxDriverPicks: number;
+  maxConstructorPicks: number;
+}
+
+interface ExistingPickInfo {
+  driverCode: string | null;
+  constructorShort: string;
+  raceId: string;
 }
 
 async function getHomeData() {
@@ -276,6 +298,67 @@ async function getHomeData() {
     }
   }
 
+  // Pick banner: check if logged-in user needs to pick for the next race
+  let pickBanner: PickBannerData | null = null;
+  let existingPick: ExistingPickInfo | null = null;
+
+  const session = await auth();
+  const userId = session?.user?.id as string | undefined;
+
+  if (nextRace && userId) {
+    const myPickForNext = await prisma.pick.findUnique({
+      where: { userId_raceId: { userId, raceId: nextRace.id } },
+      include: {
+        driver: { select: { code: true } },
+        team: { select: { id: true } },
+      },
+    });
+
+    if (myPickForNext && (myPickForNext.driverId || myPickForNext.teamId)) {
+      existingPick = {
+        driverCode: myPickForNext.driver?.code ?? null,
+        constructorShort: myPickForNext.team ? teamShort(myPickForNext.team.id) : "—",
+        raceId: nextRace.id,
+      };
+    } else {
+      const [drivers, constructors, myPicks] = await Promise.all([
+        prisma.driver.findMany({ orderBy: { familyName: "asc" } }),
+        prisma.team.findMany({ orderBy: { name: "asc" } }),
+        prisma.pick.findMany({
+          where: { userId },
+          select: { driverId: true, teamId: true, raceId: true },
+        }),
+      ]);
+
+      const driverUses: Record<string, number> = {};
+      const constructorUses: Record<string, number> = {};
+      for (const p of myPicks) {
+        if (p.raceId === nextRace.id) continue;
+        if (p.driverId) driverUses[p.driverId] = (driverUses[p.driverId] ?? 0) + 1;
+        if (p.teamId) constructorUses[p.teamId] = (constructorUses[p.teamId] ?? 0) + 1;
+      }
+
+      pickBanner = {
+        raceId: nextRace.id,
+        raceName: nextRace.name,
+        raceRound: nextRace.round,
+        drivers: drivers.map((d) => ({
+          id: d.id,
+          code: d.code,
+          givenName: d.givenName,
+          familyName: d.familyName,
+        })),
+        constructors: constructors.map((c) => ({ id: c.id, name: c.name })),
+        currentDriverId: null,
+        currentConstructorId: null,
+        driverUses,
+        constructorUses,
+        maxDriverPicks: league?.maxDriverPicks ?? 2,
+        maxConstructorPicks: league?.maxConstructorPicks ?? 3,
+      };
+    }
+  }
+
   return {
     season,
     rows,
@@ -285,6 +368,8 @@ async function getHomeData() {
     activeRaceCount: activeRaces.length,
     nextRace: nextRaceInfo,
     stats,
+    pickBanner,
+    existingPick,
   };
 }
 
@@ -302,6 +387,8 @@ export default async function HomePage() {
     activeRaceCount,
     nextRace,
     stats,
+    pickBanner,
+    existingPick,
   } = await getHomeData();
   const noLeague = rows.length === 0;
 
@@ -321,17 +408,38 @@ export default async function HomePage() {
 
           {/* Next race countdown */}
           {nextRace && (
-            <div className="mt-5 p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-lg inline-block">
-              <div className="text-sm font-medium text-zinc-300 mb-1">
-                R{nextRace.round}: {nextRace.name}
-                {nextRace.country && (
-                  <span className="text-zinc-500"> / {nextRace.country}</span>
-                )}
+            <div className="mt-5">
+              <div className="p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-lg inline-block">
+                <div className="text-sm font-medium text-zinc-300 mb-1">
+                  R{nextRace.round}: {nextRace.name}
+                  {nextRace.country && (
+                    <span className="text-zinc-500"> / {nextRace.country}</span>
+                  )}
+                </div>
+                <Countdown
+                  targetDate={nextRace.deadline}
+                  label="Pick deadline"
+                />
               </div>
-              <Countdown
-                targetDate={nextRace.deadline}
-                label="Pick deadline"
-              />
+              {existingPick && (
+                <div className="mt-2 text-sm text-zinc-400">
+                  You picked{" "}
+                  <span className="text-zinc-200 font-medium">
+                    {existingPick.driverCode ?? "—"}
+                  </span>
+                  {" + "}
+                  <span className="text-zinc-200 font-medium">
+                    {existingPick.constructorShort}
+                  </span>
+                  {" for this race "}
+                  <Link
+                    href={`/races/${existingPick.raceId}`}
+                    className="text-red-400 hover:text-red-300 underline underline-offset-2"
+                  >
+                    Edit
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 
@@ -364,6 +472,29 @@ export default async function HomePage() {
         {/* Decorative */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full blur-3xl" />
       </section>
+
+      {/* Pick banner — shown when logged-in user hasn't picked for next race */}
+      {pickBanner && (
+        <section className="bg-zinc-900 border border-zinc-800 border-l-amber-500 border-l-4 rounded-xl p-5 sm:p-6">
+          <div className="flex items-baseline gap-2 mb-4">
+            <h2 className="text-lg font-semibold">Make your pick</h2>
+            <span className="text-sm text-zinc-500">
+              R{pickBanner.raceRound}: {pickBanner.raceName}
+            </span>
+          </div>
+          <PickForm
+            raceId={pickBanner.raceId}
+            drivers={pickBanner.drivers}
+            constructors={pickBanner.constructors}
+            currentDriverId={pickBanner.currentDriverId}
+            currentConstructorId={pickBanner.currentConstructorId}
+            driverUses={pickBanner.driverUses}
+            constructorUses={pickBanner.constructorUses}
+            maxDriverPicks={pickBanner.maxDriverPicks}
+            maxConstructorPicks={pickBanner.maxConstructorPicks}
+          />
+        </section>
+      )}
 
       {/* Fun stats */}
       {stats.length > 0 && (

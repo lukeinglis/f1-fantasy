@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
 import { createModuleLogger } from "@/lib/logger";
+import { DriverAvatar } from "@/components/DriverAvatar";
 
 const log = createModuleLogger("picks/page");
 
@@ -188,12 +189,10 @@ export default async function MyPicksPage() {
         </section>
       )}
 
-      <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-        <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
-          By race
-        </h2>
+      <section>
+        <h2 className="text-lg font-semibold mb-4">By race</h2>
         {picks.length === 0 ? (
-          <p className="p-4 text-zinc-400">
+          <p className="text-zinc-400">
             No picks yet.{" "}
             <Link href="/races" className="text-red-400 hover:underline">
               Head to the calendar
@@ -201,41 +200,77 @@ export default async function MyPicksPage() {
             .
           </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-2">Race</th>
-                  <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
-                  <th className="text-right px-4 py-2">Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {picks.map((p) => {
-                  const s = scoreByRace.get(p.raceId);
-                  return (
-                    <tr
-                      key={p.id}
-                      className="border-t border-zinc-800 hover:bg-zinc-800/30"
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {picks.map((p) => {
+              const s = scoreByRace.get(p.raceId);
+              const color = p.team ? teamColor(p.team.id) : "#555555";
+
+              return (
+                <Link
+                  key={p.id}
+                  href={`/races/${p.raceId}`}
+                  className="group relative rounded-lg overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors"
+                  style={{
+                    background: `linear-gradient(135deg, ${color}20 0%, transparent 60%)`,
+                  }}
+                >
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-1"
+                    style={{ backgroundColor: color }}
+                  />
+
+                  {p.team && (
+                    <span
+                      className="absolute right-[-0.25rem] top-1/2 -translate-y-1/2 text-4xl font-black uppercase pointer-events-none select-none leading-none"
+                      style={{ color: `${color}28` }}
                     >
-                      <td className="px-4 py-2.5">
-                        <Link
-                          href={`/races/${p.raceId}`}
-                          className="hover:text-red-400 transition-colors"
+                      {teamShort(p.team.id)}
+                    </span>
+                  )}
+
+                  <div className="p-3 pl-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className="text-[10px] font-bold px-1.5 py-0.5 rounded"
+                          style={{ backgroundColor: `${color}40`, color }}
                         >
-                          R{p.race.round} / {p.race.name}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        {p.driver
-                          ? `${p.driver.givenName} ${p.driver.familyName}`
-                          : "—"}
-                      </td>
-                      <td className="px-4 py-2.5">
+                          R{p.race.round}
+                        </span>
+                        <span className="text-[11px] text-zinc-400 truncate max-w-[80px]">
+                          {p.race.name}
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold tabular-nums">
+                        {s ? (
+                          <span className="text-red-400">
+                            {s.totalPoints}
+                          </span>
+                        ) : (
+                          <span className="text-zinc-600">&mdash;</span>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {p.driver ? (
+                        <DriverAvatar
+                          driverId={p.driver.id}
+                          size={56}
+                          className="shrink-0 ring-2 ring-zinc-700 group-hover:ring-zinc-500 transition-all"
+                        />
+                      ) : (
+                        <div className="w-14 h-14 rounded-full bg-zinc-800 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold truncate">
+                          {p.driver
+                            ? `${p.driver.givenName} ${p.driver.familyName}`
+                            : "No driver"}
+                        </p>
                         {p.team ? (
                           <span
-                            className="px-2 py-0.5 rounded text-[11px] font-bold"
+                            className="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold"
                             style={{
                               backgroundColor: teamColor(p.team.id),
                               color: teamTextColor(p.team.id),
@@ -244,23 +279,16 @@ export default async function MyPicksPage() {
                             {teamShort(p.team.id)}
                           </span>
                         ) : (
-                          "—"
-                        )}
-                      </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums">
-                        {s ? (
-                          <span className="text-red-400 font-medium">
-                            {s.totalPoints}
+                          <span className="text-xs text-zinc-500 mt-1">
+                            No constructor
                           </span>
-                        ) : (
-                          <span className="text-zinc-500">—</span>
                         )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>
