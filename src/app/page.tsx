@@ -386,6 +386,9 @@ function round1(n: number) {
   return Math.round(n * 10) / 10;
 }
 
+const STAT_ROTATIONS = ["-rotate-1", "rotate-1", "-rotate-[0.5deg]", "rotate-[1.5deg]"];
+const PIN_COLORS = ["bg-red-500", "bg-amber-500", "bg-emerald-500", "bg-blue-500"];
+
 export default async function HomePage() {
   const {
     season,
@@ -403,25 +406,35 @@ export default async function HomePage() {
   return (
     <div className="space-y-8">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-900 to-red-950/30 border border-zinc-800 rounded-xl p-6 sm:p-8">
-        <div className="relative z-10">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-            <span className="text-red-500">F1</span> Fantasy League
+      <section className="relative overflow-hidden bg-stone-900 border border-stone-700 rounded-xl">
+        {/* Garage door corrugated lines at top */}
+        <div className="garage-door h-4 border-b border-stone-700/50" />
+
+        <div className="p-6 sm:p-8 relative z-10">
+          <h1
+            className="text-4xl sm:text-5xl tracking-tight"
+            style={{ fontFamily: "var(--font-russo-one)" }}
+          >
+            <span className="text-red-500">F1</span>{" "}
+            <span className="text-stone-100">Fantasy League</span>
           </h1>
-          <p className="text-zinc-400 mt-2 max-w-lg text-sm sm:text-base">
+          <p className="text-stone-400 mt-2 max-w-lg text-sm sm:text-base italic">
             Pick a driver and a constructor each race. Use them wisely: each
             driver can only be picked twice and each constructor three times
             per season.
           </p>
 
-          {/* Next race countdown */}
+          {/* Next race countdown — Pit board style */}
           {nextRace && (
             <div className="mt-5">
-              <div className="p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-lg inline-block">
-                <div className="text-sm font-medium text-zinc-300 mb-1">
+              <div className="p-4 bg-stone-950 border border-stone-700 rounded-lg inline-block">
+                <div className="text-[10px] uppercase tracking-widest text-amber-600 font-bold mb-1.5">
+                  Pit Board
+                </div>
+                <div className="text-sm font-medium text-stone-300 mb-1" style={{ fontFamily: "var(--font-geist-mono)" }}>
                   R{nextRace.round}: {nextRace.name}
                   {nextRace.country && (
-                    <span className="text-zinc-500"> / {nextRace.country}</span>
+                    <span className="text-stone-500"> / {nextRace.country}</span>
                   )}
                 </div>
                 <Countdown
@@ -430,13 +443,13 @@ export default async function HomePage() {
                 />
               </div>
               {existingPick && (
-                <div className="mt-2 text-sm text-zinc-400 flex items-center gap-1.5 flex-wrap">
+                <div className="mt-2 text-sm text-stone-400 flex items-center gap-1.5 flex-wrap">
                   <span>You picked</span>
                   <span className="inline-flex items-center gap-1">
                     {existingPick.driverId && (
                       <DriverAvatar driverId={existingPick.driverId} size={20} />
                     )}
-                    <span className="text-zinc-200 font-medium">
+                    <span className="text-stone-200 font-medium">
                       {existingPick.driverCode ?? "—"}
                     </span>
                   </span>
@@ -452,12 +465,12 @@ export default async function HomePage() {
                       {existingPick.constructorShort}
                     </span>
                   ) : (
-                    <span className="text-zinc-200 font-medium">—</span>
+                    <span className="text-stone-200 font-medium">—</span>
                   )}
                   <span>for this race</span>
                   <Link
                     href={`/races/${existingPick.raceId}`}
-                    className="text-red-400 hover:text-red-300 underline underline-offset-2"
+                    className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
                   >
                     Edit
                   </Link>
@@ -466,34 +479,37 @@ export default async function HomePage() {
             </div>
           )}
 
-          <div className="flex items-center gap-6 mt-5">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-red-400">{season}</div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wide">
+          {/* Season stat badges — garage plaques */}
+          <div className="flex items-center gap-4 mt-5">
+            <div className="text-center bg-amber-900/30 border border-amber-800/40 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-amber-400" style={{ fontFamily: "var(--font-russo-one)" }}>{season}</div>
+              <div className="text-[10px] text-amber-600 uppercase tracking-widest font-bold">
                 Season
               </div>
             </div>
-            <div className="w-px h-8 bg-zinc-700" />
-            <div className="text-center">
-              <div className="text-2xl font-bold">
+            <div className="text-center bg-stone-800/60 border border-stone-700/50 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-stone-100" style={{ fontFamily: "var(--font-russo-one)" }}>
                 {racesScored}
-                <span className="text-zinc-500 text-lg">/{activeRaceCount}</span>
+                <span className="text-stone-500 text-lg">/{activeRaceCount}</span>
               </div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wide">
+              <div className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
                 Races scored
               </div>
             </div>
-            <div className="w-px h-8 bg-zinc-700" />
-            <div className="text-center">
-              <div className="text-2xl font-bold">{rows.length}</div>
-              <div className="text-xs text-zinc-500 uppercase tracking-wide">
+            <div className="text-center bg-stone-800/60 border border-stone-700/50 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold text-stone-100" style={{ fontFamily: "var(--font-russo-one)" }}>{rows.length}</div>
+              <div className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
                 Players
               </div>
             </div>
           </div>
         </div>
-        {/* Decorative */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full blur-3xl" />
+
+        {/* Decorative diagonal racing stripe */}
+        <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden">
+          <div className="absolute -top-2 -right-8 w-48 h-8 bg-red-600/10 rotate-45 origin-center" />
+          <div className="absolute top-2 -right-8 w-48 h-2 bg-red-600/15 rotate-45 origin-center" />
+        </div>
       </section>
 
       {/* Pick banner — shown when logged-in user hasn't picked for next race */}
@@ -513,15 +529,18 @@ export default async function HomePage() {
         />
       )}
 
-      {/* Fun stats */}
+      {/* Fun stats — bulletin board pinned cards */}
       {stats.length > 0 && (
-        <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {stats.map((s) => (
+        <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {stats.map((s, i) => (
             <div
               key={s.label}
-              className="bg-zinc-900 border border-zinc-800 rounded-lg p-4"
+              className={`relative bg-stone-800/80 border border-stone-700/60 rounded-lg p-4 pin-dot ${STAT_ROTATIONS[i % STAT_ROTATIONS.length]}`}
             >
-              <div className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
+              {/* Pin dot */}
+              <div className={`absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full ${PIN_COLORS[i % PIN_COLORS.length]} shadow-sm`} />
+
+              <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold">
                 {s.label}
               </div>
               {s.driverId ? (
@@ -547,18 +566,23 @@ export default async function HomePage() {
                 </div>
               )}
               {s.sub && (
-                <div className="text-xs text-zinc-400 mt-0.5">{s.sub}</div>
+                <div className="text-xs text-stone-400 mt-0.5">{s.sub}</div>
               )}
             </div>
           ))}
         </section>
       )}
 
-      {/* Leaderboard */}
+      {/* Leaderboard — chalkboard style */}
       <section>
-        <h2 className="text-xl font-semibold mb-3">Standings</h2>
+        <h2
+          className="text-xl mb-3"
+          style={{ fontFamily: "var(--font-russo-one)" }}
+        >
+          Standings
+        </h2>
         {noLeague ? (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+          <div className="bg-stone-900 border border-stone-700 rounded-lg p-6">
             <p>No players yet.</p>
             <Link
               href="/register"
@@ -568,53 +592,57 @@ export default async function HomePage() {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-lg">
+          <div className="overflow-x-auto bg-stone-900 border border-stone-700 rounded-lg chalk-texture">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/50 text-zinc-400 uppercase text-xs tracking-wide">
+              <thead className="bg-stone-800/60 text-stone-500 uppercase text-xs tracking-wide">
                 <tr>
-                  <th className="text-left px-4 py-3 w-12">#</th>
-                  <th className="text-left px-4 py-3">Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-left px-4 py-3 w-12 italic">#</th>
+                  <th className="text-left px-4 py-3 italic">Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Driver pts
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Constructor pts
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Races
                   </th>
-                  <th className="text-right px-4 py-3">Total</th>
+                  <th className="text-right px-4 py-3 italic">Total</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r, i) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-zinc-800 hover:bg-zinc-800/30 ${
-                      i === 0 && r.totalPoints > 0 ? "bg-amber-900/5" : ""
+                    className={`border-t border-stone-800 hover:bg-stone-800/30 ${
+                      i === 0 && r.totalPoints > 0
+                        ? "bg-amber-900/10"
+                        : i % 2 === 0
+                          ? "bg-stone-900/30"
+                          : ""
                     }`}
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
                         <span className="text-amber-400 font-bold">
-                          {i + 1}
+                          🏆 {i + 1}
                         </span>
                       ) : i < 3 && r.totalPoints > 0 ? (
-                        <span className="text-zinc-300 font-bold">
+                        <span className="text-stone-300 font-bold">
                           {i + 1}
                         </span>
                       ) : (
-                        <span className="text-zinc-500">{i + 1}</span>
+                        <span className="text-stone-500">{i + 1}</span>
                       )}
                     </td>
                     <td className="px-4 py-3 font-medium">{r.userName}</td>
-                    <td className="px-4 py-3 text-right tabular-nums text-zinc-300 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-stone-400 hidden sm:table-cell">
                       {r.driverPoints}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-zinc-300 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-stone-400 hidden sm:table-cell">
                       {r.constructorPoints}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-zinc-500 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-stone-500 hidden sm:table-cell">
                       {r.racesScored}
                     </td>
                     <td className="px-4 py-3 text-right font-semibold tabular-nums text-red-400">
@@ -631,42 +659,49 @@ export default async function HomePage() {
       {/* Prediction leaderboard */}
       {predictionRows.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-3">
+          <h2
+            className="text-xl mb-3"
+            style={{ fontFamily: "var(--font-russo-one)" }}
+          >
             Prediction Standings
           </h2>
-          <div className="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-lg">
+          <div className="overflow-x-auto bg-stone-900 border border-stone-700 rounded-lg chalk-texture">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/50 text-zinc-400 uppercase text-xs tracking-wide">
+              <thead className="bg-stone-800/60 text-stone-500 uppercase text-xs tracking-wide">
                 <tr>
-                  <th className="text-left px-4 py-3 w-12">#</th>
-                  <th className="text-left px-4 py-3">Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-left px-4 py-3 w-12 italic">#</th>
+                  <th className="text-left px-4 py-3 italic">Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Exact
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Close
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
                     Races
                   </th>
-                  <th className="text-right px-4 py-3">Points</th>
+                  <th className="text-right px-4 py-3 italic">Points</th>
                 </tr>
               </thead>
               <tbody>
                 {predictionRows.map((r, i) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-zinc-800 hover:bg-zinc-800/30 ${
-                      i === 0 && r.totalPoints > 0 ? "bg-amber-900/5" : ""
+                    className={`border-t border-stone-800 hover:bg-stone-800/30 ${
+                      i === 0 && r.totalPoints > 0
+                        ? "bg-amber-900/10"
+                        : i % 2 === 0
+                          ? "bg-stone-900/30"
+                          : ""
                     }`}
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
-                        <span className="text-amber-400 font-bold">{i + 1}</span>
+                        <span className="text-amber-400 font-bold">🏆 {i + 1}</span>
                       ) : i < 3 && r.totalPoints > 0 ? (
-                        <span className="text-zinc-300 font-bold">{i + 1}</span>
+                        <span className="text-stone-300 font-bold">{i + 1}</span>
                       ) : (
-                        <span className="text-zinc-500">{i + 1}</span>
+                        <span className="text-stone-500">{i + 1}</span>
                       )}
                     </td>
                     <td className="px-4 py-3 font-medium">{r.userName}</td>
@@ -676,7 +711,7 @@ export default async function HomePage() {
                     <td className="px-4 py-3 text-right tabular-nums text-yellow-400 hidden sm:table-cell">
                       {r.closeMatches}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-zinc-500 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-stone-500 hidden sm:table-cell">
                       {r.racesScored}
                     </td>
                     <td className="px-4 py-3 text-right font-semibold tabular-nums text-red-400">
@@ -690,42 +725,47 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* F1 Mini Game */}
+      {/* F1 Mini Game — Arcade cabinet framing */}
       <section>
-        <h2 className="text-xl font-semibold mb-3">
+        <h2
+          className="text-xl mb-3"
+          style={{ fontFamily: "var(--font-russo-one)" }}
+        >
           <span className="text-red-500">F1</span> Dodge
+          <span className="text-stone-600 text-sm font-normal ml-2 italic" style={{ fontFamily: "var(--font-geist-sans)" }}>break room</span>
         </h2>
         <F1Game />
       </section>
 
+      {/* Bottom links — garage cabinet drawer pulls */}
       <div className="flex flex-wrap gap-3 text-sm">
         <Link
           href="/grid"
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-medium"
+          className="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg font-bold uppercase tracking-wide text-xs border border-red-500/30"
         >
           Season grid
         </Link>
         <Link
           href="/races"
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
         >
           Race calendar
         </Link>
         <Link
           href="/picks"
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
         >
           My picks
         </Link>
         <Link
           href="/stats"
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
         >
           Stats
         </Link>
         <Link
           href="/rules"
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+          className="px-5 py-2.5 bg-amber-900/40 hover:bg-amber-900/60 rounded-lg border border-amber-800/40 font-medium uppercase tracking-wide text-xs text-amber-300"
         >
           How to play
         </Link>
