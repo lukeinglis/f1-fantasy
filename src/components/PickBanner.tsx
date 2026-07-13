@@ -30,8 +30,8 @@ export default function PickBanner(props: PickBannerProps) {
         className="w-full flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-zinc-800/50 transition-colors"
       >
         <div className="flex items-baseline gap-2">
-          <h2 className="text-lg font-semibold">Make your pick</h2>
-          <span className="text-sm text-zinc-500">
+          <h2 className="text-lg font-semibold text-stone-100">Make your pick</h2>
+          <span className="text-sm text-stone-300">
             R{props.raceRound}: {props.raceName}
           </span>
         </div>

@@ -113,7 +113,7 @@ export default function AdminPanel(props: Props) {
   return (
     <div className="space-y-6">
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 space-y-3">
-        <h2 className="text-lg font-semibold">Season {props.season}</h2>
+        <h2 className="text-lg font-semibold text-stone-100">Season {props.season}</h2>
         <div className="flex flex-wrap gap-2">
           <button
             disabled={busy !== null}
@@ -135,11 +135,11 @@ export default function AdminPanel(props: Props) {
       </section>
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-        <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+        <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
           Races
         </h2>
         {props.races.length === 0 ? (
-          <p className="p-4 text-zinc-400">
+          <p className="p-4 text-stone-400">
             No races yet. Click &quot;Sync season&quot; above.
           </p>
         ) : (
@@ -160,7 +160,7 @@ export default function AdminPanel(props: Props) {
                   className="border-t border-zinc-800 hover:bg-zinc-800/30"
                 >
                   <td className="px-4 py-2 tabular-nums">{r.round}</td>
-                  <td className="px-4 py-2">{r.name}</td>
+                  <td className="px-4 py-2 text-stone-200">{r.name}</td>
                   <td className="px-4 py-2 text-zinc-400">
                     {new Date(r.date).toLocaleDateString()}
                   </td>
@@ -196,8 +196,8 @@ export default function AdminPanel(props: Props) {
       </section>
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-        <h2 className="text-lg font-semibold mb-3">Manual results entry</h2>
-        <p className="text-sm text-zinc-400 mb-3">
+        <h2 className="text-lg font-semibold mb-3 text-stone-100">Manual results entry</h2>
+        <p className="text-sm text-stone-400 mb-3">
           Use this only if the API is delayed. Pick a race, then enter finishing positions.
         </p>
         <select

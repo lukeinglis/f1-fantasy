@@ -16,10 +16,10 @@ export default async function RulesPage() {
   return (
     <div className="space-y-8 max-w-2xl">
       <header>
-        <h1 className="text-3xl font-bold">
-          How to Play <span className="text-red-500">F1 Fantasy</span>
+        <h1 className="text-3xl font-bold text-stone-900">
+          How to Play <span className="text-red-700">F1 Fantasy</span>
         </h1>
-        <p className="text-zinc-400 mt-1 text-sm">
+        <p className="text-stone-700 mt-1 text-sm">
           {season} season rules
         </p>
       </header>
@@ -202,13 +202,13 @@ export default async function RulesPage() {
       <div className="flex gap-3 text-sm">
         <Link
           href="/races"
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-medium"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-medium text-white"
         >
           View race calendar
         </Link>
         <Link
           href="/"
-          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded"
+          className="px-4 py-2 bg-stone-800 hover:bg-stone-700 rounded text-stone-100"
         >
           Leaderboard
         </Link>

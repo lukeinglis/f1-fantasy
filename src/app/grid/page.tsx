@@ -165,8 +165,8 @@ export default async function GridPage() {
   if (users.length === 0 || races.length === 0) {
     return (
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Season Grid</h1>
-        <p className="text-zinc-400">
+        <h1 className="text-3xl font-bold text-stone-900">Season Grid</h1>
+        <p className="text-stone-700">
           No data yet. Sync the season from the admin panel first.
         </p>
       </div>
@@ -185,10 +185,10 @@ export default async function GridPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold">
-            Season Grid <span className="text-red-500">{season}</span>
+          <h1 className="text-3xl font-bold text-stone-900">
+            Season Grid <span className="text-red-700">{season}</span>
           </h1>
-          <p className="text-zinc-400 mt-1 text-sm">
+          <p className="text-stone-700 mt-1 text-sm">
             Every pick at a glance. Hover for details.
           </p>
         </div>
@@ -199,10 +199,10 @@ export default async function GridPage() {
         <table className="border-separate border-spacing-[3px] text-xs w-auto">
           <thead>
             <tr>
-              <th className="sticky left-0 z-20 bg-zinc-950 px-3 py-2 text-left text-zinc-400 uppercase tracking-wide text-[10px] min-w-[110px]">
+              <th className="sticky left-0 z-20 bg-zinc-950 px-3 py-2 text-left text-stone-300 uppercase tracking-wide text-[10px] min-w-[110px]">
                 Player
               </th>
-              <th className="sticky left-[110px] z-20 bg-zinc-950 px-2 py-2 text-right text-zinc-400 uppercase tracking-wide text-[10px] min-w-[48px]">
+              <th className="sticky left-[110px] z-20 bg-zinc-950 px-2 py-2 text-right text-stone-300 uppercase tracking-wide text-[10px] min-w-[48px]">
                 Total
               </th>
               {activeRaces.map((r) => {
@@ -237,13 +237,13 @@ export default async function GridPage() {
               ) / 10;
               return (
                 <tr key={user.id}>
-                  <td className="sticky left-0 z-10 bg-zinc-950 px-3 py-2 font-medium text-sm whitespace-nowrap">
+                  <td className="sticky left-0 z-10 bg-zinc-950 px-3 py-2 font-medium text-sm whitespace-nowrap text-stone-100">
                     {userIdx === 0 && total > 0 && (
                       <span className="text-amber-400 mr-1.5">&#9733;</span>
                     )}
                     {user.name}
                   </td>
-                  <td className="sticky left-[110px] z-10 bg-zinc-950 px-2 py-2 text-right font-bold text-red-400 tabular-nums text-sm">
+                  <td className="sticky left-[110px] z-10 bg-zinc-950 px-2 py-2 text-right font-bold text-red-400 tabular-nums text-sm text-stone-100">
                     {total || ""}
                   </td>
                   {activeRaces.map((r) => {
@@ -258,12 +258,12 @@ export default async function GridPage() {
                           key={r.id}
                           className={`rounded-md text-center py-2 px-1 min-h-[52px] ${
                             isPast
-                              ? "bg-zinc-900/40 text-zinc-700"
-                              : "bg-zinc-800/20 text-zinc-700 border border-dashed border-zinc-800"
+                              ? "bg-stone-800/60 text-stone-500"
+                              : "bg-[#f5f0e8]/60 text-stone-500 border border-dashed border-stone-400"
                           }`}
                         >
                           {isPast ? (
-                            <span className="text-zinc-700 text-[10px]">
+                            <span className="text-stone-500 text-[10px]">
                               &mdash;
                             </span>
                           ) : (

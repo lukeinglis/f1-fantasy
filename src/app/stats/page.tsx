@@ -240,10 +240,10 @@ export default async function StatsPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold">
-          Season <span className="text-red-500">Stats</span>
+        <h1 className="text-3xl font-bold text-stone-900">
+          Season <span className="text-red-700">Stats</span>
         </h1>
-        <p className="text-zinc-400 mt-1 text-sm">
+        <p className="text-stone-700 mt-1 text-sm">
           {data.scoredRaces} of {data.totalActiveRaces} active races scored.
         </p>
       </header>
@@ -287,7 +287,7 @@ export default async function StatsPage() {
       {/* Race wins leaderboard */}
       {data.winsLeaderboard.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3">
+          <h2 className="text-lg font-semibold mb-3 text-stone-100">
             Race wins
           </h2>
           <div className="space-y-2">
@@ -299,7 +299,7 @@ export default async function StatsPage() {
                   <span className="text-zinc-500 text-sm w-4 tabular-nums">
                     {i + 1}
                   </span>
-                  <span className="text-sm font-medium w-28 truncate">
+                  <span className="text-sm font-medium w-28 truncate text-stone-200">
                     {w.name}
                   </span>
                   <div className="flex-1 bg-zinc-800 rounded-full h-4 overflow-hidden">
@@ -321,7 +321,7 @@ export default async function StatsPage() {
       {/* Average scores per race */}
       {data.raceAverages.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3">
+          <h2 className="text-lg font-semibold mb-3 text-stone-100">
             Average score by race
           </h2>
           <div className="space-y-1.5">
@@ -353,7 +353,7 @@ export default async function StatsPage() {
       <div className="grid sm:grid-cols-2 gap-4">
         {data.driverPopularity.length > 0 && (
           <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-            <h2 className="text-lg font-semibold mb-3">
+            <h2 className="text-lg font-semibold mb-3 text-stone-100">
               Driver popularity
             </h2>
             <div className="space-y-1.5">
@@ -384,7 +384,7 @@ export default async function StatsPage() {
 
         {data.consPopularity.length > 0 && (
           <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-            <h2 className="text-lg font-semibold mb-3">
+            <h2 className="text-lg font-semibold mb-3 text-stone-100">
               Constructor popularity
             </h2>
             <div className="space-y-1.5">
@@ -428,10 +428,10 @@ export default async function StatsPage() {
       {/* Player budgets */}
       {data.playerBudgets.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
             Pick budget remaining
           </h2>
-          <p className="text-xs text-zinc-500 px-4 pt-2">
+          <p className="text-xs text-stone-500 px-4 pt-2">
             How many unique drivers/constructors each player has used vs exhausted.
             Max {data.maxDriver} uses per driver, {data.maxConstructor} per constructor.
           </p>
@@ -452,7 +452,7 @@ export default async function StatsPage() {
                     key={b.userName}
                     className="border-t border-zinc-800 hover:bg-zinc-800/30"
                   >
-                    <td className="px-4 py-2.5 font-medium">{b.userName}</td>
+                    <td className="px-4 py-2.5 font-medium text-stone-200">{b.userName}</td>
                     <td className="px-4 py-2.5 text-right tabular-nums text-zinc-300">
                       {b.driversUsed}
                     </td>
@@ -501,13 +501,13 @@ function StatCard({
 }) {
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-      <div className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">
+      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">
         {label}
       </div>
       <div className={`text-xl font-bold ${color ?? "text-white"}`}>
         {value}
       </div>
-      {sub && <div className="text-xs text-zinc-400 mt-0.5">{sub}</div>}
+      {sub && <div className="text-xs text-stone-400 mt-0.5">{sub}</div>}
     </div>
   );
 }

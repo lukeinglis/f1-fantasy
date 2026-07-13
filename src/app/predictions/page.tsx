@@ -102,10 +102,10 @@ export default async function PredictionsPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold">
-          <span className="text-red-500">Prediction</span> Challenge
+        <h1 className="text-3xl font-bold text-stone-900">
+          <span className="text-red-700">Prediction</span> Challenge
         </h1>
-        <p className="text-zinc-400 mt-1 text-sm">
+        <p className="text-stone-700 mt-1 text-sm">
           Predict the top 10 finishing order before each race.
           Exact position = 5 pts, off by 1 = 2 pts, off by 2 = 1 pt.
         </p>
@@ -117,14 +117,14 @@ export default async function PredictionsPage() {
           href={`/races/${nextRace.id}`}
           className="block bg-gradient-to-r from-zinc-900 to-red-950/30 border border-zinc-800 rounded-lg p-5 hover:border-red-800/50 transition-colors"
         >
-          <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">
+          <div className="text-xs uppercase tracking-wider text-zinc-400 mb-1">
             Next prediction
           </div>
-          <div className="text-lg font-semibold">
+          <div className="text-lg font-semibold text-stone-100">
             R{nextRace.round}: {nextRace.name}
           </div>
           {nextRace.country && (
-            <div className="text-sm text-zinc-400">{nextRace.country}</div>
+            <div className="text-sm text-stone-400">{nextRace.country}</div>
           )}
           <div className="text-sm text-red-400 mt-2">
             Submit your prediction &rarr;
@@ -135,7 +135,7 @@ export default async function PredictionsPage() {
       {/* Overall leaderboard */}
       {rows.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-3">Season Standings</h2>
+          <h2 className="text-xl font-semibold mb-3 text-stone-900">Season Standings</h2>
           <div className="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-lg">
             <table className="w-full text-sm">
               <thead className="bg-zinc-800/50 text-zinc-400 uppercase text-xs tracking-wide">
@@ -174,7 +174,7 @@ export default async function PredictionsPage() {
                         <span className="text-zinc-500">{i + 1}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-medium">{r.userName}</td>
+                    <td className="px-4 py-3 font-medium text-stone-100">{r.userName}</td>
                     <td className="px-4 py-3 text-right tabular-nums text-emerald-400 hidden sm:table-cell">
                       {r.exactMatches}
                     </td>
@@ -200,7 +200,7 @@ export default async function PredictionsPage() {
 
       {rows.length === 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 text-center">
-          <p className="text-zinc-400">
+          <p className="text-stone-400">
             No predictions submitted yet. Head to a{" "}
             <Link href="/races" className="text-red-400 hover:underline">
               race page
@@ -213,12 +213,12 @@ export default async function PredictionsPage() {
       {/* Race-by-race breakdown */}
       {rows.length > 0 && (
         <section>
-          <h2 className="text-xl font-semibold mb-3">Race by Race</h2>
+          <h2 className="text-xl font-semibold mb-3 text-stone-900">Race by Race</h2>
           <div className="overflow-x-auto bg-zinc-900 border border-zinc-800 rounded-lg">
             <table className="w-full text-sm">
               <thead className="bg-zinc-800/50 text-zinc-400 uppercase text-xs tracking-wide">
                 <tr>
-                  <th className="text-left px-4 py-3 sticky left-0 bg-zinc-900 z-10">
+                  <th className="text-left px-4 py-3 sticky left-0 bg-zinc-900 z-10 text-zinc-400">
                     Race
                   </th>
                   {rows.map((r) => (
