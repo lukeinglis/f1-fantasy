@@ -10,7 +10,8 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="sticker inline-block bg-red-600 hover:bg-red-700 text-white rounded-lg px-5 py-2.5 font-medium"
+        className="sticker inline-block bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2.5 font-bold cartoon-shadow"
+        style={{ fontFamily: 'var(--font-bangers)' }}
       >
         Go home
       </Link>

@@ -132,6 +132,12 @@ body {
   color: #fff;
 }
 
+/* Focus-visible outlines for keyboard navigation */
+button:focus-visible, a:focus-visible, [role='button']:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
 /* Smooth transitions for interactive elements */
 a, button, select, input {
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;

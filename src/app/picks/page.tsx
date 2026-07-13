@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
 import { createModuleLogger } from "@/lib/logger";
 import { DriverAvatar } from "@/components/DriverAvatar";
+import { getCurrentSeason } from "@/lib/data";
 
 const log = createModuleLogger("picks/page");
 
@@ -18,7 +19,7 @@ export default async function MyPicksPage() {
   const userId = session.user.id;
 
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
 
   const now = new Date();
 

@@ -20,11 +20,12 @@ export default function ErrorPage({
       <div className="flex items-center gap-3">
         <button
           onClick={reset}
-          className="sticker bg-red-600 hover:bg-red-700 text-white rounded-lg px-5 py-2.5 font-medium"
+          className="sticker bg-red-600 hover:bg-red-700 text-white rounded-xl px-5 py-2.5 font-bold cartoon-shadow"
+          style={{ fontFamily: 'var(--font-bangers)' }}
         >
           Try again
         </button>
-        <Link href="/" className="text-stone-600 hover:text-stone-800">
+        <Link href="/" className="text-stone-600 hover:text-stone-800 underline-offset-2 hover:underline">
           Go home
         </Link>
       </div>

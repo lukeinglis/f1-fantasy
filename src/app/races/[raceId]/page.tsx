@@ -8,6 +8,7 @@ import PredictionForm from "@/components/PredictionForm";
 import PredictionResults from "@/components/PredictionResults";
 import Countdown from "@/components/Countdown";
 import { DriverAvatar } from "@/components/DriverAvatar";
+import { getPickUsage } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -84,34 +85,25 @@ export default async function RaceDetailPage(props: {
 
   // Fetch user-specific data only when authenticated
   let myPick: { driverId: string | null; teamId: string | null } | null = null;
-  let myPicks: { driverId: string | null; teamId: string | null; raceId: string }[] = [];
   let myPredictions: { position: number; driverId: string }[] = [];
-  const driverUses: Record<string, number> = {};
-  const consUses: Record<string, number> = {};
+  let driverUses: Record<string, number> = {};
+  let consUses: Record<string, number> = {};
 
   if (userId) {
-    const [fetchedPick, fetchedMyPicks, fetchedPredictions] = await Promise.all([
+    const [fetchedPick, fetchedPredictions, pickUsage] = await Promise.all([
       prisma.pick.findUnique({
         where: { userId_raceId: { userId, raceId } },
-      }),
-      prisma.pick.findMany({
-        where: { userId },
-        select: { driverId: true, teamId: true, raceId: true },
       }),
       prisma.prediction.findMany({
         where: { userId, raceId },
         orderBy: { position: "asc" },
       }),
+      getPickUsage(userId, season, raceId),
     ]);
     myPick = fetchedPick;
-    myPicks = fetchedMyPicks;
     myPredictions = fetchedPredictions;
-
-    for (const p of myPicks) {
-      if (p.raceId === raceId) continue;
-      if (p.driverId) driverUses[p.driverId] = (driverUses[p.driverId] ?? 0) + 1;
-      if (p.teamId) consUses[p.teamId] = (consUses[p.teamId] ?? 0) + 1;
-    }
+    driverUses = pickUsage.driverUses;
+    consUses = pickUsage.constructorUses;
   }
 
   const maxDriver = league?.maxDriverPicks ?? 2;

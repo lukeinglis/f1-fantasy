@@ -7,6 +7,7 @@
     "build": "prisma generate && (prisma migrate deploy || (sleep 8 && prisma migrate deploy) || (sleep 15 && prisma migrate deploy)) && next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -39,6 +40,7 @@
     "eslint-config-next": "15.5.16",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
