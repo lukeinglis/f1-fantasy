@@ -830,6 +830,7 @@ export default function F1Game() {
         <canvas
           ref={canvasRef}
           className="block w-full"
+          aria-label="F1 Dodge mini game — hold Space or tap to fly up, release to fall, dodge barriers"
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerLeave}

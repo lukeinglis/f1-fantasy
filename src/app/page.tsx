@@ -7,6 +7,7 @@ import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
 import { auth } from "@/lib/auth";
 import PickBanner from "@/components/PickBanner";
+import { getCurrentSeason, getPickUsage } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -69,7 +70,7 @@ interface ExistingPickInfo {
 async function getHomeData() {
   await ensureSeasonSynced();
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
 
   const [users, scores, races, picks, allScores, predictionScores] = await Promise.all([
     prisma.user.findMany({
@@ -328,7 +329,7 @@ async function getHomeData() {
         raceId: nextRace.id,
       };
     } else {
-      const [activeDriverIds, allDrivers, constructors, myPicks] = await Promise.all([
+      const [activeDriverIds, allDrivers, constructors] = await Promise.all([
         prisma.raceResult.findMany({
           where: { race: { season } },
           select: { driverId: true },
@@ -336,23 +337,13 @@ async function getHomeData() {
         }),
         prisma.driver.findMany({ orderBy: { familyName: "asc" } }),
         prisma.team.findMany({ orderBy: { name: "asc" } }),
-        prisma.pick.findMany({
-          where: { userId },
-          select: { driverId: true, teamId: true, raceId: true },
-        }),
       ]);
       const activeIds = new Set(activeDriverIds.map(r => r.driverId));
       const drivers = activeIds.size > 0
         ? allDrivers.filter(d => activeIds.has(d.id))
         : allDrivers;
 
-      const driverUses: Record<string, number> = {};
-      const constructorUses: Record<string, number> = {};
-      for (const p of myPicks) {
-        if (p.raceId === nextRace.id) continue;
-        if (p.driverId) driverUses[p.driverId] = (driverUses[p.driverId] ?? 0) + 1;
-        if (p.teamId) constructorUses[p.teamId] = (constructorUses[p.teamId] ?? 0) + 1;
-      }
+      const { driverUses, constructorUses } = await getPickUsage(userId, season, nextRace.id);
 
       pickBanner = {
         raceId: nextRace.id,
@@ -693,15 +684,15 @@ export default async function HomePage() {
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
                         <span className="text-amber-300 font-bold text-base">
-                          🏆 {i + 1}
+                          <span aria-hidden="true">🏆</span> {i + 1}
                         </span>
                       ) : i === 1 && r.totalPoints > 0 ? (
                         <span className="text-stone-300 font-bold">
-                          🥈 {i + 1}
+                          <span aria-hidden="true">🥈</span> {i + 1}
                         </span>
                       ) : i === 2 && r.totalPoints > 0 ? (
                         <span className="text-amber-700 font-bold">
-                          🥉 {i + 1}
+                          <span aria-hidden="true">🥉</span> {i + 1}
                         </span>
                       ) : (
                         <span className="text-amber-100/50">{i + 1}</span>
@@ -772,11 +763,11 @@ export default async function HomePage() {
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
-                        <span className="text-amber-300 font-bold text-base">🏆 {i + 1}</span>
+                        <span className="text-amber-300 font-bold text-base"><span aria-hidden="true">🏆</span> {i + 1}</span>
                       ) : i === 1 && r.totalPoints > 0 ? (
-                        <span className="text-stone-300 font-bold">🥈 {i + 1}</span>
+                        <span className="text-stone-300 font-bold"><span aria-hidden="true">🥈</span> {i + 1}</span>
                       ) : i === 2 && r.totalPoints > 0 ? (
-                        <span className="text-amber-700 font-bold">🥉 {i + 1}</span>
+                        <span className="text-amber-700 font-bold"><span aria-hidden="true">🥉</span> {i + 1}</span>
                       ) : (
                         <span className="text-amber-100/50">{i + 1}</span>
                       )}

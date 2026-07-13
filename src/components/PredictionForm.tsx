@@ -224,7 +224,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="text-xs text-stone-600 hover:text-stone-800 px-2 py-1 rounded border border-stone-400 hover:border-stone-500 transition-colors"
+            className="text-xs text-stone-600 hover:text-stone-800 px-2 py-1 rounded border border-stone-400 hover:border-stone-500"
           >
             {collapsed ? "Edit prediction" : "Collapse"}
           </button>
@@ -387,7 +387,8 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
             <button
               type="submit"
               disabled={saving || filledCount === 0}
-              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors cartoon-shadow"
+              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold sticker cartoon-shadow"
+              style={{ fontFamily: "var(--font-bangers)" }}
             >
               {saving
                 ? "Saving..."
@@ -399,7 +400,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
               <button
                 type="button"
                 onClick={clearAll}
-                className="px-3 py-2.5 text-sm text-stone-600 hover:text-stone-800 transition-colors"
+                className="px-3 py-2.5 text-sm text-stone-600 hover:text-stone-800 underline-offset-2 hover:underline"
               >
                 Clear all
               </button>

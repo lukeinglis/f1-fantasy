@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createModuleLogger } from "@/lib/logger";
+import { getCurrentSeason } from "@/lib/data";
 
 const log = createModuleLogger("api/leaderboard");
 
@@ -8,8 +9,7 @@ const log = createModuleLogger("api/leaderboard");
 // where results have been locked. Players with no scores yet show 0.
 export async function GET() {
   log.info({ path: '/api/leaderboard' }, 'GET leaderboard');
-  const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
 
   const users = await prisma.user.findMany({
     select: { id: true, name: true, role: true },

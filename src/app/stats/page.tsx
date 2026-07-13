@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
+import { getCurrentSeason } from "@/lib/data";
 import { teamColor, teamShort, teamTextColor } from "@/lib/f1-meta";
 import { DriverAvatar } from "@/components/DriverAvatar";
 
@@ -37,7 +38,7 @@ interface RaceScore {
 
 async function getStatsData() {
   const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
   const maxDriver = league?.maxDriverPicks ?? 2;
   const maxConstructor = league?.maxConstructorPicks ?? 3;
 

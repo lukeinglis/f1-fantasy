@@ -38,6 +38,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${bangers.variable} antialiased text-stone-900 min-h-screen`}
       >
         <Providers>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-red-600 focus:text-white focus:rounded">Skip to content</a>
           <NavBar
             user={
               session?.user
@@ -49,7 +50,7 @@ export default async function RootLayout({
                 : null
             }
           />
-          <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
+          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6">{children}</main>
         </Providers>
       </body>
     </html>

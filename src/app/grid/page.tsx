@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { TEAM_COLORS, teamTextColor, teamShort } from "@/lib/f1-meta";
 import { isPreSeasonRound } from "@/lib/season";
 import { DriverAvatar } from "@/components/DriverAvatar";
+import GridCell from "@/components/GridCell";
+import { getCurrentSeason } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +19,7 @@ interface CellData {
 }
 
 async function getGridData(currentUserId: string | null) {
-  const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
 
   const [races, users, picks, scores] = await Promise.all([
     prisma.race.findMany({
@@ -197,7 +198,7 @@ export default async function GridPage() {
             Season Grid <span className="text-red-700">{season}</span>
           </h1>
           <p className="text-stone-700 mt-1 text-sm">
-            Every pick at a glance. Hover for details.
+            Every pick at a glance. Tap or hover for details.
           </p>
         </div>
       </header>
@@ -299,10 +300,30 @@ export default async function GridPage() {
                       : "";
 
                     return (
-                      <td
+                      <GridCell
                         key={r.id}
-                        className="rounded-md text-center py-1.5 px-1 cursor-default transition-transform hover:scale-110 hover:z-10 hover:shadow-lg hover:shadow-black/40 relative group overflow-hidden"
+                        className="rounded-md text-center py-1.5 px-1 cursor-default transition-transform hover:scale-110 hover:z-10 hover:shadow-lg hover:shadow-black/40 relative overflow-hidden"
                         style={{ backgroundColor: bgColor, color: txtColor }}
+                        tooltipContent={
+                          <>
+                            <div className="card-paper border-2 border-stone-400 cartoon-shadow rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap">
+                              <div className="text-stone-800 font-medium">
+                                {cell.driverName ?? "No driver"}
+                              </div>
+                              <div className="text-stone-600">
+                                {cell.constructorName ?? "No constructor"}
+                              </div>
+                              {cell.totalPoints != null && (
+                                <div className="text-red-700 font-bold mt-1">
+                                  {cell.totalPoints} pts
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              className="w-2 h-2 card-paper border-b-2 border-r-2 border-stone-400 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
+                            />
+                          </>
+                        }
                       >
                         {shortName && (
                           <div
@@ -332,26 +353,7 @@ export default async function GridPage() {
                             </div>
                           )}
                         </div>
-                        {/* Tooltip */}
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
-                          <div className="card-paper border-2 border-stone-400 cartoon-shadow rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap">
-                            <div className="text-stone-800 font-medium">
-                              {cell.driverName ?? "No driver"}
-                            </div>
-                            <div className="text-stone-600">
-                              {cell.constructorName ?? "No constructor"}
-                            </div>
-                            {cell.totalPoints != null && (
-                              <div className="text-red-700 font-bold mt-1">
-                                {cell.totalPoints} pts
-                              </div>
-                            )}
-                          </div>
-                          <div
-                            className="w-2 h-2 card-paper border-b-2 border-r-2 border-stone-400 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
-                          />
-                        </div>
-                      </td>
+                      </GridCell>
                     );
                   })}
                 </tr>

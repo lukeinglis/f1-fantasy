@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
+import { getCurrentSeason } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
 export default async function PredictionsPage() {
-  const league = await prisma.league.findFirst();
-  const season = league?.season ?? Number(process.env.F1_SEASON ?? 2026);
+  const season = await getCurrentSeason();
 
   const [users, races, predictionScores, predictionCounts] = await Promise.all([
     prisma.user.findMany({
