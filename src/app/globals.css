@@ -3,9 +3,30 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-russo-one);
 }
 
-/* Custom scrollbar for the dark theme */
+/* Garage floor asphalt texture */
+body {
+  background-color: #1c1917;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.008) 2px,
+      rgba(255, 255, 255, 0.008) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.005) 2px,
+      rgba(255, 255, 255, 0.005) 4px
+    );
+}
+
+/* Custom scrollbar — warm tones */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -14,11 +35,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #44403c;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #57534e;
 }
 
 /* Selection color */
@@ -37,4 +58,56 @@ a, button, select, input {
 /* Grid cell hover animation */
 td.group:hover {
   z-index: 10;
+}
+
+/* Checkerboard racing stripe */
+.racing-stripe {
+  height: 6px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #44403c 0px,
+    #44403c 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* Garage door corrugated lines */
+.garage-door {
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+}
+
+/* Bulletin board pin dot */
+.pin-dot::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b45309;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Chalk texture overlay for leaderboard */
+.chalk-texture {
+  background-image:
+    radial-gradient(
+      ellipse at 20% 50%,
+      rgba(255, 255, 255, 0.015) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 80% 20%,
+      rgba(255, 255, 255, 0.01) 0%,
+      transparent 40%
+    );
 }
