@@ -43,8 +43,8 @@ export default function RegisterPage() {
 
   return (
     <div className="max-w-sm mx-auto mt-12 bg-zinc-900 border border-zinc-800 p-6 rounded-lg">
-      <h1 className="text-xl font-semibold mb-4">Join the league</h1>
-      <p className="text-sm text-zinc-400 mb-4">
+      <h1 className="text-xl font-semibold mb-4 text-stone-100">Join the league</h1>
+      <p className="text-sm text-stone-400 mb-4">
         Pick a name and a password. That&apos;s it.
       </p>
       <form className="space-y-3" onSubmit={onSubmit}>
@@ -75,7 +75,7 @@ export default function RegisterPage() {
           {loading ? "Creating..." : "Join"}
         </button>
       </form>
-      <p className="text-sm text-zinc-400 mt-4">
+      <p className="text-sm text-stone-400 mt-4">
         Already joined?{" "}
         <Link href="/login" className="text-red-400 hover:underline">
           Sign in

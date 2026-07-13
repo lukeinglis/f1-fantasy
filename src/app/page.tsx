@@ -582,10 +582,10 @@ export default async function HomePage() {
       {/* Leaderboard — wooden scoreboard */}
       <section>
         <h2
-          className="text-2xl mb-3 text-white"
+          className="text-2xl mb-3 text-stone-900"
           style={{
             fontFamily: "var(--font-bangers)",
-            textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
+            textShadow: "1px 1px 0px rgba(0,0,0,0.15)",
           }}
         >
           Standings
@@ -674,10 +674,10 @@ export default async function HomePage() {
       {predictionRows.length > 0 && (
         <section>
           <h2
-            className="text-2xl mb-3 text-white"
+            className="text-2xl mb-3 text-stone-900"
             style={{
               fontFamily: "var(--font-bangers)",
-              textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
+              textShadow: "1px 1px 0px rgba(0,0,0,0.15)",
             }}
           >
             Prediction Standings

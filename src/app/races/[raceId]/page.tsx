@@ -42,7 +42,7 @@ export default async function RaceDetailPage(props: {
   if (!race) {
     return (
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-        <h1 className="text-xl font-semibold">Race not found</h1>
+        <h1 className="text-xl font-semibold text-stone-100">Race not found</h1>
         <Link
           href="/races"
           className="text-red-400 hover:underline mt-2 inline-block"
@@ -205,15 +205,15 @@ export default async function RaceDetailPage(props: {
     <div className="space-y-6">
       <Link
         href="/races"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-stone-700 hover:text-stone-900 transition-colors"
       >
         &larr; Back to calendar
       </Link>
 
       {/* Pre-season banner */}
       {preSeason && (
-        <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-zinc-400 flex items-center gap-3">
-          <span className="text-zinc-500 text-lg">&#9432;</span>
+        <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-stone-400 flex items-center gap-3">
+          <span className="text-stone-500 text-lg">&#9432;</span>
           <span>
             This race happened before the league started. Results are shown
             for reference but don&apos;t count toward fantasy scores.
@@ -223,19 +223,19 @@ export default async function RaceDetailPage(props: {
 
       {/* Race header */}
       <header className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-        <div className="flex items-baseline gap-2 text-zinc-500 text-sm">
+        <div className="flex items-baseline gap-2 text-zinc-400 text-sm">
           Round {race.round} &middot; {season}
         </div>
-        <h1 className="text-3xl font-bold mt-1">{race.name}</h1>
+        <h1 className="text-3xl font-bold mt-1 text-stone-100">{race.name}</h1>
         {race.circuitName && (
-          <div className="text-zinc-400 mt-1">
+          <div className="text-stone-400 mt-1">
             {race.circuitName}
             {race.locality && ` / ${race.locality}`}
             {race.country && `, ${race.country}`}
           </div>
         )}
         <div className="flex flex-wrap items-center gap-3 mt-3">
-          <div className="text-sm text-zinc-300">{fmtDate(race.date)}</div>
+          <div className="text-sm text-stone-300">{fmtDate(race.date)}</div>
           {race.resultsLocked && (
             <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
               Results final
@@ -272,7 +272,7 @@ export default async function RaceDetailPage(props: {
       {/* Pick form (only before deadline, not pre-season) */}
       {!deadlinePassed && !preSeason && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3">Make your pick</h2>
+          <h2 className="text-lg font-semibold mb-3 text-stone-100">Make your pick</h2>
           <PickForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -317,7 +317,7 @@ export default async function RaceDetailPage(props: {
       {/* Prediction results (shown after deadline) */}
       {deadlinePassed && predictionPlayers.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
             {hasPredictionScores ? "Prediction scoreboard" : "All predictions"}
           </h2>
           <div className="p-4">
@@ -337,7 +337,7 @@ export default async function RaceDetailPage(props: {
       {/* All picks with scores (shown after deadline) */}
       {deadlinePassed && sortedPicks.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
             {hasScores ? "Fantasy scoreboard" : "All picks"}
           </h2>
           <div className="overflow-x-auto">
@@ -386,10 +386,10 @@ export default async function RaceDetailPage(props: {
                           )}
                         </td>
                       )}
-                      <td className="px-4 py-3 font-medium whitespace-nowrap">
+                      <td className="px-4 py-3 font-medium whitespace-nowrap text-stone-100">
                         {p.user.name}
                         {isMe && (
-                          <span className="text-zinc-500 text-xs ml-1.5">
+                          <span className="text-stone-500 text-xs ml-1.5">
                             (you)
                           </span>
                         )}
@@ -448,8 +448,8 @@ export default async function RaceDetailPage(props: {
 
       {deadlinePassed && sortedPicks.length === 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-2">All picks</h2>
-          <p className="text-zinc-400">
+          <h2 className="text-lg font-semibold mb-2 text-stone-100">All picks</h2>
+          <p className="text-stone-400">
             No picks were submitted for this race.
           </p>
         </section>
@@ -458,7 +458,7 @@ export default async function RaceDetailPage(props: {
       {/* Race results */}
       {race.results.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
             Race results
           </h2>
           <div className="overflow-x-auto">

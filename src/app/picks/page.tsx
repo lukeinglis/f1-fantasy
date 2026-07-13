@@ -82,11 +82,11 @@ export default async function MyPicksPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold">My Picks</h1>
-        <p className="text-zinc-400 mt-1 text-sm">
+        <h1 className="text-3xl font-bold text-stone-900">My Picks</h1>
+        <p className="text-stone-700 mt-1 text-sm">
           Track everything you&rsquo;ve used and what you have left.
           {seasonTotal > 0 && (
-            <span className="text-red-400 font-medium ml-2">
+            <span className="text-red-700 font-medium ml-2">
               Season total: {Math.round(seasonTotal * 10) / 10} pts
             </span>
           )}
@@ -117,14 +117,14 @@ export default async function MyPicksPage() {
       {/* Current race league picks (visible only after deadline) */}
       {currentRace && currentRacePicks.length > 0 && (
         <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800">
+          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
             <Link
               href={`/races/${currentRace.id}`}
               className="hover:text-red-400 transition-colors"
             >
               R{currentRace.round} / {currentRace.name}
             </Link>
-            <span className="text-sm text-zinc-400 font-normal ml-2">
+            <span className="text-sm text-stone-400 font-normal ml-2">
               League picks
             </span>
           </h2>
@@ -147,10 +147,10 @@ export default async function MyPicksPage() {
                         isMe ? "bg-red-900/5" : "hover:bg-zinc-800/30"
                       }`}
                     >
-                      <td className="px-4 py-2.5 font-medium whitespace-nowrap">
+                      <td className="px-4 py-2.5 font-medium whitespace-nowrap text-stone-100">
                         {p.user.name}
                         {isMe && (
-                          <span className="text-zinc-500 text-xs ml-1.5">
+                          <span className="text-stone-500 text-xs ml-1.5">
                             (you)
                           </span>
                         )}
@@ -195,11 +195,11 @@ export default async function MyPicksPage() {
       )}
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">By race</h2>
+        <h2 className="text-lg font-semibold mb-4 text-stone-900">By race</h2>
         {picks.length === 0 ? (
-          <p className="text-zinc-400">
+          <p className="text-stone-700">
             No picks yet.{" "}
-            <Link href="/races" className="text-red-400 hover:underline">
+            <Link href="/races" className="text-red-700 hover:text-red-800 hover:underline">
               Head to the calendar
             </Link>
             .
@@ -214,7 +214,7 @@ export default async function MyPicksPage() {
                 <Link
                   key={p.id}
                   href={`/races/${p.raceId}`}
-                  className="group relative rounded-lg overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors"
+                  className="group relative rounded-lg overflow-hidden border border-stone-400 hover:border-stone-500 transition-colors bg-stone-800"
                   style={{
                     background: `linear-gradient(135deg, ${color}20 0%, transparent 60%)`,
                   }}
@@ -242,17 +242,17 @@ export default async function MyPicksPage() {
                         >
                           R{p.race.round}
                         </span>
-                        <span className="text-[11px] text-zinc-400 truncate max-w-[80px]">
+                        <span className="text-[11px] text-stone-600 truncate max-w-[80px]">
                           {p.race.name}
                         </span>
                       </div>
                       <span className="text-sm font-bold tabular-nums">
                         {s ? (
-                          <span className="text-red-400">
+                          <span className="text-red-300">
                             {s.totalPoints}
                           </span>
                         ) : (
-                          <span className="text-zinc-600">&mdash;</span>
+                          <span className="text-stone-500">&mdash;</span>
                         )}
                       </span>
                     </div>
@@ -262,13 +262,13 @@ export default async function MyPicksPage() {
                         <DriverAvatar
                           driverId={p.driver.id}
                           size={56}
-                          className="shrink-0 ring-2 ring-zinc-700 group-hover:ring-zinc-500 transition-all"
+                          className="shrink-0 ring-2 ring-stone-600 group-hover:ring-stone-400 transition-all"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-zinc-800 shrink-0" />
+                        <div className="w-14 h-14 rounded-full bg-stone-700 shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">
+                        <p className="text-sm font-semibold truncate text-stone-100">
                           {p.driver
                             ? `${p.driver.givenName} ${p.driver.familyName}`
                             : "No driver"}
@@ -284,7 +284,7 @@ export default async function MyPicksPage() {
                             {teamShort(p.team.id)}
                           </span>
                         ) : (
-                          <span className="text-xs text-zinc-500 mt-1">
+                          <span className="text-xs text-stone-400 mt-1">
                             No constructor
                           </span>
                         )}
@@ -327,13 +327,13 @@ function UsagePanel({
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-stone-400">
         {title}
       </h3>
       <div className="flex items-baseline gap-3 mt-1">
-        <p className="text-2xl font-bold">
+        <p className="text-2xl font-bold text-stone-100">
           {availableCount}
-          <span className="text-sm text-zinc-400 font-normal ml-1">
+          <span className="text-sm text-stone-400 font-normal ml-1">
             available
           </span>
         </p>
@@ -343,12 +343,12 @@ function UsagePanel({
           </p>
         )}
       </div>
-      <p className="text-xs text-zinc-500">
+      <p className="text-xs text-stone-500">
         Max {max} uses per {title === "Drivers" ? "driver" : "constructor"}
       </p>
       {usedItems.length > 0 && (
         <div className="mt-3">
-          <p className="text-xs text-zinc-500 mb-1.5">Used so far:</p>
+          <p className="text-xs text-stone-500 mb-1.5">Used so far:</p>
           <div className="flex flex-wrap gap-1.5">
             {usedItems
               .sort(

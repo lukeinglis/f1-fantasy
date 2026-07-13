@@ -34,7 +34,7 @@ function LoginInner() {
 
   return (
     <div className="max-w-sm mx-auto mt-12 bg-zinc-900 border border-zinc-800 p-6 rounded-lg">
-      <h1 className="text-xl font-semibold mb-4">Sign in</h1>
+      <h1 className="text-xl font-semibold mb-4 text-stone-100">Sign in</h1>
       <form className="space-y-3" onSubmit={onSubmit}>
         <input
           type="text"
@@ -62,7 +62,7 @@ function LoginInner() {
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>
-      <p className="text-sm text-zinc-400 mt-4">
+      <p className="text-sm text-stone-400 mt-4">
         No account?{" "}
         <Link href="/register" className="text-red-400 hover:underline">
           Join the league

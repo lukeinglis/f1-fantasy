@@ -43,8 +43,8 @@ export default async function RacesPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold">{season} Race Calendar</h1>
-        <p className="text-zinc-400 mt-1 text-sm">
+        <h1 className="text-3xl font-bold text-stone-900">{season} Race Calendar</h1>
+        <p className="text-stone-700 mt-1 text-sm">
           {scoredCount} of {activeRaces.length} races scored.{" "}
           {nextRaceIdx >= 0
             ? `Next up: Round ${activeRaces[nextRaceIdx].round}.`
@@ -54,7 +54,7 @@ export default async function RacesPage() {
 
       {races.length === 0 ? (
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-          <p>
+          <p className="text-stone-300">
             No races loaded yet. Admin: go to{" "}
             <Link href="/admin" className="text-red-400 underline">
               Admin
@@ -79,7 +79,7 @@ export default async function RacesPage() {
                   className={`bg-zinc-900 border rounded-lg p-4 transition-colors flex justify-between items-center gap-4 ${
                     isNext
                       ? "border-red-600/60 ring-1 ring-red-600/20"
-                      : "border-zinc-800 hover:border-zinc-700"
+                      : "border-zinc-700 hover:border-zinc-600"
                   }`}
                 >
                   <div className="flex items-center gap-4 min-w-0">
@@ -97,7 +97,7 @@ export default async function RacesPage() {
                     <div className="min-w-0">
                       <div
                         className={`font-semibold truncate ${
-                          r.resultsLocked ? "text-zinc-400" : ""
+                          r.resultsLocked ? "text-stone-400" : "text-stone-100"
                         }`}
                       >
                         {r.name}
