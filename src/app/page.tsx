@@ -6,7 +6,7 @@ import { DriverAvatar } from "@/components/DriverAvatar";
 import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
 import { auth } from "@/lib/auth";
-import PickForm from "@/components/PickForm";
+import PickBanner from "@/components/PickBanner";
 import F1Game from "@/components/F1Game";
 
 export const dynamic = "force-dynamic";
@@ -498,25 +498,19 @@ export default async function HomePage() {
 
       {/* Pick banner — shown when logged-in user hasn't picked for next race */}
       {pickBanner && (
-        <section className="bg-zinc-900 border border-zinc-800 border-l-amber-500 border-l-4 rounded-xl p-5 sm:p-6">
-          <div className="flex items-baseline gap-2 mb-4">
-            <h2 className="text-lg font-semibold">Make your pick</h2>
-            <span className="text-sm text-zinc-500">
-              R{pickBanner.raceRound}: {pickBanner.raceName}
-            </span>
-          </div>
-          <PickForm
-            raceId={pickBanner.raceId}
-            drivers={pickBanner.drivers}
-            constructors={pickBanner.constructors}
-            currentDriverId={pickBanner.currentDriverId}
-            currentConstructorId={pickBanner.currentConstructorId}
-            driverUses={pickBanner.driverUses}
-            constructorUses={pickBanner.constructorUses}
-            maxDriverPicks={pickBanner.maxDriverPicks}
-            maxConstructorPicks={pickBanner.maxConstructorPicks}
-          />
-        </section>
+        <PickBanner
+          raceId={pickBanner.raceId}
+          raceName={pickBanner.raceName}
+          raceRound={pickBanner.raceRound}
+          drivers={pickBanner.drivers}
+          constructors={pickBanner.constructors}
+          currentDriverId={pickBanner.currentDriverId}
+          currentConstructorId={pickBanner.currentConstructorId}
+          driverUses={pickBanner.driverUses}
+          constructorUses={pickBanner.constructorUses}
+          maxDriverPicks={pickBanner.maxDriverPicks}
+          maxConstructorPicks={pickBanner.maxConstructorPicks}
+        />
       )}
 
       {/* Fun stats */}
