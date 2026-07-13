@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isPreSeasonRound } from "@/lib/season";
@@ -52,15 +51,11 @@ export default async function RaceDetailPage(props: {
       </div>
     );
   }
-  if (!userId) {
-    redirect(`/login?callbackUrl=/races/${raceId}`);
-  }
-
   const league = await prisma.league.findFirst();
   const season = league?.season ?? race.season;
   const preSeason = isPreSeasonRound(race.round);
 
-  const [activeDriverIds, allDrivers, constructors, myPicks, allPicks] = await Promise.all([
+  const [activeDriverIds, allDrivers, constructors, allPicks] = await Promise.all([
     prisma.raceResult.findMany({
       where: { race: { season } },
       select: { driverId: true },
@@ -68,10 +63,6 @@ export default async function RaceDetailPage(props: {
     }),
     prisma.driver.findMany({ orderBy: { familyName: "asc" } }),
     prisma.team.findMany({ orderBy: { name: "asc" } }),
-    prisma.pick.findMany({
-      where: { userId },
-      select: { driverId: true, teamId: true, raceId: true },
-    }),
     prisma.pick.findMany({
       where: { raceId },
       include: {
@@ -91,32 +82,48 @@ export default async function RaceDetailPage(props: {
   const driverById = new Map(drivers.map((d) => [d.id, d]));
   const consById = new Map(constructors.map((c) => [c.id, c]));
 
-  const myPick = await prisma.pick.findUnique({
-    where: { userId_raceId: { userId, raceId } },
-  });
-
-  // Driver/constructor usage *excluding* this race
+  // Fetch user-specific data only when authenticated
+  let myPick: { driverId: string | null; teamId: string | null } | null = null;
+  let myPicks: { driverId: string | null; teamId: string | null; raceId: string }[] = [];
+  let myPredictions: { position: number; driverId: string }[] = [];
   const driverUses: Record<string, number> = {};
   const consUses: Record<string, number> = {};
-  for (const p of myPicks) {
-    if (p.raceId === raceId) continue;
-    if (p.driverId) driverUses[p.driverId] = (driverUses[p.driverId] ?? 0) + 1;
-    if (p.teamId) consUses[p.teamId] = (consUses[p.teamId] ?? 0) + 1;
+
+  if (userId) {
+    const [fetchedPick, fetchedMyPicks, fetchedPredictions] = await Promise.all([
+      prisma.pick.findUnique({
+        where: { userId_raceId: { userId, raceId } },
+      }),
+      prisma.pick.findMany({
+        where: { userId },
+        select: { driverId: true, teamId: true, raceId: true },
+      }),
+      prisma.prediction.findMany({
+        where: { userId, raceId },
+        orderBy: { position: "asc" },
+      }),
+    ]);
+    myPick = fetchedPick;
+    myPicks = fetchedMyPicks;
+    myPredictions = fetchedPredictions;
+
+    for (const p of myPicks) {
+      if (p.raceId === raceId) continue;
+      if (p.driverId) driverUses[p.driverId] = (driverUses[p.driverId] ?? 0) + 1;
+      if (p.teamId) consUses[p.teamId] = (consUses[p.teamId] ?? 0) + 1;
+    }
   }
+
   const maxDriver = league?.maxDriverPicks ?? 2;
   const maxConstructor = league?.maxConstructorPicks ?? 3;
 
   const now = new Date();
   const deadlinePassed = now >= race.pickDeadline;
-  const role = (session?.user as { role?: string }).role;
+  const role = (session?.user as { role?: string })?.role;
   const isAdmin = role === "admin";
 
   // Prediction data
-  const [myPredictions, allPredictions, predictionScores] = await Promise.all([
-    prisma.prediction.findMany({
-      where: { userId, raceId },
-      orderBy: { position: "asc" },
-    }),
+  const [allPredictions, predictionScores] = await Promise.all([
     deadlinePassed
       ? prisma.prediction.findMany({
           where: { raceId },
@@ -283,15 +290,16 @@ export default async function RaceDetailPage(props: {
         )}
       </header>
 
-      {/* Pick form (only before deadline, not pre-season) */}
-      {!deadlinePassed && !preSeason && (
+      {/* Pick form (only before deadline, not pre-season, authenticated only) */}
+      {userId && !deadlinePassed && !preSeason && (
         <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
           <h2
-            className="text-lg mb-3 text-stone-800"
+            className="text-lg mb-1 text-stone-800"
             style={{ fontFamily: "var(--font-bangers)" }}
           >
             Make your pick
           </h2>
+          <p className="text-xs text-stone-500 mb-3">Pick one driver and one constructor — score points based on their race finish.</p>
           <PickForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -314,9 +322,10 @@ export default async function RaceDetailPage(props: {
         </section>
       )}
 
-      {/* Prediction form (only before deadline, not pre-season) */}
-      {!deadlinePassed && !preSeason && (
+      {/* Prediction form (only before deadline, not pre-season, authenticated only) */}
+      {userId && !deadlinePassed && !preSeason && (
         <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <p className="text-xs text-stone-500 mb-3">Predict the top 10 finishers for bonus points in a separate challenge.</p>
           <PredictionForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -349,7 +358,7 @@ export default async function RaceDetailPage(props: {
                 driverId: r.driverId,
                 position: r.position,
               }))}
-              currentUserId={userId}
+              currentUserId={userId ?? ""}
               hasScores={hasPredictionScores}
             />
           </div>

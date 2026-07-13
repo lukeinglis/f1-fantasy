@@ -334,21 +334,21 @@ export default async function GridPage() {
                         </div>
                         {/* Tooltip */}
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
-                          <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap shadow-xl">
-                            <div className="text-zinc-200 font-medium">
+                          <div className="card-paper border-2 border-stone-400 cartoon-shadow rounded-lg px-3 py-2 text-left text-xs whitespace-nowrap">
+                            <div className="text-stone-800 font-medium">
                               {cell.driverName ?? "No driver"}
                             </div>
-                            <div className="text-zinc-400">
+                            <div className="text-stone-600">
                               {cell.constructorName ?? "No constructor"}
                             </div>
                             {cell.totalPoints != null && (
-                              <div className="text-red-400 font-bold mt-1">
+                              <div className="text-red-700 font-bold mt-1">
                                 {cell.totalPoints} pts
                               </div>
                             )}
                           </div>
                           <div
-                            className="w-2 h-2 bg-zinc-900 border-b border-r border-zinc-700 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
+                            className="w-2 h-2 card-paper border-b-2 border-r-2 border-stone-400 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-1"
                           />
                         </div>
                       </td>

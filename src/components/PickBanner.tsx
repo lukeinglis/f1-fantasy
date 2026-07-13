@@ -15,10 +15,11 @@ interface PickBannerProps {
   constructorUses: Record<string, number>;
   maxDriverPicks: number;
   maxConstructorPicks: number;
+  isFirstPick?: boolean;
 }
 
 export default function PickBanner(props: PickBannerProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(props.isFirstPick ?? false);
 
   return (
     <section

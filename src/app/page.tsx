@@ -7,7 +7,6 @@ import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
 import { auth } from "@/lib/auth";
 import PickBanner from "@/components/PickBanner";
-import F1Game from "@/components/F1Game";
 
 export const dynamic = "force-dynamic";
 
@@ -376,6 +375,21 @@ async function getHomeData() {
     }
   }
 
+  // Count total season picks for logged-in user (for onboarding detection)
+  let seasonPickCount = 0;
+  if (userId) {
+    seasonPickCount = await prisma.pick.count({
+      where: {
+        userId,
+        race: { season },
+        OR: [
+          { driverId: { not: null } },
+          { teamId: { not: null } },
+        ],
+      },
+    });
+  }
+
   return {
     season,
     rows,
@@ -387,6 +401,7 @@ async function getHomeData() {
     stats,
     pickBanner,
     existingPick,
+    seasonPickCount,
   };
 }
 
@@ -410,6 +425,7 @@ export default async function HomePage() {
     stats,
     pickBanner,
     existingPick,
+    seasonPickCount,
   } = await getHomeData();
   const noLeague = rows.length === 0;
 
@@ -525,6 +541,38 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Onboarding card — shown when logged-in user has zero picks for the season */}
+      {pickBanner && seasonPickCount === 0 && (
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
+          <h2
+            className="text-2xl text-stone-900 mb-2"
+            style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.1)" }}
+          >
+            Welcome to F1 Fantasy!
+          </h2>
+          <p className="text-stone-700 text-sm mb-4">
+            Pick a driver and constructor each race. Use them wisely — each driver can be picked twice, each constructor three times per season. Score points based on race results!
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4 mb-4">
+            <div className="bg-stone-100 rounded-lg p-3 border border-stone-300">
+              <div className="font-bold text-stone-800 text-sm mb-1" style={{ fontFamily: "var(--font-bangers)" }}>How picks work</div>
+              <p className="text-stone-600 text-xs">Pick one driver + one constructor each race. Their finishing positions earn you fantasy points.</p>
+            </div>
+            <div className="bg-stone-100 rounded-lg p-3 border border-stone-300">
+              <div className="font-bold text-stone-800 text-sm mb-1" style={{ fontFamily: "var(--font-bangers)" }}>Prediction challenge</div>
+              <p className="text-stone-600 text-xs">Predict the top 10 finishers for bonus points in a separate leaderboard.</p>
+            </div>
+          </div>
+          <Link
+            href="/rules"
+            className="inline-block px-5 py-2.5 bg-amber-500 hover:bg-amber-400 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+            style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
+          >
+            How to Play
+          </Link>
+        </section>
+      )}
+
       {/* Pick banner — shown when logged-in user hasn't picked for next race */}
       {pickBanner && (
         <PickBanner
@@ -539,6 +587,7 @@ export default async function HomePage() {
           constructorUses={pickBanner.constructorUses}
           maxDriverPicks={pickBanner.maxDriverPicks}
           maxConstructorPicks={pickBanner.maxConstructorPicks}
+          isFirstPick={seasonPickCount === 0}
         />
       )}
 
@@ -597,7 +646,7 @@ export default async function HomePage() {
             textShadow: "1px 1px 0px rgba(0,0,0,0.15)",
           }}
         >
-          Standings
+          Fantasy Picks Standings
         </h2>
         {noLeague ? (
           <div className="wood-panel border-4 border-[#2a1f15] rounded-2xl p-6 cartoon-shadow">
@@ -753,61 +802,64 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* F1 Mini Game — Arcade cabinet framing */}
-      <section>
-        <div className="wood-panel border-4 border-[#2a1f15] rounded-2xl p-1 cartoon-shadow">
-          <div className="bg-gradient-to-b from-red-700 to-red-800 rounded-t-xl px-4 py-2 text-center border-b-2 border-red-900">
-            <h2
-              className="text-2xl text-white inline-block"
+      {/* F1 Dodge mini game CTA */}
+      <Link
+        href="/game"
+        className="block wood-panel border-4 border-[#2a1f15] rounded-2xl p-4 cartoon-shadow hover:scale-[1.01] transition-transform"
+      >
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-b from-red-700 to-red-800 rounded-xl px-4 py-3 border-2 border-red-900 shrink-0">
+            <span
+              className="text-xl text-white"
               style={{
                 fontFamily: "var(--font-bangers)",
                 textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
-                letterSpacing: "0.05em",
               }}
             >
               <span className="text-yellow-300">F1</span> Dodge
-              <span className="text-red-200 text-base font-normal ml-2" style={{ fontFamily: "var(--font-geist-sans)" }}>arcade</span>
-            </h2>
+            </span>
           </div>
-          <div className="p-2">
-            <F1Game />
+          <div>
+            <div className="text-amber-100 font-bold text-sm">Play the mini game</div>
+            <div className="text-amber-100/50 text-xs">Dodge the traffic and rack up points</div>
           </div>
+          <span className="text-amber-300 ml-auto text-lg">&rarr;</span>
         </div>
-      </section>
+      </Link>
 
       {/* Bottom links — chunky cartoon buttons */}
       <div className="flex flex-wrap gap-3">
         <Link
           href="/grid"
-          className="px-6 py-3 bg-red-600 hover:bg-red-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          className="px-6 py-3 bg-red-600 hover:bg-red-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform sticker"
           style={{ fontFamily: "var(--font-bangers)", fontSize: "1rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           Season Grid
         </Link>
         <Link
           href="/races"
-          className="px-5 py-3 bg-blue-600 hover:bg-blue-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          className="px-5 py-3 bg-amber-800 hover:bg-amber-700 hover:scale-105 rounded-xl text-amber-50 border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform sticker"
           style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           Race Calendar
         </Link>
         <Link
           href="/picks"
-          className="px-5 py-3 bg-emerald-600 hover:bg-emerald-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          className="px-5 py-3 bg-amber-800 hover:bg-amber-700 hover:scale-105 rounded-xl text-amber-50 border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform sticker"
           style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           My Picks
         </Link>
         <Link
           href="/stats"
-          className="px-5 py-3 bg-purple-600 hover:bg-purple-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          className="px-5 py-3 bg-amber-800 hover:bg-amber-700 hover:scale-105 rounded-xl text-amber-50 border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform sticker"
           style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           Stats
         </Link>
         <Link
           href="/rules"
-          className="px-5 py-3 bg-amber-500 hover:bg-amber-400 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          className="px-5 py-3 bg-amber-800 hover:bg-amber-700 hover:scale-105 rounded-xl text-amber-50 border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform sticker"
           style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           How to Play

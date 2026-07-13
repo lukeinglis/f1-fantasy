@@ -40,7 +40,8 @@ export default function PickForm(props: Props) {
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
 
-  const hasSelection = driverId !== "" || consId !== "";
+  const hasSelection = driverId !== "" && consId !== "";
+  const hasPartialSelection = (driverId !== "" || consId !== "") && !hasSelection;
   const isUpdate = !!(props.currentDriverId || props.currentConstructorId);
 
   async function onSubmit(e: React.FormEvent) {
@@ -179,12 +180,18 @@ export default function PickForm(props: Props) {
         </div>
       )}
 
+      {hasPartialSelection && (
+        <div className="text-sm text-amber-700 font-medium">
+          Select both a driver and a constructor
+        </div>
+      )}
+
       <div className="flex items-center gap-3">
         <button
           disabled={saving || !hasSelection}
           className="px-5 py-2.5 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold text-sm text-white transition-colors sticker"
         >
-          {saving ? "Saving..." : isUpdate ? "Update pick" : "Save pick"}
+          {saving ? "Saving..." : hasPartialSelection ? "Pick both to save" : isUpdate ? "Update pick" : "Save pick"}
         </button>
         <span className="text-xs text-stone-500">
           You can change your pick any time before the race starts.
