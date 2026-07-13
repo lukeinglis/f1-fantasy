@@ -60,7 +60,12 @@ export default async function RaceDetailPage(props: {
   const season = league?.season ?? race.season;
   const preSeason = isPreSeasonRound(race.round);
 
-  const [drivers, constructors, myPicks, allPicks] = await Promise.all([
+  const [activeDriverIds, allDrivers, constructors, myPicks, allPicks] = await Promise.all([
+    prisma.raceResult.findMany({
+      where: { race: { season } },
+      select: { driverId: true },
+      distinct: ['driverId'],
+    }),
     prisma.driver.findMany({ orderBy: { familyName: "asc" } }),
     prisma.team.findMany({ orderBy: { name: "asc" } }),
     prisma.pick.findMany({
@@ -78,6 +83,10 @@ export default async function RaceDetailPage(props: {
       },
     }),
   ]);
+  const activeIds = new Set(activeDriverIds.map(r => r.driverId));
+  const drivers = activeIds.size > 0
+    ? allDrivers.filter(d => activeIds.has(d.id))
+    : allDrivers;
 
   const driverById = new Map(drivers.map((d) => [d.id, d]));
   const consById = new Map(constructors.map((c) => [c.id, c]));

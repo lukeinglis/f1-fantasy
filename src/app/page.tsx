@@ -329,7 +329,12 @@ async function getHomeData() {
         raceId: nextRace.id,
       };
     } else {
-      const [drivers, constructors, myPicks] = await Promise.all([
+      const [activeDriverIds, allDrivers, constructors, myPicks] = await Promise.all([
+        prisma.raceResult.findMany({
+          where: { race: { season } },
+          select: { driverId: true },
+          distinct: ['driverId'],
+        }),
         prisma.driver.findMany({ orderBy: { familyName: "asc" } }),
         prisma.team.findMany({ orderBy: { name: "asc" } }),
         prisma.pick.findMany({
@@ -337,6 +342,10 @@ async function getHomeData() {
           select: { driverId: true, teamId: true, raceId: true },
         }),
       ]);
+      const activeIds = new Set(activeDriverIds.map(r => r.driverId));
+      const drivers = activeIds.size > 0
+        ? allDrivers.filter(d => activeIds.has(d.id))
+        : allDrivers;
 
       const driverUses: Record<string, number> = {};
       const constructorUses: Record<string, number> = {};
