@@ -82,7 +82,12 @@ export default async function MyPicksPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-stone-900">My Picks</h1>
+        <h1
+          className="text-3xl text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
+          My Picks
+        </h1>
         <p className="text-stone-700 mt-1 text-sm">
           Track everything you&rsquo;ve used and what you have left.
           {seasonTotal > 0 && (
@@ -116,25 +121,28 @@ export default async function MyPicksPage() {
 
       {/* Current race league picks (visible only after deadline) */}
       {currentRace && currentRacePicks.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
+        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+          <h2
+            className="text-lg font-semibold p-4 border-b border-[#2a1f15]/50 text-amber-100"
+            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+          >
             <Link
               href={`/races/${currentRace.id}`}
               className="hover:text-red-400 transition-colors"
             >
               R{currentRace.round} / {currentRace.name}
             </Link>
-            <span className="text-sm text-stone-400 font-normal ml-2">
+            <span className="text-sm text-amber-300/60 font-normal ml-2">
               League picks
             </span>
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-2">Player</th>
-                  <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Driver</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructor</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,25 +151,25 @@ export default async function MyPicksPage() {
                   return (
                     <tr
                       key={p.id}
-                      className={`border-t border-zinc-800 ${
-                        isMe ? "bg-red-900/5" : "hover:bg-zinc-800/30"
+                      className={`border-t border-[#2a1f15]/50 ${
+                        isMe ? "bg-amber-900/20" : "hover:bg-white/5"
                       }`}
                     >
-                      <td className="px-4 py-2.5 font-medium whitespace-nowrap text-stone-100">
+                      <td className="px-4 py-2.5 font-medium whitespace-nowrap text-amber-50">
                         {p.user.name}
                         {isMe && (
-                          <span className="text-stone-500 text-xs ml-1.5">
+                          <span className="text-amber-100/50 text-xs ml-1.5">
                             (you)
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
+                      <td className="px-4 py-2.5 whitespace-nowrap text-amber-100/80">
                         {p.driver ? (
                           <span className="inline-flex items-center gap-1.5">
                             <DriverAvatar driverId={p.driver.id} size={24} />
                             {p.driver.givenName} {p.driver.familyName}
                             {p.driver.code && (
-                              <span className="text-zinc-500 text-xs">
+                              <span className="text-amber-100/50 text-xs">
                                 {p.driver.code}
                               </span>
                             )}
@@ -195,7 +203,12 @@ export default async function MyPicksPage() {
       )}
 
       <section>
-        <h2 className="text-lg font-semibold mb-4 text-stone-900">By race</h2>
+        <h2
+          className="text-lg mb-4 text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
+          By race
+        </h2>
         {picks.length === 0 ? (
           <p className="text-stone-700">
             No picks yet.{" "}
@@ -214,20 +227,20 @@ export default async function MyPicksPage() {
                 <Link
                   key={p.id}
                   href={`/races/${p.raceId}`}
-                  className="group relative rounded-lg overflow-hidden border border-stone-400 hover:border-stone-500 transition-colors bg-stone-800"
+                  className="group relative card-paper rounded-xl overflow-hidden border-2 border-stone-400 hover:border-stone-500 transition-colors cartoon-shadow"
                   style={{
-                    background: `linear-gradient(135deg, ${color}20 0%, transparent 60%)`,
+                    background: `linear-gradient(135deg, ${color}15 0%, #f5f0e8 60%)`,
                   }}
                 >
                   <div
-                    className="absolute left-0 top-0 bottom-0 w-1"
+                    className="absolute left-0 top-0 bottom-0 w-1.5"
                     style={{ backgroundColor: color }}
                   />
 
                   {p.team && (
                     <span
                       className="absolute right-[-0.25rem] top-1/2 -translate-y-1/2 text-4xl font-black uppercase pointer-events-none select-none leading-none"
-                      style={{ color: `${color}28` }}
+                      style={{ color: `${color}20` }}
                     >
                       {teamShort(p.team.id)}
                     </span>
@@ -238,21 +251,21 @@ export default async function MyPicksPage() {
                       <div className="flex items-center gap-1.5">
                         <span
                           className="text-[10px] font-bold px-1.5 py-0.5 rounded"
-                          style={{ backgroundColor: `${color}40`, color }}
+                          style={{ backgroundColor: `${color}30`, color }}
                         >
                           R{p.race.round}
                         </span>
-                        <span className="text-[11px] text-stone-600 truncate max-w-[80px]">
+                        <span className="text-[11px] text-stone-500 truncate max-w-[80px]">
                           {p.race.name}
                         </span>
                       </div>
                       <span className="text-sm font-bold tabular-nums">
                         {s ? (
-                          <span className="text-red-300">
+                          <span className="text-red-700">
                             {s.totalPoints}
                           </span>
                         ) : (
-                          <span className="text-stone-500">&mdash;</span>
+                          <span className="text-stone-400">&mdash;</span>
                         )}
                       </span>
                     </div>
@@ -262,13 +275,13 @@ export default async function MyPicksPage() {
                         <DriverAvatar
                           driverId={p.driver.id}
                           size={56}
-                          className="shrink-0 ring-2 ring-stone-600 group-hover:ring-stone-400 transition-all"
+                          className="shrink-0 ring-2 ring-stone-400 group-hover:ring-stone-500 transition-all"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-stone-700 shrink-0" />
+                        <div className="w-14 h-14 rounded-full bg-stone-300 shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate text-stone-100">
+                        <p className="text-sm font-semibold truncate text-stone-800">
                           {p.driver
                             ? `${p.driver.givenName} ${p.driver.familyName}`
                             : "No driver"}
@@ -284,7 +297,7 @@ export default async function MyPicksPage() {
                             {teamShort(p.team.id)}
                           </span>
                         ) : (
-                          <span className="text-xs text-stone-400 mt-1">
+                          <span className="text-xs text-stone-500 mt-1">
                             No constructor
                           </span>
                         )}
@@ -326,19 +339,22 @@ function UsagePanel({
   const availableCount = items.length - exhaustedCount;
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-stone-400">
+    <div className="card-paper border-2 border-stone-400 rounded-xl p-4 cartoon-shadow">
+      <h3
+        className="text-sm font-semibold uppercase tracking-wide text-stone-600"
+        style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.08em" }}
+      >
         {title}
       </h3>
       <div className="flex items-baseline gap-3 mt-1">
-        <p className="text-2xl font-bold text-stone-100">
+        <p className="text-2xl font-bold text-stone-900">
           {availableCount}
-          <span className="text-sm text-stone-400 font-normal ml-1">
+          <span className="text-sm text-stone-500 font-normal ml-1">
             available
           </span>
         </p>
         {exhaustedCount > 0 && (
-          <p className="text-sm text-red-400">
+          <p className="text-sm text-red-700">
             {exhaustedCount} exhausted
           </p>
         )}
@@ -382,8 +398,8 @@ function UsagePanel({
                     key={i.id}
                     className={`text-[11px] px-2 py-0.5 rounded border ${
                       exhausted
-                        ? "bg-red-900/40 text-red-300 border-red-800"
-                        : "bg-amber-900/30 text-amber-200 border-amber-800"
+                        ? "bg-red-100 text-red-700 border-red-400"
+                        : "bg-amber-100 text-amber-800 border-amber-400"
                     }`}
                     title={`${i.label}: ${used}/${max}`}
                   >

@@ -70,7 +70,7 @@ export default function PickForm(props: Props) {
     <form onSubmit={onSubmit} className="space-y-5">
       {/* Driver card grid */}
       <div>
-        <p className="text-sm font-medium text-zinc-300 mb-2">Driver</p>
+        <p className="text-sm font-medium text-stone-700 mb-2">Driver</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
           {props.drivers.map((d) => {
             const used = props.driverUses[d.id] ?? 0;
@@ -87,22 +87,22 @@ export default function PickForm(props: Props) {
                   setDriverId(selected ? "" : d.id);
                   setSavedAt(null);
                 }}
-                className={`flex flex-col items-center bg-zinc-800 border rounded-lg px-2 py-2 text-center transition-all ${
+                className={`flex flex-col items-center card-paper border-2 rounded-lg px-2 py-2 text-center transition-all ${
                   exhausted
-                    ? "opacity-30 cursor-not-allowed border-zinc-600"
+                    ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected
-                      ? "ring-2 ring-red-500 border-red-500 bg-red-900/10 cursor-pointer"
-                      : "border-zinc-600 hover:border-zinc-500 cursor-pointer"
+                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer cartoon-shadow"
+                      : "border-stone-400 hover:border-stone-500 cursor-pointer"
                 }`}
               >
                 <DriverAvatar driverId={d.id} size={32} className="shrink-0" />
-                <span className="text-xs font-bold text-zinc-200 mt-1">
+                <span className="text-xs font-bold text-stone-800 mt-1">
                   {d.code ?? d.id.substring(0, 3).toUpperCase()}
                 </span>
-                <span className="text-[10px] text-zinc-500 truncate w-full">
+                <span className="text-[10px] text-stone-500 truncate w-full">
                   {d.familyName}
                 </span>
-                <span className="text-[9px] text-zinc-600 mt-0.5">
+                <span className="text-[9px] text-stone-400 mt-0.5">
                   {used}/{props.maxDriverPicks}
                 </span>
               </button>
@@ -113,7 +113,7 @@ export default function PickForm(props: Props) {
 
       {/* Constructor card grid */}
       <div>
-        <p className="text-sm font-medium text-zinc-300 mb-2">Constructor</p>
+        <p className="text-sm font-medium text-stone-700 mb-2">Constructor</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
           {props.constructors.map((c) => {
             const used = props.constructorUses[c.id] ?? 0;
@@ -132,14 +132,14 @@ export default function PickForm(props: Props) {
                   setConsId(selected ? "" : c.id);
                   setSavedAt(null);
                 }}
-                className={`flex items-center gap-2 bg-zinc-800 border rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
+                className={`flex items-center gap-2 card-paper border-2 rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
                   exhausted
-                    ? "opacity-30 cursor-not-allowed border-zinc-600"
+                    ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected
-                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer"
-                      : "border-zinc-600 hover:border-zinc-500 cursor-pointer"
+                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer cartoon-shadow"
+                      : "border-stone-400 hover:border-stone-500 cursor-pointer"
                 }`}
-                style={{ borderLeftColor: exhausted ? '#52525b' : selected ? '#ef4444' : color }}
+                style={{ borderLeftColor: exhausted ? '#a8a29e' : selected ? '#ef4444' : color }}
               >
                 <div
                   className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center"
@@ -153,10 +153,10 @@ export default function PickForm(props: Props) {
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <span className="text-xs font-medium text-zinc-200 block truncate">
+                  <span className="text-xs font-medium text-stone-800 block truncate">
                     {c.name}
                   </span>
-                  <span className="text-[9px] text-zinc-600">
+                  <span className="text-[9px] text-stone-400">
                     {used}/{props.maxConstructorPicks}
                   </span>
                 </div>
@@ -168,12 +168,12 @@ export default function PickForm(props: Props) {
 
       {/* Status messages */}
       {error && (
-        <div className="bg-red-900/20 border border-red-800 rounded-lg px-4 py-2.5 text-sm text-red-300">
+        <div className="bg-red-50 border-2 border-red-400 rounded-lg px-4 py-2.5 text-sm text-red-700 font-medium">
           {error}
         </div>
       )}
       {savedAt && !error && (
-        <div className="bg-emerald-900/20 border border-emerald-800 rounded-lg px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
+        <div className="bg-emerald-50 border-2 border-emerald-400 rounded-lg px-4 py-2.5 text-sm text-emerald-700 font-medium flex items-center gap-2">
           <span>&#10003;</span>
           Pick saved at {savedAt.toLocaleTimeString()}
         </div>
@@ -182,11 +182,11 @@ export default function PickForm(props: Props) {
       <div className="flex items-center gap-3">
         <button
           disabled={saving || !hasSelection}
-          className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
+          className="px-5 py-2.5 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold text-sm text-white transition-colors sticker"
         >
           {saving ? "Saving..." : isUpdate ? "Update pick" : "Save pick"}
         </button>
-        <span className="text-xs text-zinc-500">
+        <span className="text-xs text-stone-500">
           You can change your pick any time before the race starts.
         </span>
       </div>

@@ -43,7 +43,12 @@ export default async function RacesPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-stone-900">{season} Race Calendar</h1>
+        <h1
+          className="text-3xl text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
+          {season} Race Calendar
+        </h1>
         <p className="text-stone-700 mt-1 text-sm">
           {scoredCount} of {activeRaces.length} races scored.{" "}
           {nextRaceIdx >= 0
@@ -53,10 +58,10 @@ export default async function RacesPage() {
       </header>
 
       {races.length === 0 ? (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-          <p className="text-stone-300">
+        <div className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
+          <p className="text-stone-600">
             No races loaded yet. Admin: go to{" "}
-            <Link href="/admin" className="text-red-400 underline">
+            <Link href="/admin" className="text-red-700 underline font-bold">
               Admin
             </Link>{" "}
             and click &quot;Sync season&quot;.
@@ -76,20 +81,20 @@ export default async function RacesPage() {
                 <Link
                   key={r.id}
                   href={`/races/${r.id}`}
-                  className={`bg-zinc-900 border rounded-lg p-4 transition-colors flex justify-between items-center gap-4 ${
+                  className={`card-paper border-2 rounded-xl p-4 transition-colors flex justify-between items-center gap-4 cartoon-shadow ${
                     isNext
-                      ? "border-red-600/60 ring-1 ring-red-600/20"
-                      : "border-zinc-700 hover:border-zinc-600"
+                      ? "border-red-600 ring-1 ring-red-600/30"
+                      : "border-stone-400 hover:border-stone-500"
                   }`}
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <span
                       className={`tabular-nums text-sm font-mono w-8 shrink-0 ${
                         r.resultsLocked
-                          ? "text-zinc-600"
+                          ? "text-stone-400"
                           : isNext
-                            ? "text-red-400 font-bold"
-                            : "text-zinc-500"
+                            ? "text-red-700 font-bold"
+                            : "text-stone-500"
                       }`}
                     >
                       R{r.round}
@@ -97,12 +102,12 @@ export default async function RacesPage() {
                     <div className="min-w-0">
                       <div
                         className={`font-semibold truncate ${
-                          r.resultsLocked ? "text-stone-400" : "text-stone-100"
+                          r.resultsLocked ? "text-stone-500" : "text-stone-800"
                         }`}
                       >
                         {r.name}
                       </div>
-                      <div className="text-xs text-zinc-500 mt-0.5">
+                      <div className="text-xs text-stone-500 mt-0.5">
                         {r.country ? `${r.country} / ` : ""}
                         {shortDate(r.date)}
                       </div>
@@ -110,23 +115,23 @@ export default async function RacesPage() {
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {r.resultsLocked ? (
-                      <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
                         Scored
                       </span>
                     ) : past ? (
-                      <span className="text-xs px-2 py-1 rounded bg-amber-900/40 text-amber-300 border border-amber-800">
-                        Awaiting results
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold sticker">
+                        Awaiting
                       </span>
                     ) : hasPick ? (
-                      <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
                         Pick set
                       </span>
                     ) : isNext ? (
-                      <span className="text-xs px-2 py-1 rounded bg-red-900/40 text-red-300 border border-red-800 font-medium">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-red-600 text-white font-bold sticker">
                         Pick now
                       </span>
                     ) : (
-                      <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-stone-400 text-white font-bold sticker">
                         Open
                       </span>
                     )}

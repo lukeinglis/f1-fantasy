@@ -13,9 +13,9 @@ export default async function AdminPage() {
   }
   if (role !== "admin") {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-        <h1 className="text-xl font-semibold text-stone-100">Admin only</h1>
-        <p className="text-stone-400 mt-1">
+      <div className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
+        <h1 className="text-xl font-semibold text-stone-800">Admin only</h1>
+        <p className="text-stone-500 mt-1">
           This page is only available to the league admin.
         </p>
       </div>
@@ -43,7 +43,12 @@ export default async function AdminPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-stone-900">Admin</h1>
+        <h1
+          className="text-3xl text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
+          Admin
+        </h1>
         <p className="text-stone-700 mt-1">
           Sync calendar/grid from jolpica, pull race results, or enter results manually.
         </p>

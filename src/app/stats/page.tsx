@@ -234,13 +234,18 @@ async function getStatsData() {
   };
 }
 
+const STAT_ROTATIONS = ["-rotate-1", "rotate-[1deg]", "-rotate-[0.5deg]", "rotate-[1.5deg]"];
+
 export default async function StatsPage() {
   const data = await getStatsData();
 
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-3xl font-bold text-stone-900">
+        <h1
+          className="text-3xl text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
           Season <span className="text-red-700">Stats</span>
         </h1>
         <p className="text-stone-700 mt-1 text-sm">
@@ -249,45 +254,54 @@ export default async function StatsPage() {
       </header>
 
       {/* Highlight cards */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {data.bestRace && (
-          <StatCard
-            label="Best single race"
-            value={`${data.bestRace.totalPoints} pts`}
-            sub={`${data.bestRace.userName}, R${data.bestRace.round}`}
-            color="text-amber-400"
-          />
-        )}
-        {data.worstRace && data.scoredRaces > 0 && (
-          <StatCard
-            label="Lowest race score"
-            value={`${data.worstRace.totalPoints} pts`}
-            sub={`${data.worstRace.userName}, R${data.worstRace.round}`}
-            color="text-zinc-400"
-          />
-        )}
-        {data.winsLeaderboard[0] && (
-          <StatCard
-            label="Most race wins"
-            value={`${data.winsLeaderboard[0].wins}`}
-            sub={data.winsLeaderboard[0].name}
-            color="text-emerald-400"
-          />
-        )}
-        {data.raceAverages.length > 0 && (
-          <StatCard
-            label="Average race score"
-            value={`${(data.raceAverages.reduce((s, r) => s + r.avg, 0) / data.raceAverages.length).toFixed(1)}`}
-            sub="across all players"
-            color="text-blue-400"
-          />
-        )}
+      <section className="cork-board border-4 border-[#3d2b1f] rounded-2xl p-4 sm:p-6 cartoon-shadow">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {data.bestRace && (
+            <StatCard
+              label="Best single race"
+              value={`${data.bestRace.totalPoints} pts`}
+              sub={`${data.bestRace.userName}, R${data.bestRace.round}`}
+              color="text-amber-700"
+              rotation={STAT_ROTATIONS[0]}
+            />
+          )}
+          {data.worstRace && data.scoredRaces > 0 && (
+            <StatCard
+              label="Lowest race score"
+              value={`${data.worstRace.totalPoints} pts`}
+              sub={`${data.worstRace.userName}, R${data.worstRace.round}`}
+              color="text-stone-600"
+              rotation={STAT_ROTATIONS[1]}
+            />
+          )}
+          {data.winsLeaderboard[0] && (
+            <StatCard
+              label="Most race wins"
+              value={`${data.winsLeaderboard[0].wins}`}
+              sub={data.winsLeaderboard[0].name}
+              color="text-emerald-700"
+              rotation={STAT_ROTATIONS[2]}
+            />
+          )}
+          {data.raceAverages.length > 0 && (
+            <StatCard
+              label="Average race score"
+              value={`${(data.raceAverages.reduce((s, r) => s + r.avg, 0) / data.raceAverages.length).toFixed(1)}`}
+              sub="across all players"
+              color="text-blue-700"
+              rotation={STAT_ROTATIONS[3]}
+            />
+          )}
+        </div>
       </section>
 
       {/* Race wins leaderboard */}
       {data.winsLeaderboard.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3 text-stone-100">
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <h2
+            className="text-lg mb-3 text-stone-800"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
             Race wins
           </h2>
           <div className="space-y-2">
@@ -296,19 +310,19 @@ export default async function StatsPage() {
               const pct = maxWins > 0 ? (w.wins / maxWins) * 100 : 0;
               return (
                 <div key={w.name} className="flex items-center gap-3">
-                  <span className="text-zinc-500 text-sm w-4 tabular-nums">
+                  <span className="text-stone-500 text-sm w-4 tabular-nums">
                     {i + 1}
                   </span>
-                  <span className="text-sm font-medium w-28 truncate text-stone-200">
+                  <span className="text-sm font-medium w-28 truncate text-stone-800">
                     {w.name}
                   </span>
-                  <div className="flex-1 bg-zinc-800 rounded-full h-4 overflow-hidden">
+                  <div className="flex-1 bg-stone-200 rounded-full h-4 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-red-600 to-red-400 transition-all"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="text-sm font-bold text-red-400 tabular-nums w-8 text-right">
+                  <span className="text-sm font-bold text-red-700 tabular-nums w-8 text-right">
                     {w.wins}
                   </span>
                 </div>
@@ -320,8 +334,11 @@ export default async function StatsPage() {
 
       {/* Average scores per race */}
       {data.raceAverages.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3 text-stone-100">
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <h2
+            className="text-lg mb-3 text-stone-800"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
             Average score by race
           </h2>
           <div className="space-y-1.5">
@@ -330,16 +347,16 @@ export default async function StatsPage() {
               const pct = maxAvg > 0 ? (r.avg / maxAvg) * 100 : 0;
               return (
                 <div key={r.round} className="flex items-center gap-3">
-                  <span className="text-zinc-500 text-xs w-8 tabular-nums font-mono">
+                  <span className="text-stone-500 text-xs w-8 tabular-nums font-mono">
                     R{r.round}
                   </span>
-                  <div className="flex-1 bg-zinc-800 rounded-full h-3 overflow-hidden">
+                  <div className="flex-1 bg-stone-200 rounded-full h-3 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-blue-600 to-blue-400"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-zinc-300 tabular-nums w-12 text-right">
+                  <span className="text-xs font-medium text-stone-700 tabular-nums w-12 text-right">
                     {r.avg}
                   </span>
                 </div>
@@ -352,8 +369,11 @@ export default async function StatsPage() {
       {/* Driver & Constructor popularity */}
       <div className="grid sm:grid-cols-2 gap-4">
         {data.driverPopularity.length > 0 && (
-          <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-            <h2 className="text-lg font-semibold mb-3 text-stone-100">
+          <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+            <h2
+              className="text-lg mb-3 text-stone-800"
+              style={{ fontFamily: "var(--font-bangers)" }}
+            >
               Driver popularity
             </h2>
             <div className="space-y-1.5">
@@ -363,16 +383,16 @@ export default async function StatsPage() {
                 return (
                   <div key={d.driverId} className="flex items-center gap-2">
                     <DriverAvatar driverId={d.driverId} size={20} />
-                    <span className="text-xs font-mono text-zinc-400 w-10">
+                    <span className="text-xs font-mono text-stone-500 w-10">
                       {d.code}
                     </span>
-                    <div className="flex-1 bg-zinc-800 rounded-full h-3 overflow-hidden">
+                    <div className="flex-1 bg-stone-200 rounded-full h-3 overflow-hidden">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-400"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className="text-xs text-zinc-300 tabular-nums w-6 text-right">
+                    <span className="text-xs text-stone-700 tabular-nums w-6 text-right">
                       {d.count}
                     </span>
                   </div>
@@ -383,8 +403,11 @@ export default async function StatsPage() {
         )}
 
         {data.consPopularity.length > 0 && (
-          <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-            <h2 className="text-lg font-semibold mb-3 text-stone-100">
+          <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+            <h2
+              className="text-lg mb-3 text-stone-800"
+              style={{ fontFamily: "var(--font-bangers)" }}
+            >
               Constructor popularity
             </h2>
             <div className="space-y-1.5">
@@ -405,7 +428,7 @@ export default async function StatsPage() {
                     >
                       {teamShort(c.constructorId)}
                     </span>
-                    <div className="flex-1 bg-zinc-800 rounded-full h-3 overflow-hidden">
+                    <div className="flex-1 bg-stone-200 rounded-full h-3 overflow-hidden">
                       <div
                         className="h-full rounded-full"
                         style={{
@@ -414,7 +437,7 @@ export default async function StatsPage() {
                         }}
                       />
                     </div>
-                    <span className="text-xs text-zinc-300 tabular-nums w-6 text-right">
+                    <span className="text-xs text-stone-700 tabular-nums w-6 text-right">
                       {c.count}
                     </span>
                   </div>
@@ -427,33 +450,38 @@ export default async function StatsPage() {
 
       {/* Player budgets */}
       {data.playerBudgets.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
+        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+          <h2
+            className="text-lg p-4 border-b border-[#2a1f15]/50 text-amber-100"
+            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+          >
             Pick budget remaining
           </h2>
-          <p className="text-xs text-stone-500 px-4 pt-2">
+          <p className="text-xs text-amber-100/50 px-4 pt-2">
             How many unique drivers/constructors each player has used vs exhausted.
             Max {data.maxDriver} uses per driver, {data.maxConstructor} per constructor.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-2">Player</th>
-                  <th className="text-right px-4 py-2">Drivers used</th>
-                  <th className="text-right px-4 py-2">Exhausted</th>
-                  <th className="text-right px-4 py-2">Constructors used</th>
-                  <th className="text-right px-4 py-2">Exhausted</th>
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Drivers used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructors used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Exhausted</th>
                 </tr>
               </thead>
               <tbody>
-                {data.playerBudgets.map((b) => (
+                {data.playerBudgets.map((b, i) => (
                   <tr
                     key={b.userName}
-                    className="border-t border-zinc-800 hover:bg-zinc-800/30"
+                    className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
+                      i % 2 === 0 ? "bg-white/[0.03]" : ""
+                    }`}
                   >
-                    <td className="px-4 py-2.5 font-medium text-stone-200">{b.userName}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-zinc-300">
+                    <td className="px-4 py-2.5 font-medium text-amber-50">{b.userName}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums text-amber-100/70">
                       {b.driversUsed}
                     </td>
                     <td className="px-4 py-2.5 text-right tabular-nums">
@@ -462,10 +490,10 @@ export default async function StatsPage() {
                           {b.driversExhausted}
                         </span>
                       ) : (
-                        <span className="text-zinc-600">0</span>
+                        <span className="text-amber-100/30">0</span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-zinc-300">
+                    <td className="px-4 py-2.5 text-right tabular-nums text-amber-100/70">
                       {b.constructorsUsed}
                     </td>
                     <td className="px-4 py-2.5 text-right tabular-nums">
@@ -474,7 +502,7 @@ export default async function StatsPage() {
                           {b.constructorsExhausted}
                         </span>
                       ) : (
-                        <span className="text-zinc-600">0</span>
+                        <span className="text-amber-100/30">0</span>
                       )}
                     </td>
                   </tr>
@@ -493,21 +521,23 @@ function StatCard({
   value,
   sub,
   color,
+  rotation,
 }: {
   label: string;
   value: string;
   sub?: string;
   color?: string;
+  rotation?: string;
 }) {
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1">
+    <div className={`card-paper border-2 border-[#3d2b1f] rounded-lg p-4 cartoon-shadow ${rotation ?? ""}`}>
+      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold">
         {label}
       </div>
-      <div className={`text-xl font-bold ${color ?? "text-white"}`}>
+      <div className={`text-xl font-bold ${color ?? "text-stone-800"}`}>
         {value}
       </div>
-      {sub && <div className="text-xs text-stone-400 mt-0.5">{sub}</div>}
+      {sub && <div className="text-xs text-stone-600 mt-0.5 font-medium">{sub}</div>}
     </div>
   );
 }
