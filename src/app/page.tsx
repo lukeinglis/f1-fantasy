@@ -208,7 +208,7 @@ async function getHomeData() {
         label: "Best single race",
         value: `${best.totalPoints} pts`,
         sub: `${best.user.name} at R${best.race.round}`,
-        color: "text-amber-400",
+        color: "text-amber-600",
       });
     }
   }
@@ -236,7 +236,7 @@ async function getHomeData() {
       label: "Most picked driver",
       value: topDriverEntry[1].name,
       sub: `${topDriverEntry[1].count} picks`,
-      color: "text-emerald-400",
+      color: "text-emerald-700",
       driverId: topDriverEntry[0],
     });
   }
@@ -299,7 +299,7 @@ async function getHomeData() {
         label: "Hot streak",
         value: `${streak} wins`,
         sub: streakName,
-        color: "text-red-400",
+        color: "text-red-600",
       });
     }
   }
@@ -386,8 +386,9 @@ function round1(n: number) {
   return Math.round(n * 10) / 10;
 }
 
-const STAT_ROTATIONS = ["-rotate-1", "rotate-1", "-rotate-[0.5deg]", "rotate-[1.5deg]"];
+const STAT_ROTATIONS = ["-rotate-2", "rotate-[1.5deg]", "-rotate-1", "rotate-2"];
 const PIN_COLORS = ["bg-red-500", "bg-amber-500", "bg-emerald-500", "bg-blue-500"];
+const STAT_TEXT_COLORS = ["text-red-700", "text-amber-700", "text-emerald-700", "text-blue-700"];
 
 export default async function HomePage() {
   const {
@@ -405,36 +406,39 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-stone-900 border border-stone-700 rounded-xl">
-        {/* Garage door corrugated lines at top */}
-        <div className="garage-door h-4 border-b border-stone-700/50" />
-
+      {/* Hero — Cork board with hand-painted sign */}
+      <section className="relative overflow-hidden cork-board border-4 border-[#3d2b1f] rounded-3xl cartoon-shadow">
         <div className="p-6 sm:p-8 relative z-10">
           <h1
-            className="text-4xl sm:text-5xl tracking-tight"
-            style={{ fontFamily: "var(--font-russo-one)" }}
+            className="text-5xl sm:text-6xl tracking-wide -rotate-1"
+            style={{
+              fontFamily: "var(--font-bangers)",
+              textShadow: "2px 2px 0px rgba(0,0,0,0.5)",
+            }}
           >
-            <span className="text-red-500">F1</span>{" "}
-            <span className="text-stone-100">Fantasy League</span>
+            <span className="text-red-600">F1</span>{" "}
+            <span className="text-white">Fantasy League</span>
           </h1>
-          <p className="text-stone-400 mt-2 max-w-lg text-sm sm:text-base italic">
+          <p className="text-stone-800 mt-2 max-w-lg text-sm sm:text-base italic font-medium">
             Pick a driver and a constructor each race. Use them wisely: each
             driver can only be picked twice and each constructor three times
             per season.
           </p>
 
-          {/* Next race countdown — Pit board style */}
+          {/* Next race countdown — Chalkboard pit board */}
           {nextRace && (
             <div className="mt-5">
-              <div className="p-4 bg-stone-950 border border-stone-700 rounded-lg inline-block">
-                <div className="text-[10px] uppercase tracking-widest text-amber-600 font-bold mb-1.5">
+              <div className="chalkboard p-4 border-4 border-[#3d2b1f] rounded-xl inline-block cartoon-shadow" style={{ boxShadow: "4px 4px 0px rgba(0,0,0,0.3), inset 0 -4px 8px rgba(0,0,0,0.2)" }}>
+                <div
+                  className="text-sm uppercase tracking-widest text-amber-300 font-bold mb-1.5"
+                  style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.15em" }}
+                >
                   Pit Board
                 </div>
-                <div className="text-sm font-medium text-stone-300 mb-1" style={{ fontFamily: "var(--font-geist-mono)" }}>
+                <div className="text-sm font-medium text-white/90 mb-1" style={{ fontFamily: "var(--font-geist-mono)" }}>
                   R{nextRace.round}: {nextRace.name}
                   {nextRace.country && (
-                    <span className="text-stone-500"> / {nextRace.country}</span>
+                    <span className="text-white/50"> / {nextRace.country}</span>
                   )}
                 </div>
                 <Countdown
@@ -443,13 +447,13 @@ export default async function HomePage() {
                 />
               </div>
               {existingPick && (
-                <div className="mt-2 text-sm text-stone-400 flex items-center gap-1.5 flex-wrap">
+                <div className="mt-2 text-sm text-stone-800 flex items-center gap-1.5 flex-wrap font-medium">
                   <span>You picked</span>
                   <span className="inline-flex items-center gap-1">
                     {existingPick.driverId && (
                       <DriverAvatar driverId={existingPick.driverId} size={20} />
                     )}
-                    <span className="text-stone-200 font-medium">
+                    <span className="text-stone-900 font-bold">
                       {existingPick.driverCode ?? "—"}
                     </span>
                   </span>
@@ -465,12 +469,12 @@ export default async function HomePage() {
                       {existingPick.constructorShort}
                     </span>
                   ) : (
-                    <span className="text-stone-200 font-medium">—</span>
+                    <span className="text-stone-900 font-bold">—</span>
                   )}
                   <span>for this race</span>
                   <Link
                     href={`/races/${existingPick.raceId}`}
-                    className="text-amber-400 hover:text-amber-300 underline underline-offset-2"
+                    className="text-red-700 hover:text-red-600 underline underline-offset-2 font-bold"
                   >
                     Edit
                   </Link>
@@ -479,26 +483,26 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Season stat badges — garage plaques */}
-          <div className="flex items-center gap-4 mt-5">
-            <div className="text-center bg-amber-900/30 border border-amber-800/40 rounded-lg px-4 py-2">
-              <div className="text-2xl font-bold text-amber-400" style={{ fontFamily: "var(--font-russo-one)" }}>{season}</div>
-              <div className="text-[10px] text-amber-600 uppercase tracking-widest font-bold">
+          {/* Season stat badges — stickers on cork board */}
+          <div className="flex items-center gap-3 sm:gap-4 mt-5 flex-wrap">
+            <div className="text-center bg-red-600 rounded-full px-5 py-3 sticker">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-bangers)" }}>{season}</div>
+              <div className="text-[10px] text-red-100 uppercase tracking-widest font-bold">
                 Season
               </div>
             </div>
-            <div className="text-center bg-stone-800/60 border border-stone-700/50 rounded-lg px-4 py-2">
-              <div className="text-2xl font-bold text-stone-100" style={{ fontFamily: "var(--font-russo-one)" }}>
+            <div className="text-center bg-amber-500 rounded-full px-5 py-3 sticker">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-bangers)" }}>
                 {racesScored}
-                <span className="text-stone-500 text-lg">/{activeRaceCount}</span>
+                <span className="text-amber-100 text-lg">/{activeRaceCount}</span>
               </div>
-              <div className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
-                Races scored
+              <div className="text-[10px] text-amber-100 uppercase tracking-widest font-bold">
+                Races
               </div>
             </div>
-            <div className="text-center bg-stone-800/60 border border-stone-700/50 rounded-lg px-4 py-2">
-              <div className="text-2xl font-bold text-stone-100" style={{ fontFamily: "var(--font-russo-one)" }}>{rows.length}</div>
-              <div className="text-[10px] text-stone-500 uppercase tracking-widest font-bold">
+            <div className="text-center bg-blue-600 rounded-full px-5 py-3 sticker">
+              <div className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-bangers)" }}>{rows.length}</div>
+              <div className="text-[10px] text-blue-100 uppercase tracking-widest font-bold">
                 Players
               </div>
             </div>
@@ -506,9 +510,9 @@ export default async function HomePage() {
         </div>
 
         {/* Decorative diagonal racing stripe */}
-        <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden">
-          <div className="absolute -top-2 -right-8 w-48 h-8 bg-red-600/10 rotate-45 origin-center" />
-          <div className="absolute top-2 -right-8 w-48 h-2 bg-red-600/15 rotate-45 origin-center" />
+        <div className="absolute top-0 right-0 w-40 h-40 overflow-hidden">
+          <div className="absolute -top-2 -right-8 w-56 h-10 bg-red-600/20 rotate-45 origin-center" />
+          <div className="absolute top-4 -right-8 w-56 h-3 bg-red-600/25 rotate-45 origin-center" />
         </div>
       </section>
 
@@ -531,121 +535,131 @@ export default async function HomePage() {
 
       {/* Fun stats — bulletin board pinned cards */}
       {stats.length > 0 && (
-        <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={`relative bg-stone-800/80 border border-stone-700/60 rounded-lg p-4 pin-dot ${STAT_ROTATIONS[i % STAT_ROTATIONS.length]}`}
-            >
-              {/* Pin dot */}
-              <div className={`absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full ${PIN_COLORS[i % PIN_COLORS.length]} shadow-sm`} />
+        <section className="cork-board border-4 border-[#3d2b1f] rounded-2xl p-4 sm:p-6 cartoon-shadow">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {stats.map((s, i) => (
+              <div
+                key={s.label}
+                className={`relative card-paper border-2 border-[#3d2b1f] rounded-lg p-4 cartoon-shadow ${STAT_ROTATIONS[i % STAT_ROTATIONS.length]}`}
+              >
+                {/* Pin dot */}
+                <div className={`absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full ${PIN_COLORS[i % PIN_COLORS.length]} shadow-md`} style={{ background: `radial-gradient(circle at 35% 35%, ${i === 0 ? '#f87171' : i === 1 ? '#fbbf24' : i === 2 ? '#34d399' : '#60a5fa'}, ${i === 0 ? '#dc2626' : i === 1 ? '#d97706' : i === 2 ? '#059669' : '#2563eb'})`, boxShadow: '0 2px 3px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.4)' }} />
 
-              <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold">
-                {s.label}
-              </div>
-              {s.driverId ? (
-                <div className="flex items-center gap-2">
-                  <DriverAvatar driverId={s.driverId} size={24} />
-                  <span className={`text-xl font-bold ${s.color ?? "text-white"}`}>
+                <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold">
+                  {s.label}
+                </div>
+                {s.driverId ? (
+                  <div className="flex items-center gap-2">
+                    <DriverAvatar driverId={s.driverId} size={24} />
+                    <span className={`text-xl font-bold ${STAT_TEXT_COLORS[i % STAT_TEXT_COLORS.length]}`}>
+                      {s.value}
+                    </span>
+                  </div>
+                ) : s.constructorId ? (
+                  <span
+                    className="inline-block px-2 py-0.5 rounded text-sm font-bold"
+                    style={{
+                      backgroundColor: teamColor(s.constructorId),
+                      color: teamTextColor(s.constructorId),
+                    }}
+                  >
                     {s.value}
                   </span>
-                </div>
-              ) : s.constructorId ? (
-                <span
-                  className="inline-block px-2 py-0.5 rounded text-sm font-bold"
-                  style={{
-                    backgroundColor: teamColor(s.constructorId),
-                    color: teamTextColor(s.constructorId),
-                  }}
-                >
-                  {s.value}
-                </span>
-              ) : (
-                <div className={`text-xl font-bold ${s.color ?? "text-white"}`}>
-                  {s.value}
-                </div>
-              )}
-              {s.sub && (
-                <div className="text-xs text-stone-400 mt-0.5">{s.sub}</div>
-              )}
-            </div>
-          ))}
+                ) : (
+                  <div className={`text-xl font-bold ${STAT_TEXT_COLORS[i % STAT_TEXT_COLORS.length]}`}>
+                    {s.value}
+                  </div>
+                )}
+                {s.sub && (
+                  <div className="text-xs text-stone-600 mt-0.5 font-medium">{s.sub}</div>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
       )}
 
-      {/* Leaderboard — chalkboard style */}
+      {/* Leaderboard — wooden scoreboard */}
       <section>
         <h2
-          className="text-xl mb-3"
-          style={{ fontFamily: "var(--font-russo-one)" }}
+          className="text-2xl mb-3 text-white"
+          style={{
+            fontFamily: "var(--font-bangers)",
+            textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
+          }}
         >
           Standings
         </h2>
         {noLeague ? (
-          <div className="bg-stone-900 border border-stone-700 rounded-lg p-6">
-            <p>No players yet.</p>
+          <div className="wood-panel border-4 border-[#2a1f15] rounded-2xl p-6 cartoon-shadow">
+            <p className="text-amber-100">No players yet.</p>
             <Link
               href="/register"
-              className="mt-3 inline-block px-4 py-2 bg-red-600 hover:bg-red-700 rounded"
+              className="mt-3 inline-block px-5 py-2.5 bg-red-600 hover:bg-red-500 hover:scale-105 rounded-xl text-white font-bold uppercase tracking-wider sticker transition-transform"
+              style={{ fontFamily: "var(--font-bangers)" }}
             >
               Create the first account
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto bg-stone-900 border border-stone-700 rounded-lg chalk-texture">
+          <div className="overflow-x-auto wood-panel border-4 border-[#2a1f15] rounded-2xl cartoon-shadow">
             <table className="w-full text-sm">
-              <thead className="bg-stone-800/60 text-stone-500 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-3 w-12 italic">#</th>
-                  <th className="text-left px-4 py-3 italic">Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
-                    Driver pts
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>#</th>
+                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                    Driver
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
-                    Constructor pts
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                    Constructor
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
                     Races
                   </th>
-                  <th className="text-right px-4 py-3 italic">Total</th>
+                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r, i) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-stone-800 hover:bg-stone-800/30 ${
+                    className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
                       i === 0 && r.totalPoints > 0
-                        ? "bg-amber-900/10"
+                        ? "bg-amber-900/20"
                         : i % 2 === 0
-                          ? "bg-stone-900/30"
+                          ? "bg-white/[0.03]"
                           : ""
                     }`}
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
-                        <span className="text-amber-400 font-bold">
+                        <span className="text-amber-300 font-bold text-base">
                           🏆 {i + 1}
                         </span>
-                      ) : i < 3 && r.totalPoints > 0 ? (
+                      ) : i === 1 && r.totalPoints > 0 ? (
                         <span className="text-stone-300 font-bold">
-                          {i + 1}
+                          🥈 {i + 1}
+                        </span>
+                      ) : i === 2 && r.totalPoints > 0 ? (
+                        <span className="text-amber-700 font-bold">
+                          🥉 {i + 1}
                         </span>
                       ) : (
-                        <span className="text-stone-500">{i + 1}</span>
+                        <span className="text-amber-100/50">{i + 1}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-medium">{r.userName}</td>
-                    <td className="px-4 py-3 text-right tabular-nums text-stone-400 hidden sm:table-cell">
+                    <td className="px-4 py-3 font-medium text-amber-50">{r.userName}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/60 hidden sm:table-cell">
                       {r.driverPoints}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-stone-400 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/60 hidden sm:table-cell">
                       {r.constructorPoints}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-stone-500 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/40 hidden sm:table-cell">
                       {r.racesScored}
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold tabular-nums text-red-400">
+                    <td className="px-4 py-3 text-right font-bold tabular-nums text-white text-base">
                       {r.totalPoints}
                     </td>
                   </tr>
@@ -660,61 +674,66 @@ export default async function HomePage() {
       {predictionRows.length > 0 && (
         <section>
           <h2
-            className="text-xl mb-3"
-            style={{ fontFamily: "var(--font-russo-one)" }}
+            className="text-2xl mb-3 text-white"
+            style={{
+              fontFamily: "var(--font-bangers)",
+              textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
+            }}
           >
             Prediction Standings
           </h2>
-          <div className="overflow-x-auto bg-stone-900 border border-stone-700 rounded-lg chalk-texture">
+          <div className="overflow-x-auto wood-panel border-4 border-[#2a1f15] rounded-2xl cartoon-shadow">
             <table className="w-full text-sm">
-              <thead className="bg-stone-800/60 text-stone-500 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-3 w-12 italic">#</th>
-                  <th className="text-left px-4 py-3 italic">Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>#</th>
+                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
                     Exact
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
                     Close
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell italic">
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
                     Races
                   </th>
-                  <th className="text-right px-4 py-3 italic">Points</th>
+                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Points</th>
                 </tr>
               </thead>
               <tbody>
                 {predictionRows.map((r, i) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-stone-800 hover:bg-stone-800/30 ${
+                    className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
                       i === 0 && r.totalPoints > 0
-                        ? "bg-amber-900/10"
+                        ? "bg-amber-900/20"
                         : i % 2 === 0
-                          ? "bg-stone-900/30"
+                          ? "bg-white/[0.03]"
                           : ""
                     }`}
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
-                        <span className="text-amber-400 font-bold">🏆 {i + 1}</span>
-                      ) : i < 3 && r.totalPoints > 0 ? (
-                        <span className="text-stone-300 font-bold">{i + 1}</span>
+                        <span className="text-amber-300 font-bold text-base">🏆 {i + 1}</span>
+                      ) : i === 1 && r.totalPoints > 0 ? (
+                        <span className="text-stone-300 font-bold">🥈 {i + 1}</span>
+                      ) : i === 2 && r.totalPoints > 0 ? (
+                        <span className="text-amber-700 font-bold">🥉 {i + 1}</span>
                       ) : (
-                        <span className="text-stone-500">{i + 1}</span>
+                        <span className="text-amber-100/50">{i + 1}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-medium">{r.userName}</td>
+                    <td className="px-4 py-3 font-medium text-amber-50">{r.userName}</td>
                     <td className="px-4 py-3 text-right tabular-nums text-emerald-400 hidden sm:table-cell">
                       {r.exactMatches}
                     </td>
                     <td className="px-4 py-3 text-right tabular-nums text-yellow-400 hidden sm:table-cell">
                       {r.closeMatches}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-stone-500 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/40 hidden sm:table-cell">
                       {r.racesScored}
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold tabular-nums text-red-400">
+                    <td className="px-4 py-3 text-right font-bold tabular-nums text-white text-base">
                       {r.totalPoints}
                     </td>
                   </tr>
@@ -727,47 +746,62 @@ export default async function HomePage() {
 
       {/* F1 Mini Game — Arcade cabinet framing */}
       <section>
-        <h2
-          className="text-xl mb-3"
-          style={{ fontFamily: "var(--font-russo-one)" }}
-        >
-          <span className="text-red-500">F1</span> Dodge
-          <span className="text-stone-600 text-sm font-normal ml-2 italic" style={{ fontFamily: "var(--font-geist-sans)" }}>break room</span>
-        </h2>
-        <F1Game />
+        <div className="wood-panel border-4 border-[#2a1f15] rounded-2xl p-1 cartoon-shadow">
+          <div className="bg-gradient-to-b from-red-700 to-red-800 rounded-t-xl px-4 py-2 text-center border-b-2 border-red-900">
+            <h2
+              className="text-2xl text-white inline-block"
+              style={{
+                fontFamily: "var(--font-bangers)",
+                textShadow: "2px 2px 0px rgba(0,0,0,0.4)",
+                letterSpacing: "0.05em",
+              }}
+            >
+              <span className="text-yellow-300">F1</span> Dodge
+              <span className="text-red-200 text-base font-normal ml-2" style={{ fontFamily: "var(--font-geist-sans)" }}>arcade</span>
+            </h2>
+          </div>
+          <div className="p-2">
+            <F1Game />
+          </div>
+        </div>
       </section>
 
-      {/* Bottom links — garage cabinet drawer pulls */}
-      <div className="flex flex-wrap gap-3 text-sm">
+      {/* Bottom links — chunky cartoon buttons */}
+      <div className="flex flex-wrap gap-3">
         <Link
           href="/grid"
-          className="px-5 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg font-bold uppercase tracking-wide text-xs border border-red-500/30"
+          className="px-6 py-3 bg-red-600 hover:bg-red-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          style={{ fontFamily: "var(--font-bangers)", fontSize: "1rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
-          Season grid
+          Season Grid
         </Link>
         <Link
           href="/races"
-          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
+          className="px-5 py-3 bg-blue-600 hover:bg-blue-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
-          Race calendar
+          Race Calendar
         </Link>
         <Link
           href="/picks"
-          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
+          className="px-5 py-3 bg-emerald-600 hover:bg-emerald-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
-          My picks
+          My Picks
         </Link>
         <Link
           href="/stats"
-          className="px-5 py-2.5 bg-stone-800 hover:bg-stone-700 rounded-lg border border-stone-600/50 font-medium uppercase tracking-wide text-xs text-stone-300"
+          className="px-5 py-3 bg-purple-600 hover:bg-purple-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
           Stats
         </Link>
         <Link
           href="/rules"
-          className="px-5 py-2.5 bg-amber-900/40 hover:bg-amber-900/60 rounded-lg border border-amber-800/40 font-medium uppercase tracking-wide text-xs text-amber-300"
+          className="px-5 py-3 bg-amber-500 hover:bg-amber-400 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
+          style={{ fontFamily: "var(--font-bangers)", fontSize: "0.95rem", letterSpacing: "0.08em", borderWidth: "3px" }}
         >
-          How to play
+          How to Play
         </Link>
       </div>
     </div>
