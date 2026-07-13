@@ -165,7 +165,12 @@ export default async function GridPage() {
   if (users.length === 0 || races.length === 0) {
     return (
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold text-stone-900">Season Grid</h1>
+        <h1
+          className="text-3xl text-stone-900"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+        >
+          Season Grid
+        </h1>
         <p className="text-stone-700">
           No data yet. Sync the season from the admin panel first.
         </p>
@@ -185,7 +190,10 @@ export default async function GridPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-stone-900">
+          <h1
+            className="text-3xl text-stone-900"
+            style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          >
             Season Grid <span className="text-red-700">{season}</span>
           </h1>
           <p className="text-stone-700 mt-1 text-sm">
@@ -199,10 +207,16 @@ export default async function GridPage() {
         <table className="border-separate border-spacing-[3px] text-xs w-auto">
           <thead>
             <tr>
-              <th className="sticky left-0 z-20 bg-zinc-950 px-3 py-2 text-left text-stone-300 uppercase tracking-wide text-[10px] min-w-[110px]">
+              <th
+                className="sticky left-0 z-20 bg-[#3d2b1f] px-3 py-2 text-left text-amber-300/70 uppercase tracking-wide text-[10px] min-w-[110px]"
+                style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+              >
                 Player
               </th>
-              <th className="sticky left-[110px] z-20 bg-zinc-950 px-2 py-2 text-right text-stone-300 uppercase tracking-wide text-[10px] min-w-[48px]">
+              <th
+                className="sticky left-[110px] z-20 bg-[#3d2b1f] px-2 py-2 text-right text-amber-300/70 uppercase tracking-wide text-[10px] min-w-[48px]"
+                style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+              >
                 Total
               </th>
               {activeRaces.map((r) => {
@@ -237,13 +251,13 @@ export default async function GridPage() {
               ) / 10;
               return (
                 <tr key={user.id}>
-                  <td className="sticky left-0 z-10 bg-zinc-950 px-3 py-2 font-medium text-sm whitespace-nowrap text-stone-100">
+                  <td className="sticky left-0 z-10 bg-[#3d2b1f] px-3 py-2 font-medium text-sm whitespace-nowrap text-amber-50">
                     {userIdx === 0 && total > 0 && (
-                      <span className="text-amber-400 mr-1.5">&#9733;</span>
+                      <span className="text-amber-300 mr-1.5">&#9733;</span>
                     )}
                     {user.name}
                   </td>
-                  <td className="sticky left-[110px] z-10 bg-zinc-950 px-2 py-2 text-right font-bold text-red-400 tabular-nums text-sm text-stone-100">
+                  <td className="sticky left-[110px] z-10 bg-[#3d2b1f] px-2 py-2 text-right font-bold text-white tabular-nums text-sm">
                     {total || ""}
                   </td>
                   {activeRaces.map((r) => {

@@ -41,11 +41,11 @@ export default async function RaceDetailPage(props: {
 
   if (!race) {
     return (
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-        <h1 className="text-xl font-semibold text-stone-100">Race not found</h1>
+      <div className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
+        <h1 className="text-xl font-semibold text-stone-800">Race not found</h1>
         <Link
           href="/races"
-          className="text-red-400 hover:underline mt-2 inline-block"
+          className="text-red-700 hover:underline mt-2 inline-block font-bold"
         >
           Back to calendar
         </Link>
@@ -214,15 +214,15 @@ export default async function RaceDetailPage(props: {
     <div className="space-y-6">
       <Link
         href="/races"
-        className="inline-flex items-center gap-1 text-sm text-stone-700 hover:text-stone-900 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-stone-700 hover:text-stone-900 transition-colors font-medium"
       >
         &larr; Back to calendar
       </Link>
 
       {/* Pre-season banner */}
       {preSeason && (
-        <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-sm text-stone-400 flex items-center gap-3">
-          <span className="text-stone-500 text-lg">&#9432;</span>
+        <div className="card-paper border-2 border-amber-400 rounded-xl px-4 py-3 text-sm text-stone-600 flex items-center gap-3 cartoon-shadow">
+          <span className="text-amber-600 text-lg">&#9432;</span>
           <span>
             This race happened before the league started. Results are shown
             for reference but don&apos;t count toward fantasy scores.
@@ -231,37 +231,42 @@ export default async function RaceDetailPage(props: {
       )}
 
       {/* Race header */}
-      <header className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-        <div className="flex items-baseline gap-2 text-zinc-400 text-sm">
+      <header className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
+        <div className="flex items-baseline gap-2 text-stone-500 text-sm">
           Round {race.round} &middot; {season}
         </div>
-        <h1 className="text-3xl font-bold mt-1 text-stone-100">{race.name}</h1>
+        <h1
+          className="text-3xl mt-1 text-stone-800"
+          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.1)" }}
+        >
+          {race.name}
+        </h1>
         {race.circuitName && (
-          <div className="text-stone-400 mt-1">
+          <div className="text-stone-500 mt-1">
             {race.circuitName}
             {race.locality && ` / ${race.locality}`}
             {race.country && `, ${race.country}`}
           </div>
         )}
         <div className="flex flex-wrap items-center gap-3 mt-3">
-          <div className="text-sm text-stone-300">{fmtDate(race.date)}</div>
+          <div className="text-sm text-stone-600">{fmtDate(race.date)}</div>
           {race.resultsLocked && (
-            <span className="text-xs px-2 py-1 rounded bg-emerald-900/40 text-emerald-300 border border-emerald-800">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
               Results final
             </span>
           )}
           {!race.resultsLocked && deadlinePassed && (
-            <span className="text-xs px-2 py-1 rounded bg-amber-900/40 text-amber-300 border border-amber-800">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold sticker">
               Picks closed
             </span>
           )}
           {!deadlinePassed && !preSeason && (
-            <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-blue-600 text-white font-bold sticker">
               Picks open
             </span>
           )}
           {preSeason && (
-            <span className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-500 border border-zinc-700">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-stone-400 text-white font-bold sticker">
               Pre-season
             </span>
           )}
@@ -280,8 +285,13 @@ export default async function RaceDetailPage(props: {
 
       {/* Pick form (only before deadline, not pre-season) */}
       {!deadlinePassed && !preSeason && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-3 text-stone-100">Make your pick</h2>
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <h2
+            className="text-lg mb-3 text-stone-800"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
+            Make your pick
+          </h2>
           <PickForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -306,7 +316,7 @@ export default async function RaceDetailPage(props: {
 
       {/* Prediction form (only before deadline, not pre-season) */}
       {!deadlinePassed && !preSeason && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
           <PredictionForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -325,8 +335,11 @@ export default async function RaceDetailPage(props: {
 
       {/* Prediction results (shown after deadline) */}
       {deadlinePassed && predictionPlayers.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
+        <section className="card-paper border-2 border-stone-400 rounded-xl overflow-hidden cartoon-shadow">
+          <h2
+            className="text-lg p-4 border-b border-stone-300 text-stone-800"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
             {hasPredictionScores ? "Prediction scoreboard" : "All predictions"}
           </h2>
           <div className="p-4">
@@ -345,25 +358,28 @@ export default async function RaceDetailPage(props: {
 
       {/* All picks with scores (shown after deadline) */}
       {deadlinePassed && sortedPicks.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
+        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+          <h2
+            className="text-lg p-4 border-b border-[#2a1f15]/50 text-amber-100"
+            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+          >
             {hasScores ? "Fantasy scoreboard" : "All picks"}
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-                <tr>
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
                   {hasScores && (
-                    <th className="text-left px-4 py-2 w-10">#</th>
+                    <th className="text-left px-4 py-2 w-10" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>#</th>
                   )}
-                  <th className="text-left px-4 py-2">Player</th>
-                  <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Driver</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructor</th>
                   {hasScores && (
                     <>
-                      <th className="text-right px-4 py-2">Drv pts</th>
-                      <th className="text-right px-4 py-2">Con pts</th>
-                      <th className="text-right px-4 py-2">Total</th>
+                      <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Drv pts</th>
+                      <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Con pts</th>
+                      <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Total</th>
                     </>
                   )}
                 </tr>
@@ -376,34 +392,34 @@ export default async function RaceDetailPage(props: {
                   return (
                     <tr
                       key={p.id}
-                      className={`border-t border-zinc-800 ${
+                      className={`border-t border-[#2a1f15]/50 ${
                         isWinner
-                          ? "bg-amber-900/10"
+                          ? "bg-amber-900/20"
                           : isMe
-                            ? "bg-red-900/5"
-                            : "hover:bg-zinc-800/30"
+                            ? "bg-red-900/10"
+                            : "hover:bg-white/5"
                       }`}
                     >
                       {hasScores && (
                         <td className="px-4 py-3 tabular-nums">
                           {isWinner ? (
-                            <span className="text-amber-400 font-bold">
-                              {i + 1}
+                            <span className="text-amber-300 font-bold">
+                              🏆 {i + 1}
                             </span>
                           ) : (
-                            <span className="text-zinc-500">{i + 1}</span>
+                            <span className="text-amber-100/50">{i + 1}</span>
                           )}
                         </td>
                       )}
-                      <td className="px-4 py-3 font-medium whitespace-nowrap text-stone-100">
+                      <td className="px-4 py-3 font-medium whitespace-nowrap text-amber-50">
                         {p.user.name}
                         {isMe && (
-                          <span className="text-stone-500 text-xs ml-1.5">
+                          <span className="text-amber-100/50 text-xs ml-1.5">
                             (you)
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap text-amber-100/80">
                         <span className="inline-flex items-center gap-1.5">
                           {p.driver && (
                             <DriverAvatar driverId={p.driver.id} size={28} className="shrink-0" />
@@ -412,7 +428,7 @@ export default async function RaceDetailPage(props: {
                             ? `${p.driver.givenName} ${p.driver.familyName}`
                             : "—"}
                           {p.driver?.code && (
-                            <span className="text-zinc-500 text-xs ml-1">
+                            <span className="text-amber-100/50 text-xs ml-1">
                               {p.driver.code}
                             </span>
                           )}
@@ -435,13 +451,13 @@ export default async function RaceDetailPage(props: {
                       </td>
                       {hasScores && (
                         <>
-                          <td className="px-4 py-3 text-right tabular-nums text-zinc-400">
+                          <td className="px-4 py-3 text-right tabular-nums text-amber-100/60">
                             {p.driverPoints ?? 0}
                           </td>
-                          <td className="px-4 py-3 text-right tabular-nums text-zinc-400">
+                          <td className="px-4 py-3 text-right tabular-nums text-amber-100/60">
                             {p.constructorPoints ?? 0}
                           </td>
-                          <td className="px-4 py-3 text-right tabular-nums font-bold text-red-400">
+                          <td className="px-4 py-3 text-right tabular-nums font-bold text-white text-base">
                             {p.totalPoints ?? 0}
                           </td>
                         </>
@@ -456,9 +472,14 @@ export default async function RaceDetailPage(props: {
       )}
 
       {deadlinePassed && sortedPicks.length === 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-2 text-stone-100">All picks</h2>
-          <p className="text-stone-400">
+        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <h2
+            className="text-lg mb-2 text-stone-800"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
+            All picks
+          </h2>
+          <p className="text-stone-500">
             No picks were submitted for this race.
           </p>
         </section>
@@ -466,51 +487,56 @@ export default async function RaceDetailPage(props: {
 
       {/* Race results */}
       {race.results.length > 0 && (
-        <section className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-zinc-800 text-stone-100">
+        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+          <h2
+            className="text-lg p-4 border-b border-[#2a1f15]/50 text-amber-100"
+            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+          >
             Race results
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
-                <tr>
-                  <th className="text-left px-4 py-2 w-12">Pos</th>
-                  <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
-                  <th className="text-left px-4 py-2 w-20">Status</th>
-                  <th className="text-right px-4 py-2 w-16">Pts</th>
+              <thead>
+                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-2 w-12" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Pos</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Driver</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructor</th>
+                  <th className="text-left px-4 py-2 w-20" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Status</th>
+                  <th className="text-right px-4 py-2 w-16" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Pts</th>
                 </tr>
               </thead>
               <tbody>
-                {race.results.map((r) => {
+                {race.results.map((r, i) => {
                   const d = driverById.get(r.driverId);
                   const c = consById.get(r.teamId);
                   const isTop3 = r.position >= 1 && r.position <= 3;
                   return (
                     <tr
                       key={r.driverId}
-                      className="border-t border-zinc-800 hover:bg-zinc-800/30"
+                      className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
+                        i % 2 === 0 ? "bg-white/[0.03]" : ""
+                      }`}
                     >
                       <td className="px-4 py-2.5 tabular-nums">
                         {isTop3 ? (
                           <span
                             className={
                               r.position === 1
-                                ? "text-amber-400 font-bold"
+                                ? "text-amber-300 font-bold"
                                 : r.position === 2
-                                  ? "text-zinc-300 font-bold"
+                                  ? "text-stone-300 font-bold"
                                   : "text-amber-700 font-bold"
                             }
                           >
                             {r.positionText ?? r.position}
                           </span>
                         ) : (
-                          <span className="text-zinc-400">
+                          <span className="text-amber-100/50">
                             {r.positionText ?? r.position}
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-2.5 text-amber-100/80">
                         <span className="inline-flex items-center gap-1.5">
                           <DriverAvatar driverId={r.driverId} size={24} className="shrink-0" />
                           {d ? `${d.givenName} ${d.familyName}` : r.driverId}
@@ -528,13 +554,13 @@ export default async function RaceDetailPage(props: {
                             {teamShort(c.id)}
                           </span>
                         ) : (
-                          <span className="text-zinc-400">{r.teamId}</span>
+                          <span className="text-amber-100/50">{r.teamId}</span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-zinc-500 text-xs">
+                      <td className="px-4 py-2.5 text-amber-100/40 text-xs">
                         {r.status && r.status !== "Finished" ? r.status : ""}
                       </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-zinc-300">
+                      <td className="px-4 py-2.5 text-right tabular-nums text-amber-100/80">
                         {r.points > 0 ? r.points : ""}
                       </td>
                     </tr>
@@ -548,13 +574,16 @@ export default async function RaceDetailPage(props: {
 
       {/* Admin link */}
       {isAdmin && !race.resultsLocked && (
-        <section className="bg-amber-900/20 border border-amber-800/50 rounded-lg p-5">
-          <h2 className="text-lg font-semibold mb-2 text-amber-300">
+        <section className="card-paper border-2 border-amber-400 rounded-xl p-5 cartoon-shadow">
+          <h2
+            className="text-lg mb-2 text-amber-700"
+            style={{ fontFamily: "var(--font-bangers)" }}
+          >
             Admin tools
           </h2>
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-stone-600">
             Go to{" "}
-            <Link href="/admin" className="text-amber-300 underline">
+            <Link href="/admin" className="text-amber-700 underline font-bold">
               Admin
             </Link>{" "}
             to sync results from the API or enter them manually.

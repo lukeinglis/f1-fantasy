@@ -24,14 +24,14 @@ interface Props {
 
 const posLabels = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"];
 const posColors = [
-  "text-amber-400", "text-zinc-300", "text-amber-700",
-  "text-zinc-400", "text-zinc-400", "text-zinc-400",
-  "text-zinc-400", "text-zinc-400", "text-zinc-400", "text-zinc-400",
+  "text-amber-700", "text-stone-500", "text-amber-800",
+  "text-stone-500", "text-stone-500", "text-stone-500",
+  "text-stone-500", "text-stone-500", "text-stone-500", "text-stone-500",
 ];
 const posBorderColors = [
-  "border-amber-400/40", "border-zinc-300/40", "border-amber-700/40",
-  "border-zinc-600", "border-zinc-600", "border-zinc-600",
-  "border-zinc-600", "border-zinc-600", "border-zinc-600", "border-zinc-600",
+  "border-amber-400", "border-stone-400", "border-amber-600",
+  "border-stone-300", "border-stone-300", "border-stone-300",
+  "border-stone-300", "border-stone-300", "border-stone-300", "border-stone-300",
 ];
 
 export default function PredictionForm({ raceId, drivers, existing }: Props) {
@@ -232,40 +232,40 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
       </div>
 
       {collapsed && existing.length > 0 ? (
-        <div className="text-sm text-zinc-400 flex items-center gap-2">
-          <span className="text-emerald-400">&#10003;</span>
+        <div className="text-sm text-stone-600 flex items-center gap-2">
+          <span className="text-emerald-700">&#10003;</span>
           Prediction submitted ({existing.length} drivers).
           Click &ldquo;Edit prediction&rdquo; to change.
         </div>
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           {/* Scoring rules */}
-          <div className="bg-zinc-800/40 border border-zinc-700 rounded-lg p-3 text-xs text-zinc-400 space-y-1">
-            <div className="font-medium text-zinc-300 text-sm mb-1">Scoring</div>
+          <div className="bg-stone-100 border-2 border-stone-300 rounded-lg p-3 text-xs text-stone-600 space-y-1">
+            <div className="font-medium text-stone-700 text-sm mb-1">Scoring</div>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              <span><span className="text-emerald-400 font-bold">5 pts</span> exact position</span>
-              <span><span className="text-yellow-400 font-bold">2 pts</span> off by 1</span>
-              <span><span className="text-orange-400 font-bold">1 pt</span> off by 2</span>
-              <span><span className="text-zinc-500 font-bold">0 pts</span> off by 3+</span>
+              <span><span className="text-emerald-700 font-bold">5 pts</span> exact position</span>
+              <span><span className="text-yellow-700 font-bold">2 pts</span> off by 1</span>
+              <span><span className="text-orange-700 font-bold">1 pt</span> off by 2</span>
+              <span><span className="text-stone-400 font-bold">0 pts</span> off by 3+</span>
             </div>
-            <div className="text-zinc-500">Max 50 pts per race (10 exact matches)</div>
+            <div className="text-stone-400">Max 50 pts per race (10 exact matches)</div>
           </div>
 
           {/* Driver pool */}
           <div>
-            <div className="text-xs text-zinc-400 font-medium mb-2 uppercase tracking-wide">
+            <div className="text-xs text-stone-600 font-medium mb-2 uppercase tracking-wide">
               Driver pool
               {selectedDriver && (
-                <span className="ml-2 text-red-400 normal-case tracking-normal">
+                <span className="ml-2 text-red-700 normal-case tracking-normal">
                   — Tap a slot to place driver
                 </span>
               )}
             </div>
             <div
-              className={`flex flex-wrap gap-2 p-3 rounded-lg border transition-colors min-h-[60px] ${
+              className={`flex flex-wrap gap-2 p-3 rounded-lg border-2 transition-colors min-h-[60px] ${
                 dragOverPool
-                  ? "border-red-500 bg-red-900/10"
-                  : "border-zinc-700 bg-zinc-800/30"
+                  ? "border-red-500 bg-red-50"
+                  : "border-stone-300 bg-stone-100/50"
               }`}
               onDragOver={onPoolDragOver}
               onDragLeave={onPoolDragLeave}
@@ -281,18 +281,18 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                     onDragStart={(e) => !isUsed && onPoolDragStart(e, d.id)}
                     onDragEnd={onDragEnd}
                     onClick={() => !isUsed && onPoolTap(d.id)}
-                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border text-xs transition-all select-none ${
+                    className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border-2 text-xs transition-all select-none ${
                       isUsed
-                        ? "opacity-30 cursor-default border-zinc-700 bg-zinc-800/50"
+                        ? "opacity-30 cursor-default border-stone-300 bg-stone-200/50"
                         : isSelected
-                          ? "border-red-500 bg-red-900/20 ring-1 ring-red-500 cursor-pointer"
-                          : "border-zinc-600 bg-zinc-800 hover:border-zinc-500 cursor-grab active:cursor-grabbing"
+                          ? "border-red-500 bg-red-50 ring-1 ring-red-500 cursor-pointer"
+                          : "border-stone-400 card-paper hover:border-stone-500 cursor-grab active:cursor-grabbing"
                     }`}
                   >
                     <DriverAvatar driverId={d.id} size={28} className="shrink-0" />
                     <div className="leading-tight">
-                      <div className="font-bold text-zinc-200">{d.code ?? d.id.substring(0, 3).toUpperCase()}</div>
-                      <div className="text-zinc-500 text-[10px] truncate max-w-[60px]">{d.familyName}</div>
+                      <div className="font-bold text-stone-800">{d.code ?? d.id.substring(0, 3).toUpperCase()}</div>
+                      <div className="text-stone-500 text-[10px] truncate max-w-[60px]">{d.familyName}</div>
                     </div>
                   </div>
                 );
@@ -302,7 +302,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
 
           {/* Prediction slots */}
           <div>
-            <div className="text-xs text-zinc-400 font-medium mb-2 uppercase tracking-wide">Your prediction</div>
+            <div className="text-xs text-stone-600 font-medium mb-2 uppercase tracking-wide">Your prediction</div>
             <div className="space-y-1.5">
               {posLabels.map((label, i) => {
                 const driverId = slots[i];
@@ -312,12 +312,12 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                 return (
                   <div
                     key={i}
-                    className={`flex items-center gap-2 rounded-lg border px-3 py-2 transition-all ${
+                    className={`flex items-center gap-2 rounded-lg border-2 px-3 py-2 transition-all ${
                       isDragOver
-                        ? "border-red-500 bg-red-900/15 scale-[1.01]"
+                        ? "border-red-500 bg-red-50 scale-[1.01]"
                         : driver
-                          ? `${posBorderColors[i]} bg-zinc-800/60`
-                          : "border-zinc-700 border-dashed bg-zinc-800/20"
+                          ? `${posBorderColors[i]} card-paper`
+                          : "border-stone-300 border-dashed bg-stone-100/50"
                     }`}
                     onDragOver={(e) => onSlotDragOver(e, i)}
                     onDragLeave={onSlotDragLeave}
@@ -336,15 +336,15 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                         onDragEnd={onDragEnd}
                       >
                         <DriverAvatar driverId={driver.id} size={28} className="shrink-0" />
-                        <span className="font-bold text-sm text-zinc-200">
+                        <span className="font-bold text-sm text-stone-800">
                           {driver.code ?? driver.id.substring(0, 3).toUpperCase()}
                         </span>
-                        <span className="text-zinc-400 text-sm truncate">
+                        <span className="text-stone-500 text-sm truncate">
                           {driver.familyName}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-zinc-600 text-sm flex-1 italic">
+                      <span className="text-stone-400 text-sm flex-1 italic">
                         {selectedDriver ? "Tap to place here" : "Drop driver here"}
                       </span>
                     )}
@@ -356,7 +356,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                           e.stopPropagation();
                           removeFromSlot(i);
                         }}
-                        className="text-zinc-600 hover:text-zinc-300 transition-colors p-0.5 shrink-0"
+                        className="text-stone-400 hover:text-stone-700 transition-colors p-0.5 shrink-0"
                         aria-label={`Remove ${driver.familyName}`}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
