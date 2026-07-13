@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Russo_One } from "next/font/google";
+import { Geist, Geist_Mono, Bangers } from "next/font/google";
 import "./globals.css";
 import { auth } from "@/lib/auth";
 import NavBar from "@/components/NavBar";
@@ -16,8 +15,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const russoOne = Russo_One({
-  variable: "--font-russo-one",
+const bangers = Bangers({
+  variable: "--font-bangers",
   weight: "400",
   subsets: ["latin"],
 });
@@ -36,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${russoOne.variable} antialiased text-stone-50 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bangers.variable} antialiased text-stone-900 min-h-screen`}
       >
         <Providers>
           <NavBar
