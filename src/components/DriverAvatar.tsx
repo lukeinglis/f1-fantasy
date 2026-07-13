@@ -21,7 +21,7 @@ export function DriverAvatar({
       alt={driverId.replace(/_/g, " ")}
       width={size}
       height={size}
-      className={`rounded-full object-cover bg-zinc-800 ${className}`}
+      className={`rounded-full object-cover bg-stone-300 ${className}`}
       onError={() => setSrc("/drivers/default.svg")}
     />
   );

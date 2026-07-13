@@ -902,8 +902,8 @@ export default function F1Game() {
       </div>
 
       {leaderboard.length > 0 && (
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
-          <h3 className="font-semibold text-sm text-zinc-400 mb-3 uppercase tracking-wide">
+        <div className="rounded-lg border border-stone-400 card-paper p-4">
+          <h3 className="font-semibold text-sm text-stone-600 mb-3 uppercase tracking-wide">
             Top Scores
           </h3>
           <div className="space-y-1.5">
@@ -916,19 +916,19 @@ export default function F1Game() {
                   <span
                     className={`w-6 text-right font-mono ${
                       i === 0
-                        ? "text-amber-400"
+                        ? "text-amber-600"
                         : i === 1
-                          ? "text-zinc-300"
+                          ? "text-stone-500"
                           : i === 2
-                            ? "text-amber-700"
-                            : "text-zinc-500"
+                            ? "text-amber-800"
+                            : "text-stone-400"
                     }`}
                   >
                     {i + 1}.
                   </span>
-                  <span className="text-zinc-200">{entry.playerName}</span>
+                  <span className="text-stone-800">{entry.playerName}</span>
                 </div>
-                <span className="font-mono text-zinc-400">
+                <span className="font-mono text-stone-600">
                   {entry.score.toLocaleString()}m
                 </span>
               </div>

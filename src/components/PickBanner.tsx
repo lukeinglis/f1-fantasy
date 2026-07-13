@@ -22,21 +22,21 @@ export default function PickBanner(props: PickBannerProps) {
 
   return (
     <section
-      className="bg-zinc-900 border border-zinc-800 border-l-amber-500 border-l-4 rounded-xl overflow-hidden"
+      className="card-paper border-2 border-amber-800 border-l-4 border-l-amber-500 cartoon-shadow rounded-xl overflow-hidden"
     >
       <button
         type="button"
         onClick={() => setIsOpen((o) => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-zinc-800/50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-amber-50 transition-colors"
       >
         <div className="flex items-baseline gap-2">
-          <h2 className="text-lg font-semibold text-stone-100">Make your pick</h2>
-          <span className="text-sm text-stone-300">
+          <h2 className="text-lg font-semibold text-stone-800">Make your pick</h2>
+          <span className="text-sm text-stone-600">
             R{props.raceRound}: {props.raceName}
           </span>
         </div>
         <svg
-          className={`w-5 h-5 text-zinc-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-stone-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

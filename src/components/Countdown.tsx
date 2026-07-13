@@ -48,10 +48,10 @@ export default function Countdown({ targetDate, label }: Props) {
   if (time === null) {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-xs uppercase tracking-wide text-zinc-500">
+        <span className="text-xs uppercase tracking-wide text-stone-600">
           {label}
         </span>
-        <div className="flex gap-1 font-mono text-lg font-bold text-zinc-600">
+        <div className="flex gap-1 font-mono text-lg font-bold text-stone-600">
           <span>--:--:--</span>
         </div>
       </div>
@@ -62,14 +62,14 @@ export default function Countdown({ targetDate, label }: Props) {
     return (
       <div className="flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-        <span className="text-sm font-medium text-red-400">Race underway</span>
+        <span className="text-sm font-medium text-red-700">Race underway</span>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-[10px] uppercase tracking-widest text-zinc-500">
+      <span className="text-[10px] uppercase tracking-widest text-stone-600">
         {label}
       </span>
       <div className="flex gap-1.5">
@@ -87,10 +87,10 @@ export default function Countdown({ targetDate, label }: Props) {
 function TimeUnit({ value, unit }: { value: number; unit: string }) {
   return (
     <div className="flex items-baseline gap-0.5">
-      <span className="font-mono text-xl font-bold tabular-nums text-white">
+      <span className="font-mono text-xl font-bold tabular-nums text-stone-900 countdown-value">
         {pad(value)}
       </span>
-      <span className="text-[10px] text-zinc-500 font-medium">{unit}</span>
+      <span className="text-[10px] text-stone-600 font-medium countdown-label">{unit}</span>
     </div>
   );
 }

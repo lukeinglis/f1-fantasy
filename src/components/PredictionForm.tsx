@@ -224,7 +224,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="text-xs text-zinc-400 hover:text-zinc-200 px-2 py-1 rounded border border-zinc-700 hover:border-zinc-600 transition-colors"
+            className="text-xs text-stone-600 hover:text-stone-800 px-2 py-1 rounded border border-stone-400 hover:border-stone-500 transition-colors"
           >
             {collapsed ? "Edit prediction" : "Collapse"}
           </button>
@@ -372,12 +372,12 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
           </div>
 
           {error && (
-            <div className="bg-red-900/20 border border-red-800 rounded-lg px-4 py-2.5 text-sm text-red-300">
+            <div className="bg-red-100 border border-red-300 rounded-lg px-4 py-2.5 text-sm text-red-800">
               {error}
             </div>
           )}
           {savedAt && !error && (
-            <div className="bg-emerald-900/20 border border-emerald-800 rounded-lg px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
+            <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-4 py-2.5 text-sm text-emerald-800 flex items-center gap-2">
               <span>&#10003;</span>
               Prediction saved at {savedAt.toLocaleTimeString()}
             </div>
@@ -387,7 +387,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
             <button
               type="submit"
               disabled={saving || filledCount === 0}
-              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors"
+              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-sm transition-colors cartoon-shadow"
             >
               {saving
                 ? "Saving..."
@@ -399,12 +399,12 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
               <button
                 type="button"
                 onClick={clearAll}
-                className="px-3 py-2.5 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="px-3 py-2.5 text-sm text-stone-600 hover:text-stone-800 transition-colors"
               >
                 Clear all
               </button>
             )}
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-stone-500">
               You can change your prediction any time before the deadline.
             </span>
           </div>

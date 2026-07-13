@@ -32,12 +32,12 @@ interface Props {
 }
 
 function scoreColor(predicted: number, actual: number | undefined): string {
-  if (actual === undefined) return "text-red-400 bg-red-900/20";
+  if (actual === undefined) return "text-red-700 bg-red-100/50";
   const diff = Math.abs(predicted - actual);
-  if (diff === 0) return "text-emerald-400 bg-emerald-900/20";
-  if (diff === 1) return "text-yellow-400 bg-yellow-900/20";
-  if (diff === 2) return "text-orange-400 bg-orange-900/20";
-  return "text-red-400 bg-red-900/20";
+  if (diff === 0) return "text-emerald-700 bg-emerald-100/50";
+  if (diff === 1) return "text-yellow-700 bg-yellow-100/50";
+  if (diff === 2) return "text-orange-700 bg-orange-100/50";
+  return "text-red-700 bg-red-100/50";
 }
 
 function scoreLabel(predicted: number, actual: number | undefined): string {
@@ -77,7 +77,7 @@ export default function PredictionResults({
       {/* Summary table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-zinc-800/40 text-zinc-400 uppercase text-xs tracking-wide">
+          <thead className="bg-[#3d2b1f] text-amber-100 uppercase text-xs tracking-wide">
             <tr>
               {hasScores && <th className="text-left px-4 py-2 w-10">#</th>}
               <th className="text-left px-4 py-2">Player</th>
@@ -100,12 +100,12 @@ export default function PredictionResults({
               return (
                 <tr
                   key={p.userId}
-                  className={`border-t border-zinc-800 cursor-pointer transition-colors ${
+                  className={`border-t border-stone-300 cursor-pointer transition-colors card-paper ${
                     isWinner
-                      ? "bg-amber-900/10"
+                      ? "bg-amber-100/60"
                       : isMe
-                        ? "bg-red-900/5"
-                        : "hover:bg-zinc-800/30"
+                        ? "bg-red-50/60"
+                        : "hover:bg-amber-50"
                   }`}
                   onClick={() =>
                     setExpandedUser(isExpanded ? null : p.userId)
@@ -114,33 +114,33 @@ export default function PredictionResults({
                   {hasScores && (
                     <td className="px-4 py-3 tabular-nums">
                       {isWinner ? (
-                        <span className="text-amber-400 font-bold">{i + 1}</span>
+                        <span className="text-amber-700 font-bold">{i + 1}</span>
                       ) : (
-                        <span className="text-zinc-500">{i + 1}</span>
+                        <span className="text-stone-500">{i + 1}</span>
                       )}
                     </td>
                   )}
-                  <td className="px-4 py-3 font-medium whitespace-nowrap">
+                  <td className="px-4 py-3 font-medium whitespace-nowrap text-stone-800">
                     {p.userName}
                     {isMe && (
-                      <span className="text-zinc-500 text-xs ml-1.5">(you)</span>
+                      <span className="text-stone-500 text-xs ml-1.5">(you)</span>
                     )}
                   </td>
                   {hasScores && (
                     <>
-                      <td className="px-4 py-3 text-right tabular-nums text-emerald-400">
+                      <td className="px-4 py-3 text-right tabular-nums text-emerald-700">
                         {p.exactMatches ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-yellow-400">
+                      <td className="px-4 py-3 text-right tabular-nums text-yellow-700">
                         {p.closeMatches ?? 0}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums font-bold text-red-400">
+                      <td className="px-4 py-3 text-right tabular-nums font-bold text-red-700">
                         {p.totalPoints ?? 0}
                       </td>
                     </>
                   )}
                   <td className="px-4 py-3 text-right">
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-stone-500">
                       {isExpanded ? "hide" : "show"}
                     </span>
                   </td>
@@ -157,8 +157,8 @@ export default function PredictionResults({
         if (!player) return null;
 
         return (
-          <div className="bg-zinc-800/30 border border-zinc-700 rounded-lg p-4">
-            <h4 className="text-sm font-semibold mb-3">
+          <div className="bg-[#f5f0e8] border-2 border-stone-400 rounded-lg p-4">
+            <h4 className="text-sm font-semibold mb-3 text-stone-800">
               {player.userName}&rsquo;s predictions
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
@@ -170,12 +170,12 @@ export default function PredictionResults({
                   return (
                     <div
                       key={pos}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded text-sm bg-zinc-800/50"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded text-sm bg-stone-200/50"
                     >
-                      <span className="font-bold text-zinc-500 w-8 text-right tabular-nums">
+                      <span className="font-bold text-stone-500 w-8 text-right tabular-nums">
                         P{pos}
                       </span>
-                      <span className="text-zinc-600 italic">not predicted</span>
+                      <span className="text-stone-400 italic">not predicted</span>
                     </div>
                   );
                 }
@@ -191,7 +191,7 @@ export default function PredictionResults({
                 return (
                   <div
                     key={pos}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm ${colors || "bg-zinc-800/50"}`}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm ${colors || "bg-stone-200/50"}`}
                   >
                     <span className="font-bold w-8 text-right tabular-nums">
                       P{pos}
@@ -200,18 +200,18 @@ export default function PredictionResults({
                     <span className="flex-1 truncate">
                       {pred.driverName}
                       {pred.driverCode && (
-                        <span className="text-zinc-500 text-xs ml-1">
+                        <span className="text-stone-500 text-xs ml-1">
                           {pred.driverCode}
                         </span>
                       )}
                     </span>
                     {hasScores && actualPos !== undefined && (
-                      <span className="text-xs text-zinc-500">
+                      <span className="text-xs text-stone-500">
                         (finished P{actualPos})
                       </span>
                     )}
                     {hasScores && actualPos === undefined && (
-                      <span className="text-xs text-zinc-500">
+                      <span className="text-xs text-stone-500">
                         (outside top 10)
                       </span>
                     )}
