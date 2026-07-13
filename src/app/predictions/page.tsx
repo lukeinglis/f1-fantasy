@@ -109,8 +109,7 @@ export default async function PredictionsPage() {
           <span className="text-red-700">Prediction</span> Challenge
         </h1>
         <p className="text-stone-700 mt-1 text-sm">
-          Predict the top 10 finishing order before each race.
-          Exact position = 5 pts, off by 1 = 2 pts, off by 2 = 1 pt.
+          A separate challenge: predict the top 10 race finishers. Earn 5 points for exact position, 2 for off-by-1, 1 for off-by-2.
         </p>
       </header>
 
