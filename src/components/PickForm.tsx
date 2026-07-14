@@ -88,11 +88,11 @@ export default function PickForm(props: Props) {
                   setDriverId(selected ? "" : d.id);
                   setSavedAt(null);
                 }}
-                className={`flex flex-col items-center card-paper border-2 rounded-lg px-2 py-2 text-center transition-all ${
+                className={`flex flex-col items-center garage-card rounded-lg px-2 py-2 text-center transition-all ${
                   exhausted
                     ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected
-                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer cartoon-shadow"
+                      ? "ring-2 ring-[var(--color-racing-red)] border-[var(--color-racing-red)] cursor-pointer"
                       : "border-stone-400 hover:border-stone-500 cursor-pointer"
                 }`}
               >
@@ -133,11 +133,11 @@ export default function PickForm(props: Props) {
                   setConsId(selected ? "" : c.id);
                   setSavedAt(null);
                 }}
-                className={`flex items-center gap-2 card-paper border-2 rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
+                className={`flex items-center gap-2 garage-card rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
                   exhausted
                     ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected
-                      ? "ring-2 ring-red-500 border-red-500 cursor-pointer cartoon-shadow"
+                      ? "ring-2 ring-[var(--color-racing-red)] border-[var(--color-racing-red)] cursor-pointer"
                       : "border-stone-400 hover:border-stone-500 cursor-pointer"
                 }`}
                 style={{ borderLeftColor: exhausted ? '#a8a29e' : selected ? '#ef4444' : color }}
@@ -189,7 +189,7 @@ export default function PickForm(props: Props) {
       <div className="flex items-center gap-3">
         <button
           disabled={saving || !hasSelection}
-          className="px-5 py-2.5 bg-red-600 hover:bg-red-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold text-sm text-white transition-colors sticker"
+          className="garage-button-primary text-sm disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {saving ? "Saving..." : hasPartialSelection ? "Pick both to save" : isUpdate ? "Update pick" : "Save pick"}
         </button>

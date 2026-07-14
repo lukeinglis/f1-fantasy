@@ -44,12 +44,12 @@ export default async function RacesPage() {
     <div className="space-y-6">
       <header>
         <h1
-          className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          className="text-3xl text-[var(--color-oil-stain)]"
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           {season} Race Calendar
         </h1>
-        <p className="text-stone-700 mt-1 text-sm">
+        <p className="text-[var(--color-garage-metal)] mt-1 text-sm">
           {scoredCount} of {activeRaces.length} races scored.{" "}
           {nextRaceIdx >= 0
             ? `Next up: Round ${activeRaces[nextRaceIdx].round}.`
@@ -58,10 +58,10 @@ export default async function RacesPage() {
       </header>
 
       {races.length === 0 ? (
-        <div className="card-paper border-2 border-stone-400 rounded-xl p-6 cartoon-shadow">
-          <p className="text-stone-600">
+        <div className="garage-card">
+          <p className="text-[var(--color-garage-metal)]">
             No races loaded yet. Admin: go to{" "}
-            <Link href="/admin" className="text-red-700 underline font-bold">
+            <Link href="/admin" className="text-[var(--color-racing-red)] underline font-bold">
               Admin
             </Link>{" "}
             and click &quot;Sync season&quot;.
@@ -81,20 +81,20 @@ export default async function RacesPage() {
                 <Link
                   key={r.id}
                   href={`/races/${r.id}`}
-                  className={`card-paper border-2 rounded-xl p-4 transition-colors flex justify-between items-center gap-4 cartoon-shadow ${
+                  className={`garage-card transition-colors flex justify-between items-center gap-4 ${
                     isNext
-                      ? "border-red-600 ring-1 ring-red-600/30"
-                      : "border-stone-400 hover:border-stone-500"
+                      ? "border-[var(--color-racing-red)] ring-1 ring-[var(--color-racing-red)]/30"
+                      : ""
                   }`}
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <span
                       className={`tabular-nums text-sm font-mono w-8 shrink-0 ${
                         r.resultsLocked
-                          ? "text-stone-400"
+                          ? "text-[var(--color-garage-metal)]"
                           : isNext
-                            ? "text-red-700 font-bold"
-                            : "text-stone-500"
+                            ? "text-[var(--color-racing-red)] font-bold"
+                            : "text-[var(--color-garage-metal)]"
                       }`}
                     >
                       R{r.round}
@@ -102,12 +102,12 @@ export default async function RacesPage() {
                     <div className="min-w-0">
                       <div
                         className={`font-semibold truncate ${
-                          r.resultsLocked ? "text-stone-500" : "text-stone-800"
+                          r.resultsLocked ? "text-[var(--color-garage-metal)]" : "text-[var(--color-oil-stain)]"
                         }`}
                       >
                         {r.name}
                       </div>
-                      <div className="text-xs text-stone-500 mt-0.5">
+                      <div className="text-xs text-[var(--color-garage-metal)] mt-0.5">
                         {r.country ? `${r.country} / ` : ""}
                         {shortDate(r.date)}
                       </div>
@@ -115,23 +115,23 @@ export default async function RacesPage() {
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {r.resultsLocked ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold garage-badge">
                         Scored
                       </span>
                     ) : past ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold garage-badge">
                         Awaiting
                       </span>
                     ) : hasPick ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold garage-badge">
                         Pick set
                       </span>
                     ) : isNext ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-red-600 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-red-600 text-white font-bold garage-badge">
                         Pick now
                       </span>
                     ) : (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-stone-400 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-stone-400 text-white font-bold garage-badge">
                         Open
                       </span>
                     )}

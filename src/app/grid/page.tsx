@@ -168,11 +168,11 @@ export default async function GridPage() {
       <div className="space-y-4">
         <h1
           className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           Season Grid
         </h1>
-        <p className="text-stone-700">
+        <p className="text-[var(--color-garage-metal)]">
           No data yet. Sync the season from the admin panel first.
         </p>
       </div>
@@ -193,11 +193,11 @@ export default async function GridPage() {
         <div>
           <h1
             className="text-3xl text-stone-900"
-            style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
-            Season Grid <span className="text-red-700">{season}</span>
+            Season Grid <span className="text-[var(--color-racing-red)]">{season}</span>
           </h1>
-          <p className="text-stone-700 mt-1 text-sm">
+          <p className="text-[var(--color-garage-metal)] mt-1 text-sm">
             Every pick at a glance. Tap or hover for details.
           </p>
         </div>
@@ -209,14 +209,14 @@ export default async function GridPage() {
           <thead>
             <tr>
               <th
-                className="sticky left-0 z-20 bg-[#3d2b1f] px-3 py-2 text-left text-amber-300/70 uppercase tracking-wide text-[10px] min-w-[110px]"
-                style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+                className="sticky left-0 z-20 bg-[var(--color-garage-metal-dark)] px-3 py-2 text-left text-white uppercase tracking-wide text-[10px] min-w-[110px]"
+                style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
               >
                 Player
               </th>
               <th
-                className="sticky left-[110px] z-20 bg-[#3d2b1f] px-2 py-2 text-right text-amber-300/70 uppercase tracking-wide text-[10px] min-w-[48px]"
-                style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+                className="sticky left-[110px] z-20 bg-[var(--color-garage-metal-dark)] px-2 py-2 text-right text-white uppercase tracking-wide text-[10px] min-w-[48px]"
+                style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
               >
                 Total
               </th>
@@ -226,12 +226,12 @@ export default async function GridPage() {
                   <th
                     key={r.id}
                     className={`px-1 py-2 text-center min-w-[72px] ${
-                      isPast ? "text-zinc-400" : "text-zinc-200"
+                      isPast ? "text-[var(--color-garage-metal)]" : "text-[var(--color-oil-stain)]"
                     }`}
                   >
                     <Link
                       href={`/races/${r.id}`}
-                      className="hover:text-red-400 transition-colors"
+                      className="hover:text-[var(--color-racing-red)] transition-colors"
                     >
                       <div className="text-sm leading-tight">
                         {countryFlag(r.country)}
@@ -252,13 +252,13 @@ export default async function GridPage() {
               ) / 10;
               return (
                 <tr key={user.id}>
-                  <td className="sticky left-0 z-10 bg-[#3d2b1f] px-3 py-2 font-medium text-sm whitespace-nowrap text-amber-50">
+                  <td className="sticky left-0 z-10 bg-[var(--color-garage-metal-dark)] px-3 py-2 font-medium text-sm whitespace-nowrap text-white">
                     {userIdx === 0 && total > 0 && (
-                      <span className="text-amber-300 mr-1.5">&#9733;</span>
+                      <span className="text-[var(--color-racing-yellow)] mr-1.5">&#9733;</span>
                     )}
                     {user.name}
                   </td>
-                  <td className="sticky left-[110px] z-10 bg-[#3d2b1f] px-2 py-2 text-right font-bold text-white tabular-nums text-sm">
+                  <td className="sticky left-[110px] z-10 bg-[var(--color-garage-metal-dark)] px-2 py-2 text-right font-bold text-white tabular-nums text-sm">
                     {total || ""}
                   </td>
                   {activeRaces.map((r) => {
@@ -273,8 +273,8 @@ export default async function GridPage() {
                           key={r.id}
                           className={`rounded-md text-center py-2 px-1 min-h-[52px] ${
                             isPast
-                              ? "bg-stone-800/60 text-stone-500"
-                              : "bg-[#f5f0e8]/60 text-stone-500 border border-dashed border-stone-400"
+                              ? "bg-[var(--color-garage-metal)]/20 text-[var(--color-garage-metal)]"
+                              : "bg-[var(--color-whiteboard)]/60 text-stone-500 border border-dashed border-stone-400"
                           }`}
                         >
                           {isPast ? (
@@ -314,7 +314,7 @@ export default async function GridPage() {
                                 {cell.constructorName ?? "No constructor"}
                               </div>
                               {cell.totalPoints != null && (
-                                <div className="text-red-700 font-bold mt-1">
+                                <div className="text-[var(--color-racing-red)] font-bold mt-1">
                                   {cell.totalPoints} pts
                                 </div>
                               )}

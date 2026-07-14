@@ -84,15 +84,15 @@ export default async function MyPicksPage() {
     <div className="space-y-6">
       <header>
         <h1
-          className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          className="text-3xl text-[var(--color-oil-stain)]"
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           My Picks
         </h1>
-        <p className="text-stone-700 mt-1 text-sm">
+        <p className="text-[var(--color-garage-metal)] mt-1 text-sm">
           Track everything you&rsquo;ve used and what you have left.
           {seasonTotal > 0 && (
-            <span className="text-red-700 font-medium ml-2">
+            <span className="text-[var(--color-racing-red)] font-medium ml-2">
               Season total: {Math.round(seasonTotal * 10) / 10} pts
             </span>
           )}
@@ -122,28 +122,28 @@ export default async function MyPicksPage() {
 
       {/* Current race league picks (visible only after deadline) */}
       {currentRace && currentRacePicks.length > 0 && (
-        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+        <section className="whiteboard rounded-2xl overflow-hidden">
           <h2
-            className="text-lg font-semibold p-4 border-b border-[#2a1f15]/50 text-amber-100"
-            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+            className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
+            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
           >
             <Link
               href={`/races/${currentRace.id}`}
-              className="hover:text-red-400 transition-colors"
+              className="hover:text-[var(--color-racing-red)] transition-colors"
             >
               R{currentRace.round} / {currentRace.name}
             </Link>
-            <span className="text-sm text-amber-300/60 font-normal ml-2">
+            <span className="text-sm text-[var(--color-garage-metal)] font-normal ml-2">
               League picks
             </span>
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Driver</th>
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructor</th>
+                <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Driver</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Constructor</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,25 +152,25 @@ export default async function MyPicksPage() {
                   return (
                     <tr
                       key={p.id}
-                      className={`border-t border-[#2a1f15]/50 ${
-                        isMe ? "bg-amber-900/20" : "hover:bg-white/5"
+                      className={`border-t border-[var(--color-garage-metal)]/20 ${
+                        isMe ? "bg-[var(--color-racing-red)]/10" : "hover:bg-[var(--color-garage-wall)]/50"
                       }`}
                     >
-                      <td className="px-4 py-2.5 font-medium whitespace-nowrap text-amber-50">
+                      <td className="px-4 py-2.5 font-medium whitespace-nowrap text-[var(--color-oil-stain)]">
                         {p.user.name}
                         {isMe && (
-                          <span className="text-amber-100/50 text-xs ml-1.5">
+                          <span className="text-[var(--color-garage-metal)] text-xs ml-1.5">
                             (you)
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap text-amber-100/80">
+                      <td className="px-4 py-2.5 whitespace-nowrap text-[var(--color-oil-stain)]/80">
                         {p.driver ? (
                           <span className="inline-flex items-center gap-1.5">
                             <DriverAvatar driverId={p.driver.id} size={24} />
                             {p.driver.givenName} {p.driver.familyName}
                             {p.driver.code && (
-                              <span className="text-amber-100/50 text-xs">
+                              <span className="text-[var(--color-garage-metal)] text-xs">
                                 {p.driver.code}
                               </span>
                             )}
@@ -205,15 +205,15 @@ export default async function MyPicksPage() {
 
       <section>
         <h2
-          className="text-lg mb-4 text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          className="text-lg mb-4 text-[var(--color-oil-stain)]"
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           By race
         </h2>
         {picks.length === 0 ? (
-          <p className="text-stone-700">
+          <p className="text-[var(--color-garage-metal)]">
             No picks yet.{" "}
-            <Link href="/races" className="text-red-700 hover:text-red-800 hover:underline">
+            <Link href="/races" className="text-[var(--color-racing-red)] hover:underline">
               Head to the calendar
             </Link>
             .
@@ -228,7 +228,7 @@ export default async function MyPicksPage() {
                 <Link
                   key={p.id}
                   href={`/races/${p.raceId}`}
-                  className="group relative card-paper rounded-xl overflow-hidden border-2 border-stone-400 hover:border-stone-500 transition-colors cartoon-shadow"
+                  className="group relative garage-card overflow-hidden transition-colors hover:border-[var(--color-racing-red)]"
                   style={{
                     background: `linear-gradient(135deg, ${color}15 0%, #f5f0e8 60%)`,
                   }}
@@ -256,17 +256,17 @@ export default async function MyPicksPage() {
                         >
                           R{p.race.round}
                         </span>
-                        <span className="text-[11px] text-stone-500 truncate max-w-[80px]">
+                        <span className="text-[11px] text-[var(--color-garage-metal)] truncate max-w-[80px]">
                           {p.race.name}
                         </span>
                       </div>
                       <span className="text-sm font-bold tabular-nums">
                         {s ? (
-                          <span className="text-red-700">
+                          <span className="text-[var(--color-racing-red)]">
                             {s.totalPoints}
                           </span>
                         ) : (
-                          <span className="text-stone-400">&mdash;</span>
+                          <span className="text-[var(--color-garage-metal)]">&mdash;</span>
                         )}
                       </span>
                     </div>
@@ -276,13 +276,13 @@ export default async function MyPicksPage() {
                         <DriverAvatar
                           driverId={p.driver.id}
                           size={56}
-                          className="shrink-0 ring-2 ring-stone-400 group-hover:ring-stone-500 transition-all"
+                          className="shrink-0 ring-2 ring-[var(--color-garage-metal)] group-hover:ring-[var(--color-racing-red)] transition-all"
                         />
                       ) : (
-                        <div className="w-14 h-14 rounded-full bg-stone-300 shrink-0" />
+                        <div className="w-14 h-14 rounded-full bg-[var(--color-garage-metal)]/30 shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate text-stone-800">
+                        <p className="text-sm font-semibold truncate text-[var(--color-oil-stain)]">
                           {p.driver
                             ? `${p.driver.givenName} ${p.driver.familyName}`
                             : "No driver"}
@@ -298,7 +298,7 @@ export default async function MyPicksPage() {
                             {teamShort(p.team.id)}
                           </span>
                         ) : (
-                          <span className="text-xs text-stone-500 mt-1">
+                          <span className="text-xs text-[var(--color-garage-metal)] mt-1">
                             No constructor
                           </span>
                         )}
@@ -340,32 +340,32 @@ function UsagePanel({
   const availableCount = items.length - exhaustedCount;
 
   return (
-    <div className="card-paper border-2 border-stone-400 rounded-xl p-4 cartoon-shadow">
+    <div className="garage-card">
       <h3
-        className="text-sm font-semibold uppercase tracking-wide text-stone-600"
-        style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.08em" }}
+        className="text-sm font-semibold uppercase tracking-wide text-[var(--color-garage-metal)]"
+        style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.08em" }}
       >
         {title}
       </h3>
       <div className="flex items-baseline gap-3 mt-1">
-        <p className="text-2xl font-bold text-stone-900">
+        <p className="text-2xl font-bold text-[var(--color-oil-stain)]">
           {availableCount}
-          <span className="text-sm text-stone-500 font-normal ml-1">
+          <span className="text-sm text-[var(--color-garage-metal)] font-normal ml-1">
             available
           </span>
         </p>
         {exhaustedCount > 0 && (
-          <p className="text-sm text-red-700">
+          <p className="text-sm text-[var(--color-racing-red)]">
             {exhaustedCount} exhausted
           </p>
         )}
       </div>
-      <p className="text-xs text-stone-500">
+      <p className="text-xs text-[var(--color-garage-metal)]">
         Max {max} uses per {title === "Drivers" ? "driver" : "constructor"}
       </p>
       {usedItems.length > 0 && (
         <div className="mt-3">
-          <p className="text-xs text-stone-500 mb-1.5">Used so far:</p>
+          <p className="text-xs text-[var(--color-garage-metal)] mb-1.5">Used so far:</p>
           <div className="flex flex-wrap gap-1.5">
             {usedItems
               .sort(

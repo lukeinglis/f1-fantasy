@@ -18,19 +18,19 @@ export default async function RulesPage() {
       <header>
         <h1
           className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
-          How to Play <span className="text-red-700">F1 Fantasy</span>
+          How to Play <span className="text-[var(--color-racing-red)]">F1 Fantasy</span>
         </h1>
         <p className="text-stone-700 mt-1 text-sm">
           {season} season rules
         </p>
       </header>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           The Basics
         </h2>
@@ -63,10 +63,10 @@ export default async function RulesPage() {
         </ul>
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Usage Caps
         </h2>
@@ -76,7 +76,7 @@ export default async function RulesPage() {
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4 cartoon-shadow">
-            <div className="text-3xl font-bold text-red-700" style={{ fontFamily: "var(--font-bangers)" }}>{maxDriver}x</div>
+            <div className="text-3xl font-bold text-red-700" style={{ fontFamily: "var(--font-permanent-marker)" }}>{maxDriver}x</div>
             <div className="text-sm text-stone-600 mt-1">
               per driver, per season
             </div>
@@ -86,7 +86,7 @@ export default async function RulesPage() {
             </p>
           </div>
           <div className="bg-amber-50 border-2 border-amber-400 rounded-xl p-4 cartoon-shadow">
-            <div className="text-3xl font-bold text-amber-700" style={{ fontFamily: "var(--font-bangers)" }}>
+            <div className="text-3xl font-bold text-amber-700" style={{ fontFamily: "var(--font-permanent-marker)" }}>
               {maxConstructor}x
             </div>
             <div className="text-sm text-stone-600 mt-1">
@@ -100,10 +100,10 @@ export default async function RulesPage() {
         </div>
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Points Table
         </h2>
@@ -135,10 +135,10 @@ export default async function RulesPage() {
         </p>
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Deadlines
         </h2>
@@ -149,10 +149,10 @@ export default async function RulesPage() {
         </p>
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Prediction Challenge
         </h2>
@@ -178,22 +178,22 @@ export default async function RulesPage() {
         <div className="grid grid-cols-4 gap-2 text-center text-sm">
           <div className="bg-emerald-50 border-2 border-emerald-400 rounded-lg px-2 py-3 cartoon-shadow">
             <div className="text-emerald-700 text-xs font-bold">Exact</div>
-            <div className="font-bold text-2xl text-emerald-700 tabular-nums" style={{ fontFamily: "var(--font-bangers)" }}>5</div>
+            <div className="font-bold text-2xl text-emerald-700 tabular-nums" style={{ fontFamily: "var(--font-permanent-marker)" }}>5</div>
             <div className="text-stone-500 text-xs">points</div>
           </div>
           <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg px-2 py-3 cartoon-shadow">
             <div className="text-yellow-700 text-xs font-bold">Off by 1</div>
-            <div className="font-bold text-2xl text-yellow-700 tabular-nums" style={{ fontFamily: "var(--font-bangers)" }}>2</div>
+            <div className="font-bold text-2xl text-yellow-700 tabular-nums" style={{ fontFamily: "var(--font-permanent-marker)" }}>2</div>
             <div className="text-stone-500 text-xs">points</div>
           </div>
           <div className="bg-orange-50 border-2 border-orange-400 rounded-lg px-2 py-3 cartoon-shadow">
             <div className="text-orange-700 text-xs font-bold">Off by 2</div>
-            <div className="font-bold text-2xl text-orange-700 tabular-nums" style={{ fontFamily: "var(--font-bangers)" }}>1</div>
+            <div className="font-bold text-2xl text-orange-700 tabular-nums" style={{ fontFamily: "var(--font-permanent-marker)" }}>1</div>
             <div className="text-stone-500 text-xs">point</div>
           </div>
           <div className="bg-stone-100 border-2 border-stone-300 rounded-lg px-2 py-3 cartoon-shadow">
             <div className="text-stone-500 text-xs font-bold">Off by 3+</div>
-            <div className="font-bold text-2xl text-stone-400 tabular-nums" style={{ fontFamily: "var(--font-bangers)" }}>0</div>
+            <div className="font-bold text-2xl text-stone-400 tabular-nums" style={{ fontFamily: "var(--font-permanent-marker)" }}>0</div>
             <div className="text-stone-500 text-xs">points</div>
           </div>
         </div>
@@ -218,10 +218,10 @@ export default async function RulesPage() {
         </p>
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-6 space-y-4 cartoon-shadow">
+      <section className="garage-card p-6 space-y-4">
         <h2
           className="text-xl text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Mid-Season Start
         </h2>
@@ -235,15 +235,15 @@ export default async function RulesPage() {
       <div className="flex gap-3 text-sm">
         <Link
           href="/races"
-          className="px-6 py-3 bg-red-600 hover:bg-red-500 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
-          style={{ fontFamily: "var(--font-bangers)", borderWidth: "3px" }}
+          className="garage-button-primary"
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Race Calendar
         </Link>
         <Link
           href="/"
-          className="px-5 py-3 bg-amber-500 hover:bg-amber-400 hover:scale-105 rounded-xl text-white border-3 border-white cartoon-shadow uppercase tracking-wider transition-transform"
-          style={{ fontFamily: "var(--font-bangers)", borderWidth: "3px" }}
+          className="garage-button-secondary"
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Leaderboard
         </Link>

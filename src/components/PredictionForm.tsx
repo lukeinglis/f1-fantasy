@@ -224,7 +224,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}
-            className="text-xs text-stone-600 hover:text-stone-800 px-2 py-1 rounded border border-stone-400 hover:border-stone-500"
+            className="text-xs text-stone-600 hover:text-stone-800 px-2 py-1 rounded border border-[var(--color-garage-metal)] hover:border-[var(--color-oil-stain)]"
           >
             {collapsed ? "Edit prediction" : "Collapse"}
           </button>
@@ -240,8 +240,8 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           {/* Scoring rules */}
-          <div className="bg-stone-100 border-2 border-stone-300 rounded-lg p-3 text-xs text-stone-600 space-y-1">
-            <div className="font-medium text-stone-700 text-sm mb-1">Scoring</div>
+          <div className="bg-[var(--color-whiteboard)] border-2 border-[var(--color-garage-metal)]/30 rounded-lg p-3 text-xs text-[var(--color-oil-stain)] space-y-1">
+            <div className="font-medium text-[var(--color-oil-stain)] text-sm mb-1">Scoring</div>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
               <span><span className="text-emerald-700 font-bold">5 pts</span> exact position</span>
               <span><span className="text-yellow-700 font-bold">2 pts</span> off by 1</span>
@@ -264,8 +264,8 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
             <div
               className={`flex flex-wrap gap-2 p-3 rounded-lg border-2 transition-colors min-h-[60px] ${
                 dragOverPool
-                  ? "border-red-500 bg-red-50"
-                  : "border-stone-300 bg-stone-100/50"
+                  ? "border-[var(--color-racing-red)] bg-[var(--color-racing-red)]/10"
+                  : "border-[var(--color-garage-metal)]/30 bg-[var(--color-whiteboard)]/50"
               }`}
               onDragOver={onPoolDragOver}
               onDragLeave={onPoolDragLeave}
@@ -283,10 +283,10 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                     onClick={() => !isUsed && onPoolTap(d.id)}
                     className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg border-2 text-xs transition-all select-none ${
                       isUsed
-                        ? "opacity-30 cursor-default border-stone-300 bg-stone-200/50"
+                        ? "opacity-30 cursor-default border-[var(--color-garage-metal)]/30 bg-[var(--color-garage-wall)]/50"
                         : isSelected
-                          ? "border-red-500 bg-red-50 ring-1 ring-red-500 cursor-pointer"
-                          : "border-stone-400 card-paper hover:border-stone-500 cursor-grab active:cursor-grabbing"
+                          ? "border-[var(--color-racing-red)] bg-[var(--color-racing-red)]/10 ring-1 ring-[var(--color-racing-red)] cursor-pointer"
+                          : "border-[var(--color-garage-metal)] bg-[var(--color-whiteboard)] hover:border-[var(--color-oil-stain)] cursor-grab active:cursor-grabbing"
                     }`}
                   >
                     <DriverAvatar driverId={d.id} size={28} className="shrink-0" />
@@ -314,10 +314,10 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
                     key={i}
                     className={`flex items-center gap-2 rounded-lg border-2 px-3 py-2 transition-all ${
                       isDragOver
-                        ? "border-red-500 bg-red-50 scale-[1.01]"
+                        ? "border-[var(--color-racing-red)] bg-[var(--color-racing-red)]/10 scale-[1.01]"
                         : driver
-                          ? `${posBorderColors[i]} card-paper`
-                          : "border-stone-300 border-dashed bg-stone-100/50"
+                          ? `${posBorderColors[i]} bg-[var(--color-whiteboard)]`
+                          : "border-[var(--color-garage-metal)]/30 border-dashed bg-[var(--color-whiteboard)]/50"
                     }`}
                     onDragOver={(e) => onSlotDragOver(e, i)}
                     onDragLeave={onSlotDragLeave}
@@ -387,8 +387,8 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
             <button
               type="submit"
               disabled={saving || filledCount === 0}
-              className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold sticker cartoon-shadow"
-              style={{ fontFamily: "var(--font-bangers)" }}
+              className="garage-button-primary disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ fontFamily: "var(--font-permanent-marker)" }}
             >
               {saving
                 ? "Saving..."
@@ -400,7 +400,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
               <button
                 type="button"
                 onClick={clearAll}
-                className="px-3 py-2.5 text-sm text-stone-600 hover:text-stone-800 underline-offset-2 hover:underline"
+                className="px-3 py-2.5 text-sm text-[var(--color-garage-metal)] hover:text-[var(--color-oil-stain)] underline-offset-2 hover:underline"
               >
                 Clear all
               </button>

@@ -245,17 +245,17 @@ export default async function StatsPage() {
       <header>
         <h1
           className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           Season <span className="text-red-700">Stats</span>
         </h1>
-        <p className="text-stone-700 mt-1 text-sm">
+        <p className="text-[var(--color-garage-metal)] mt-1 text-sm">
           {data.scoredRaces} of {data.totalActiveRaces} active races scored.
         </p>
       </header>
 
       {/* Highlight cards */}
-      <section className="cork-board border-4 border-[#3d2b1f] rounded-2xl p-4 sm:p-6 cartoon-shadow">
+      <section className="garage-card">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {data.bestRace && (
             <StatCard
@@ -298,10 +298,10 @@ export default async function StatsPage() {
 
       {/* Race wins leaderboard */}
       {data.winsLeaderboard.length > 0 && (
-        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+        <section className="garage-card">
           <h2
             className="text-lg mb-3 text-stone-800"
-            style={{ fontFamily: "var(--font-bangers)" }}
+            style={{ fontFamily: "var(--font-permanent-marker)" }}
           >
             Race wins
           </h2>
@@ -335,10 +335,10 @@ export default async function StatsPage() {
 
       {/* Average scores per race */}
       {data.raceAverages.length > 0 && (
-        <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+        <section className="garage-card">
           <h2
             className="text-lg mb-3 text-stone-800"
-            style={{ fontFamily: "var(--font-bangers)" }}
+            style={{ fontFamily: "var(--font-permanent-marker)" }}
           >
             Average score by race
           </h2>
@@ -370,10 +370,10 @@ export default async function StatsPage() {
       {/* Driver & Constructor popularity */}
       <div className="grid sm:grid-cols-2 gap-4">
         {data.driverPopularity.length > 0 && (
-          <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <section className="garage-card">
             <h2
               className="text-lg mb-3 text-stone-800"
-              style={{ fontFamily: "var(--font-bangers)" }}
+              style={{ fontFamily: "var(--font-permanent-marker)" }}
             >
               Driver popularity
             </h2>
@@ -404,10 +404,10 @@ export default async function StatsPage() {
         )}
 
         {data.consPopularity.length > 0 && (
-          <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+          <section className="garage-card">
             <h2
               className="text-lg mb-3 text-stone-800"
-              style={{ fontFamily: "var(--font-bangers)" }}
+              style={{ fontFamily: "var(--font-permanent-marker)" }}
             >
               Constructor popularity
             </h2>
@@ -451,59 +451,57 @@ export default async function StatsPage() {
 
       {/* Player budgets */}
       {data.playerBudgets.length > 0 && (
-        <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+        <section className="whiteboard rounded-2xl overflow-hidden">
           <h2
-            className="text-lg p-4 border-b border-[#2a1f15]/50 text-amber-100"
-            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+            className="text-lg p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
+            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
           >
             Pick budget remaining
           </h2>
-          <p className="text-xs text-amber-100/50 px-4 pt-2">
+          <p className="text-xs text-[var(--color-garage-metal)] px-4 pt-2">
             How many unique drivers/constructors each player has used vs exhausted.
             Max {data.maxDriver} uses per driver, {data.maxConstructor} per constructor.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Drivers used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Exhausted</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Constructors used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Exhausted</th>
+                <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Drivers used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Constructors used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Exhausted</th>
                 </tr>
               </thead>
               <tbody>
                 {data.playerBudgets.map((b, i) => (
                   <tr
                     key={b.userName}
-                    className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
-                      i % 2 === 0 ? "bg-white/[0.03]" : ""
-                    }`}
+                    className={`border-t border-[var(--color-garage-metal)]/20 hover:bg-[var(--color-garage-wall)]/50`}
                   >
-                    <td className="px-4 py-2.5 font-medium text-amber-50">{b.userName}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-amber-100/70">
+                    <td className="px-4 py-2.5 font-medium text-[var(--color-oil-stain)]">{b.userName}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-oil-stain)]/70">
                       {b.driversUsed}
                     </td>
                     <td className="px-4 py-2.5 text-right tabular-nums">
                       {b.driversExhausted > 0 ? (
-                        <span className="text-red-400">
+                        <span className="text-[var(--color-racing-red)]">
                           {b.driversExhausted}
                         </span>
                       ) : (
-                        <span className="text-amber-100/30">0</span>
+                        <span className="text-[var(--color-garage-metal)]/30">0</span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-amber-100/70">
+                    <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-oil-stain)]/70">
                       {b.constructorsUsed}
                     </td>
                     <td className="px-4 py-2.5 text-right tabular-nums">
                       {b.constructorsExhausted > 0 ? (
-                        <span className="text-red-400">
+                        <span className="text-[var(--color-racing-red)]">
                           {b.constructorsExhausted}
                         </span>
                       ) : (
-                        <span className="text-amber-100/30">0</span>
+                        <span className="text-[var(--color-garage-metal)]/30">0</span>
                       )}
                     </td>
                   </tr>
@@ -531,8 +529,8 @@ function StatCard({
   rotation?: string;
 }) {
   return (
-    <div className={`card-paper border-2 border-[#3d2b1f] rounded-lg p-4 cartoon-shadow ${rotation ?? ""}`}>
-      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold">
+    <div className={`garage-card ${rotation ?? ""}`}>
+      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold" style={{ fontFamily: "var(--font-permanent-marker)" }}>
         {label}
       </div>
       <div className={`text-xl font-bold ${color ?? "text-stone-800"}`}>

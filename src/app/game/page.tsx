@@ -6,7 +6,7 @@ export default function GamePage() {
     <div className="space-y-6">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-stone-700 hover:text-stone-900 transition-colors font-medium"
+        className="inline-flex items-center gap-1 text-sm text-[var(--color-garage-metal)] hover:text-[var(--color-oil-stain)] transition-colors font-medium"
       >
         &larr; Back to home
       </Link>
@@ -14,14 +14,14 @@ export default function GamePage() {
       <h1
         className="text-3xl text-stone-900"
         style={{
-          fontFamily: "var(--font-bangers)",
+          fontFamily: "var(--font-permanent-marker)",
           textShadow: "1px 1px 0px rgba(0,0,0,0.15)",
         }}
       >
-        <span className="text-red-600">F1</span> Dodge
+        <span className="text-[var(--color-racing-red)]">F1</span> Dodge
       </h1>
 
-      <div className="card-paper border-2 border-stone-400 rounded-xl p-4 cartoon-shadow">
+      <div className="garage-card p-4">
         <F1Game />
       </div>
     </div>

@@ -103,12 +103,12 @@ export default async function PredictionsPage() {
     <div className="space-y-8">
       <header>
         <h1
-          className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          className="text-3xl text-[var(--color-oil-stain)]"
+          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
-          <span className="text-red-700">Prediction</span> Challenge
+          <span className="text-[var(--color-racing-red)]">Prediction</span> Challenge
         </h1>
-        <p className="text-stone-700 mt-1 text-sm">
+        <p className="text-[var(--color-garage-metal)] mt-1 text-sm">
           A separate challenge: predict the top 10 race finishers. Earn 5 points for exact position, 2 for off-by-1, 1 for off-by-2.
         </p>
       </header>
@@ -117,21 +117,21 @@ export default async function PredictionsPage() {
       {nextRace && (
         <Link
           href={`/races/${nextRace.id}`}
-          className="block card-paper border-2 border-stone-400 rounded-xl p-5 hover:border-red-600 transition-colors cartoon-shadow"
+          className="block garage-card hover:border-[var(--color-racing-red)] transition-colors"
         >
           <div
-            className="text-xs uppercase tracking-wider text-stone-500 mb-1 font-bold"
-            style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.1em" }}
+            className="text-xs uppercase tracking-wider text-[var(--color-garage-metal)] mb-1 font-bold"
+            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.1em" }}
           >
             Next prediction
           </div>
-          <div className="text-lg font-semibold text-stone-800">
+          <div className="text-lg font-semibold text-[var(--color-oil-stain)]">
             R{nextRace.round}: {nextRace.name}
           </div>
           {nextRace.country && (
-            <div className="text-sm text-stone-500">{nextRace.country}</div>
+            <div className="text-sm text-[var(--color-garage-metal)]">{nextRace.country}</div>
           )}
-          <div className="text-sm text-red-700 font-bold mt-2">
+          <div className="text-sm text-[var(--color-racing-red)] font-bold mt-2">
             Submit your prediction &rarr;
           </div>
         </Link>
@@ -141,69 +141,69 @@ export default async function PredictionsPage() {
       {rows.length > 0 && (
         <section>
           <h2
-            className="text-xl mb-3 text-stone-900"
-            style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            className="text-xl mb-3 text-[var(--color-oil-stain)]"
+            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
             Season Standings
           </h2>
-          <div className="overflow-x-auto wood-panel border-4 border-[#2a1f15] rounded-2xl cartoon-shadow">
+          <div className="overflow-x-auto whiteboard rounded-2xl">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>#</th>
-                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
+                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>#</th>
+                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
                     Exact
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
                     Close
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
                     Best race
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
                     Races
                   </th>
-                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Total</th>
+                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((r, i) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
+                    className={`border-t border-[var(--color-garage-metal)]/20 hover:bg-[var(--color-garage-wall)]/50 ${
                       i === 0 && r.totalPoints > 0
-                        ? "bg-amber-900/20"
+                        ? "bg-[var(--color-racing-yellow)]/15"
                         : i % 2 === 0
-                          ? "bg-white/[0.03]"
+                          ? "even:bg-[var(--color-whiteboard)]"
                           : ""
                     }`}
                   >
                     <td className="px-4 py-3 tabular-nums">
                       {i === 0 && r.totalPoints > 0 ? (
-                        <span className="text-amber-300 font-bold text-base">🏆 {i + 1}</span>
+                        <span className="text-[var(--color-racing-yellow)] font-bold text-base">🏆 {i + 1}</span>
                       ) : i === 1 && r.totalPoints > 0 ? (
-                        <span className="text-stone-300 font-bold">🥈 {i + 1}</span>
+                        <span className="text-[var(--color-garage-metal)] font-bold">🥈 {i + 1}</span>
                       ) : i === 2 && r.totalPoints > 0 ? (
                         <span className="text-amber-700 font-bold">🥉 {i + 1}</span>
                       ) : (
-                        <span className="text-amber-100/50">{i + 1}</span>
+                        <span className="text-[var(--color-garage-metal)]">{i + 1}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-medium text-amber-50">{r.userName}</td>
-                    <td className="px-4 py-3 text-right tabular-nums text-emerald-400 hidden sm:table-cell">
+                    <td className="px-4 py-3 font-medium text-[var(--color-oil-stain)]">{r.userName}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-emerald-600 hidden sm:table-cell">
                       {r.exactMatches}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-yellow-400 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-yellow-600 hidden sm:table-cell">
                       {r.closeMatches}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/60 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)] hidden sm:table-cell">
                       {r.bestRace > 0 ? r.bestRace : "—"}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-amber-100/40 hidden sm:table-cell">
+                    <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)]/60 hidden sm:table-cell">
                       {r.racesScored}
                     </td>
-                    <td className="px-4 py-3 text-right font-bold tabular-nums text-white text-base">
+                    <td className="px-4 py-3 text-right font-bold tabular-nums text-[var(--color-oil-stain)] text-base">
                       {r.totalPoints}
                     </td>
                   </tr>
@@ -215,10 +215,10 @@ export default async function PredictionsPage() {
       )}
 
       {rows.length === 0 && (
-        <section className="card-paper border-2 border-stone-400 rounded-xl p-6 text-center cartoon-shadow">
-          <p className="text-stone-600">
+        <section className="garage-card text-center">
+          <p className="text-[var(--color-garage-metal)]">
             No predictions submitted yet. Head to a{" "}
-            <Link href="/races" className="text-red-700 hover:underline font-bold">
+            <Link href="/races" className="text-[var(--color-racing-red)] hover:underline font-bold">
               race page
             </Link>{" "}
             to make your first prediction.
@@ -230,18 +230,18 @@ export default async function PredictionsPage() {
       {rows.length > 0 && (
         <section>
           <h2
-            className="text-xl mb-3 text-stone-900"
-            style={{ fontFamily: "var(--font-bangers)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            className="text-xl mb-3 text-[var(--color-oil-stain)]"
+            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
             Race by Race
           </h2>
-          <div className="overflow-x-auto wood-panel border-4 border-[#2a1f15] rounded-2xl cartoon-shadow">
+          <div className="overflow-x-auto whiteboard rounded-2xl">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
+                <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
                   <th
-                    className="text-left px-4 py-3 sticky left-0 z-10 bg-[#2a1f15]"
-                    style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+                    className="text-left px-4 py-3 sticky left-0 z-10 bg-[var(--color-garage-metal-dark)]"
+                    style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
                   >
                     Race
                   </th>
@@ -249,7 +249,7 @@ export default async function PredictionsPage() {
                     <th
                       key={r.userId}
                       className="text-center px-3 py-3 whitespace-nowrap"
-                      style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}
+                      style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
                     >
                       {r.userName}
                     </th>
@@ -266,14 +266,14 @@ export default async function PredictionsPage() {
                   .map((race, raceIdx) => (
                     <tr
                       key={race.id}
-                      className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
-                        raceIdx % 2 === 0 ? "bg-white/[0.03]" : ""
+                      className={`border-t border-[var(--color-garage-metal)]/20 hover:bg-[var(--color-garage-wall)]/50 ${
+                        raceIdx % 2 === 0 ? "bg-[var(--color-whiteboard)]" : "bg-[var(--color-garage-wall)]/30"
                       }`}
                     >
-                      <td className="px-4 py-2.5 whitespace-nowrap sticky left-0 z-10 wood-panel">
+                      <td className="px-4 py-2.5 whitespace-nowrap sticky left-0 z-10 bg-[var(--color-whiteboard)]">
                         <Link
                           href={`/races/${race.id}`}
-                          className="text-amber-100 hover:text-red-400 transition-colors"
+                          className="text-[var(--color-oil-stain)] hover:text-[var(--color-racing-red)] transition-colors"
                         >
                           R{race.round}
                         </Link>
@@ -289,15 +289,15 @@ export default async function PredictionsPage() {
                             className="text-center px-3 py-2.5 tabular-nums"
                           >
                             {score !== undefined ? (
-                              <span className="font-bold text-white">
+                              <span className="font-bold text-[var(--color-oil-stain)]">
                                 {score}
                               </span>
                             ) : predicted ? (
-                              <span className="text-amber-100/40 text-xs">
+                              <span className="text-[var(--color-garage-metal)] text-xs">
                                 &#9679;
                               </span>
                             ) : (
-                              <span className="text-amber-100/20">&mdash;</span>
+                              <span className="text-[var(--color-garage-metal)]/30">&mdash;</span>
                             )}
                           </td>
                         );

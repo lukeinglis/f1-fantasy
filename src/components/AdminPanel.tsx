@@ -112,10 +112,10 @@ export default function AdminPanel(props: Props) {
 
   return (
     <div className="space-y-6">
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-5 space-y-3 cartoon-shadow">
+      <section className="garage-card p-5 space-y-3">
         <h2
           className="text-lg text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Season {props.season}
         </h2>
@@ -123,14 +123,14 @@ export default function AdminPanel(props: Props) {
           <button
             disabled={busy !== null}
             onClick={syncSeason}
-            className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg font-bold text-white disabled:opacity-50 sticker"
+            className="garage-button-primary disabled:opacity-50"
           >
             {busy === "season" ? "Syncing..." : "Sync season (calendar + grid)"}
           </button>
           <button
             disabled={busy !== null}
             onClick={recomputeAll}
-            className="px-4 py-2 bg-stone-600 hover:bg-stone-500 rounded-lg font-bold text-white disabled:opacity-50 sticker"
+            className="garage-button-secondary disabled:opacity-50"
           >
             {busy === "recompute" ? "Recomputing..." : "Recompute all scores"}
           </button>
@@ -139,52 +139,50 @@ export default function AdminPanel(props: Props) {
         {err && <p className="text-red-700 text-sm font-medium">{err}</p>}
       </section>
 
-      <section className="wood-panel border-4 border-[#2a1f15] rounded-2xl overflow-hidden cartoon-shadow">
+      <section className="whiteboard rounded-2xl overflow-hidden">
         <h2
-          className="text-lg p-4 border-b border-[#2a1f15]/50 text-amber-100"
-          style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.03em" }}
+          className="text-lg p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
+          style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
         >
           Races
         </h2>
         {props.races.length === 0 ? (
-          <p className="p-4 text-amber-100/60">
+          <p className="p-4 text-[var(--color-garage-metal)]">
             No races yet. Click &quot;Sync season&quot; above.
           </p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#2a1f15] text-amber-300/70 uppercase text-xs tracking-wide">
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Round</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Name</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Date</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Status</th>
-                <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-bangers)", letterSpacing: "0.05em" }}>Actions</th>
+              <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Round</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Name</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Date</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Status</th>
+                <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {props.races.map((r, i) => (
                 <tr
                   key={r.id}
-                  className={`border-t border-[#2a1f15]/50 hover:bg-white/5 ${
-                    i % 2 === 0 ? "bg-white/[0.03]" : ""
-                  }`}
+                  className={`border-t border-[var(--color-garage-metal)]/20 hover:bg-[var(--color-garage-wall)]/50`}
                 >
-                  <td className="px-4 py-2 tabular-nums text-amber-100/70">{r.round}</td>
-                  <td className="px-4 py-2 text-amber-50">{r.name}</td>
-                  <td className="px-4 py-2 text-amber-100/50">
+                  <td className="px-4 py-2 tabular-nums text-[var(--color-oil-stain)]/70">{r.round}</td>
+                  <td className="px-4 py-2 text-[var(--color-oil-stain)]">{r.name}</td>
+                  <td className="px-4 py-2 text-[var(--color-garage-metal)]">
                     {new Date(r.date).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-2">
                     {r.resultsLocked ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-600 text-white font-bold garage-badge">
                         Scored
                       </span>
                     ) : r.hasResults ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500 text-white font-bold garage-badge">
                         Results entered
                       </span>
                     ) : (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-stone-500 text-white font-bold sticker">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-stone-500 text-white font-bold garage-badge">
                         Pending
                       </span>
                     )}
@@ -193,7 +191,7 @@ export default function AdminPanel(props: Props) {
                     <button
                       disabled={busy !== null}
                       onClick={() => syncRoundResults(r.round)}
-                      className="text-xs px-3 py-1 bg-stone-600 hover:bg-stone-500 rounded-lg text-white font-bold disabled:opacity-50"
+                      className="garage-button-secondary text-xs px-3 py-1 disabled:opacity-50"
                     >
                       {busy === `results-${r.round}` ? "..." : "Sync results"}
                     </button>
@@ -205,10 +203,10 @@ export default function AdminPanel(props: Props) {
         )}
       </section>
 
-      <section className="card-paper border-2 border-stone-400 rounded-xl p-5 cartoon-shadow">
+      <section className="garage-card p-5">
         <h2
           className="text-lg mb-3 text-stone-800"
-          style={{ fontFamily: "var(--font-bangers)" }}
+          style={{ fontFamily: "var(--font-permanent-marker)" }}
         >
           Manual results entry
         </h2>
@@ -218,7 +216,7 @@ export default function AdminPanel(props: Props) {
         <select
           value={selectedRaceId}
           onChange={(e) => setSelectedRaceId(e.target.value)}
-          className="w-full bg-stone-100 border border-stone-400 rounded-lg px-3 py-2 mb-3 text-stone-800"
+          className="w-full bg-[var(--color-whiteboard)] border-[var(--color-garage-metal)] rounded-lg px-3 py-2 mb-3 text-[var(--color-oil-stain)]"
         >
           {props.races.map((r) => (
             <option key={r.id} value={r.id}>
@@ -303,7 +301,7 @@ function ManualResultsForm({
   return (
     <div className="space-y-2">
       <table className="w-full text-sm">
-        <thead className="text-stone-500 text-xs uppercase">
+        <thead className="text-[var(--color-garage-metal)] text-xs uppercase">
           <tr>
             <th className="text-left py-1 w-12">Pos</th>
             <th className="text-left py-1">Driver</th>
@@ -313,13 +311,13 @@ function ManualResultsForm({
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={i} className="border-t border-stone-300">
+            <tr key={i} className="border-t border-[var(--color-garage-metal)]/20">
               <td className="py-1 tabular-nums text-stone-500">{r.position}</td>
               <td className="py-1">
                 <select
                   value={r.driverId}
                   onChange={(e) => update(i, { driverId: e.target.value })}
-                  className="w-full bg-stone-100 border border-stone-400 rounded-lg px-2 py-1 text-stone-800"
+                  className="w-full bg-[var(--color-whiteboard)] border-[var(--color-garage-metal)] rounded-lg px-2 py-1 text-[var(--color-oil-stain)]"
                 >
                   <option value="">—</option>
                   {drivers.map((d) => (
@@ -335,7 +333,7 @@ function ManualResultsForm({
                   onChange={(e) =>
                     update(i, { constructorId: e.target.value })
                   }
-                  className="w-full bg-stone-100 border border-stone-400 rounded-lg px-2 py-1 text-stone-800"
+                  className="w-full bg-[var(--color-whiteboard)] border-[var(--color-garage-metal)] rounded-lg px-2 py-1 text-[var(--color-oil-stain)]"
                 >
                   <option value="">—</option>
                   {constructors.map((c) => (
@@ -349,7 +347,7 @@ function ManualResultsForm({
                 <input
                   value={r.status}
                   onChange={(e) => update(i, { status: e.target.value })}
-                  className="w-full bg-stone-100 border border-stone-400 rounded-lg px-2 py-1 text-stone-800"
+                  className="w-full bg-[var(--color-whiteboard)] border-[var(--color-garage-metal)] rounded-lg px-2 py-1 text-[var(--color-oil-stain)]"
                 />
               </td>
             </tr>
@@ -359,7 +357,7 @@ function ManualResultsForm({
       <button
         disabled={saving}
         onClick={submit}
-        className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg font-bold text-white disabled:opacity-50 sticker"
+        className="garage-button-primary disabled:opacity-50"
       >
         {saving ? "Saving..." : "Save results & score"}
       </button>

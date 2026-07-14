@@ -21,7 +21,7 @@ export function DriverAvatar({
       alt={driverId.replace(/_/g, " ")}
       width={size}
       height={size}
-      className={`rounded-full object-cover bg-stone-300 ${className}`}
+      className={`rounded-full object-cover bg-[var(--color-garage-wall)] ${className}`}
       onError={() => setSrc("/drivers/default.svg")}
     />
   );
