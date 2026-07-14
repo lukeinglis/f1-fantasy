@@ -39,7 +39,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
             <Link
               key={zone.href}
               href={zone.href}
-              className="absolute group cursor-pointer transition-all duration-200 hover:brightness-125 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
+              className="absolute group cursor-pointer transition-all duration-300 rounded-lg backdrop-brightness-100 hover:backdrop-brightness-125 hover:backdrop-saturate-150 hover:shadow-[0_0_20px_rgba(255,255,255,0.3),inset_0_0_20px_rgba(255,255,255,0.1)]"
               style={{
                 top: zone.top,
                 left: zone.left,
