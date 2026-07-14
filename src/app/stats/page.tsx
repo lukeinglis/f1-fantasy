@@ -245,7 +245,7 @@ export default async function StatsPage() {
       <header>
         <h1
           className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           Season <span className="text-red-700">Stats</span>
         </h1>
@@ -301,7 +301,7 @@ export default async function StatsPage() {
         <section className="garage-card">
           <h2
             className="text-lg mb-3 text-stone-800"
-            style={{ fontFamily: "var(--font-permanent-marker)" }}
+            style={{ fontFamily: "var(--font-f1-bold)" }}
           >
             Race wins
           </h2>
@@ -338,7 +338,7 @@ export default async function StatsPage() {
         <section className="garage-card">
           <h2
             className="text-lg mb-3 text-stone-800"
-            style={{ fontFamily: "var(--font-permanent-marker)" }}
+            style={{ fontFamily: "var(--font-f1-bold)" }}
           >
             Average score by race
           </h2>
@@ -373,7 +373,7 @@ export default async function StatsPage() {
           <section className="garage-card">
             <h2
               className="text-lg mb-3 text-stone-800"
-              style={{ fontFamily: "var(--font-permanent-marker)" }}
+              style={{ fontFamily: "var(--font-f1-bold)" }}
             >
               Driver popularity
             </h2>
@@ -407,7 +407,7 @@ export default async function StatsPage() {
           <section className="garage-card">
             <h2
               className="text-lg mb-3 text-stone-800"
-              style={{ fontFamily: "var(--font-permanent-marker)" }}
+              style={{ fontFamily: "var(--font-f1-bold)" }}
             >
               Constructor popularity
             </h2>
@@ -454,7 +454,7 @@ export default async function StatsPage() {
         <section className="whiteboard rounded-2xl overflow-hidden">
           <h2
             className="text-lg p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
-            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
+            style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.03em" }}
           >
             Pick budget remaining
           </h2>
@@ -466,11 +466,11 @@ export default async function StatsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Drivers used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Exhausted</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Constructors used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Drivers used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Constructors used</th>
+                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
                 </tr>
               </thead>
               <tbody>
@@ -530,7 +530,7 @@ function StatCard({
 }) {
   return (
     <div className={`garage-card ${rotation ?? ""}`}>
-      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold" style={{ fontFamily: "var(--font-permanent-marker)" }}>
+      <div className="text-[10px] uppercase tracking-widest text-stone-500 mb-1 font-bold" style={{ fontFamily: "var(--font-f1-bold)" }}>
         {label}
       </div>
       <div className={`text-xl font-bold ${color ?? "text-stone-800"}`}>

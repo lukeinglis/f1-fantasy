@@ -45,7 +45,7 @@ export default function RegisterPage() {
     <div className="max-w-sm mx-auto mt-12 garage-card p-6">
       <h1
         className="text-xl mb-4 text-stone-800"
-        style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.1)" }}
+        style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.1)" }}
       >
         Join the league
       </h1>
@@ -76,7 +76,7 @@ export default function RegisterPage() {
         <button
           disabled={loading}
           className="w-full garage-button-primary disabled:opacity-50"
-          style={{ fontFamily: "var(--font-permanent-marker)" }}
+          style={{ fontFamily: "var(--font-f1-bold)" }}
         >
           {loading ? "Creating..." : "Join"}
         </button>

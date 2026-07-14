@@ -388,7 +388,7 @@ export default function PredictionForm({ raceId, drivers, existing }: Props) {
               type="submit"
               disabled={saving || filledCount === 0}
               className="garage-button-primary disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ fontFamily: "var(--font-permanent-marker)" }}
+              style={{ fontFamily: "var(--font-f1-bold)" }}
             >
               {saving
                 ? "Saving..."

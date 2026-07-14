@@ -45,7 +45,7 @@ export default async function RacesPage() {
       <header>
         <h1
           className="text-3xl text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           {season} Race Calendar
         </h1>

@@ -13,7 +13,7 @@ export default function ErrorPage({
 
   return (
     <div className="max-w-sm mx-auto mt-12 garage-card p-6">
-      <h1 className="text-2xl font-bold mb-4 text-stone-800" style={{ fontFamily: 'var(--font-permanent-marker)' }}>Something went wrong</h1>
+      <h1 className="text-2xl font-bold mb-4 text-stone-800" style={{ fontFamily: 'var(--font-f1-bold)' }}>Something went wrong</h1>
       <div className="bg-red-100 border border-red-300 rounded-lg px-4 py-2.5 text-sm text-red-800 mb-6">
         Something went wrong. Please try again.
       </div>
@@ -21,7 +21,7 @@ export default function ErrorPage({
         <button
           onClick={reset}
           className="garage-button-primary"
-          style={{ fontFamily: 'var(--font-permanent-marker)' }}
+          style={{ fontFamily: 'var(--font-f1-bold)' }}
         >
           Try again
         </button>

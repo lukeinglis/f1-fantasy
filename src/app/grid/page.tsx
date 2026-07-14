@@ -168,7 +168,7 @@ export default async function GridPage() {
       <div className="space-y-4">
         <h1
           className="text-3xl text-stone-900"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           Season Grid
         </h1>
@@ -193,7 +193,7 @@ export default async function GridPage() {
         <div>
           <h1
             className="text-3xl text-stone-900"
-            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
             Season Grid <span className="text-[var(--color-racing-red)]">{season}</span>
           </h1>
@@ -210,13 +210,13 @@ export default async function GridPage() {
             <tr>
               <th
                 className="sticky left-0 z-20 bg-[var(--color-garage-metal-dark)] px-3 py-2 text-left text-white uppercase tracking-wide text-[10px] min-w-[110px]"
-                style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
+                style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}
               >
                 Player
               </th>
               <th
                 className="sticky left-[110px] z-20 bg-[var(--color-garage-metal-dark)] px-2 py-2 text-right text-white uppercase tracking-wide text-[10px] min-w-[48px]"
-                style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
+                style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}
               >
                 Total
               </th>

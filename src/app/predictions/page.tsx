@@ -104,7 +104,7 @@ export default async function PredictionsPage() {
       <header>
         <h1
           className="text-3xl text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           <span className="text-[var(--color-racing-red)]">Prediction</span> Challenge
         </h1>
@@ -121,7 +121,7 @@ export default async function PredictionsPage() {
         >
           <div
             className="text-xs uppercase tracking-wider text-[var(--color-garage-metal)] mb-1 font-bold"
-            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.1em" }}
+            style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.1em" }}
           >
             Next prediction
           </div>
@@ -142,7 +142,7 @@ export default async function PredictionsPage() {
         <section>
           <h2
             className="text-xl mb-3 text-[var(--color-oil-stain)]"
-            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
             Season Standings
           </h2>
@@ -150,21 +150,21 @@ export default async function PredictionsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>#</th>
-                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
+                  <th className="text-left px-4 py-3 w-12" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>#</th>
+                  <th className="text-left px-4 py-3" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>
                     Exact
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>
                     Close
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>
                     Best race
                   </th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>
+                  <th className="text-right px-4 py-3 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>
                     Races
                   </th>
-                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Total</th>
+                  <th className="text-right px-4 py-3" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -231,7 +231,7 @@ export default async function PredictionsPage() {
         <section>
           <h2
             className="text-xl mb-3 text-[var(--color-oil-stain)]"
-            style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+            style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
           >
             Race by Race
           </h2>
@@ -241,7 +241,7 @@ export default async function PredictionsPage() {
                 <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
                   <th
                     className="text-left px-4 py-3 sticky left-0 z-10 bg-[var(--color-garage-metal-dark)]"
-                    style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
+                    style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}
                   >
                     Race
                   </th>
@@ -249,7 +249,7 @@ export default async function PredictionsPage() {
                     <th
                       key={r.userId}
                       className="text-center px-3 py-3 whitespace-nowrap"
-                      style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}
+                      style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}
                     >
                       {r.userName}
                     </th>

@@ -225,7 +225,7 @@ export default async function RaceDetailPage(props: {
         <div className="flex items-baseline gap-2 text-[var(--color-garage-metal)] text-sm">
           Round {race.round} &middot; {season}
         </div>
-        <h1 className="text-3xl font-bold mt-1" style={{ fontFamily: 'var(--font-permanent-marker)' }}>{race.name}</h1>
+        <h1 className="text-3xl font-bold mt-1" style={{ fontFamily: 'var(--font-f1-bold)' }}>{race.name}</h1>
         {race.circuitName && (
           <div className="text-[var(--color-garage-metal)] mt-1">
             {race.circuitName}
@@ -271,7 +271,7 @@ export default async function RaceDetailPage(props: {
       {/* Pick form (only before deadline, not pre-season) */}
       {!deadlinePassed && !preSeason && (
         <section className="garage-card">
-          <h2 className="text-lg font-semibold mb-3 text-[var(--color-oil-stain)]" style={{ fontFamily: 'var(--font-permanent-marker)' }}>Make your pick</h2>
+          <h2 className="text-lg font-semibold mb-3 text-[var(--color-oil-stain)]" style={{ fontFamily: 'var(--font-f1-bold)' }}>Make your pick</h2>
           <PickForm
             raceId={race.id}
             drivers={drivers.map((d) => ({
@@ -316,7 +316,7 @@ export default async function RaceDetailPage(props: {
       {/* Prediction results (shown after deadline) */}
       {deadlinePassed && predictionPlayers.length > 0 && (
         <section className="garage-card overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-permanent-marker)' }}>
+          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-f1-bold)' }}>
             {hasPredictionScores ? "Prediction scoreboard" : "All predictions"}
           </h2>
           <div className="p-4">
@@ -341,7 +341,7 @@ export default async function RaceDetailPage(props: {
       {/* All picks with scores (shown after deadline) */}
       {deadlinePassed && sortedPicks.length > 0 && (
         <section className="garage-card overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-permanent-marker)' }}>
+          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-f1-bold)' }}>
             {hasScores ? "Fantasy scoreboard" : "All picks"}
           </h2>
           <div className="overflow-x-auto">
@@ -447,7 +447,7 @@ export default async function RaceDetailPage(props: {
 
       {deadlinePassed && sortedPicks.length === 0 && (
         <section className="garage-card">
-          <h2 className="text-lg font-semibold mb-2" style={{ fontFamily: 'var(--font-permanent-marker)' }}>All picks</h2>
+          <h2 className="text-lg font-semibold mb-2" style={{ fontFamily: 'var(--font-f1-bold)' }}>All picks</h2>
           <p className="text-[var(--color-garage-metal)]">
             No picks were submitted for this race.
           </p>
@@ -457,7 +457,7 @@ export default async function RaceDetailPage(props: {
       {/* Race results */}
       {race.results.length > 0 && (
         <section className="garage-card overflow-hidden">
-          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-permanent-marker)' }}>
+          <h2 className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20" style={{ fontFamily: 'var(--font-f1-bold)' }}>
             Race results
           </h2>
           <div className="overflow-x-auto">
@@ -536,7 +536,7 @@ export default async function RaceDetailPage(props: {
       {/* Admin link */}
       {isAdmin && !race.resultsLocked && (
         <section className="garage-card">
-          <h2 className="text-lg font-semibold mb-2 text-[var(--color-racing-yellow)]" style={{ fontFamily: 'var(--font-permanent-marker)' }}>
+          <h2 className="text-lg font-semibold mb-2 text-[var(--color-racing-yellow)]" style={{ fontFamily: 'var(--font-f1-bold)' }}>
             Admin tools
           </h2>
           <p className="text-sm text-[var(--color-oil-stain)]">

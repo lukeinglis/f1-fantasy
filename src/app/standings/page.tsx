@@ -280,7 +280,7 @@ export default async function StandingsPage() {
       <div>
         <h1
           className="text-4xl sm:text-5xl text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)" }}
+          style={{ fontFamily: "var(--font-f1-bold)" }}
         >
           Standings
         </h1>
@@ -336,7 +336,7 @@ export default async function StandingsPage() {
       <section>
         <h2
           className="text-2xl mb-3 text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)" }}
+          style={{ fontFamily: "var(--font-f1-bold)" }}
         >
           Fantasy Picks Standings
         </h2>
@@ -444,7 +444,7 @@ export default async function StandingsPage() {
         <section>
           <h2
             className="text-2xl mb-3 text-[var(--color-oil-stain)]"
-            style={{ fontFamily: "var(--font-permanent-marker)" }}
+            style={{ fontFamily: "var(--font-f1-bold)" }}
           >
             Prediction Standings
           </h2>

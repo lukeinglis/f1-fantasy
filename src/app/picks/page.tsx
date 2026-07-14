@@ -85,7 +85,7 @@ export default async function MyPicksPage() {
       <header>
         <h1
           className="text-3xl text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           My Picks
         </h1>
@@ -125,7 +125,7 @@ export default async function MyPicksPage() {
         <section className="whiteboard rounded-2xl overflow-hidden">
           <h2
             className="text-lg font-semibold p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
-            style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
+            style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.03em" }}
           >
             <Link
               href={`/races/${currentRace.id}`}
@@ -141,9 +141,9 @@ export default async function MyPicksPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Player</th>
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Driver</th>
-                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Constructor</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Player</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Driver</th>
+                  <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Constructor</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,7 +206,7 @@ export default async function MyPicksPage() {
       <section>
         <h2
           className="text-lg mb-4 text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
+          style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}
         >
           By race
         </h2>
@@ -343,7 +343,7 @@ function UsagePanel({
     <div className="garage-card">
       <h3
         className="text-sm font-semibold uppercase tracking-wide text-[var(--color-garage-metal)]"
-        style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.08em" }}
+        style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.08em" }}
       >
         {title}
       </h3>

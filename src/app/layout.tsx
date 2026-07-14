@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Permanent_Marker, Russo_One } from "next/font/google";
+import { Geist, Geist_Mono, Russo_One } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { auth } from "@/lib/auth";
 import NavBar from "@/components/NavBar";
@@ -15,10 +16,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const permanentMarker = Permanent_Marker({
-  variable: "--font-permanent-marker",
-  weight: "400",
-  subsets: ["latin"],
+const f1Bold = localFont({
+  src: "../../public/fonts/Formula1-Bold.ttf",
+  variable: "--font-f1-bold",
+  display: "swap",
+});
+
+const f1Regular = localFont({
+  src: "../../public/fonts/Formula1-Regular.ttf",
+  variable: "--font-f1-regular",
+  display: "swap",
+});
+
+const f1Wide = localFont({
+  src: "../../public/fonts/Formula1-Wide.ttf",
+  variable: "--font-f1-wide",
+  display: "swap",
 });
 
 const russoOne = Russo_One({
@@ -41,7 +54,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${permanentMarker.variable} ${russoOne.variable} antialiased min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} ${f1Bold.variable} ${f1Regular.variable} ${f1Wide.variable} ${russoOne.variable} antialiased min-h-screen`}
       >
         <Providers>
           <a

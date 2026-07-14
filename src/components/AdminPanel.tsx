@@ -115,7 +115,7 @@ export default function AdminPanel(props: Props) {
       <section className="garage-card p-5 space-y-3">
         <h2
           className="text-lg text-stone-800"
-          style={{ fontFamily: "var(--font-permanent-marker)" }}
+          style={{ fontFamily: "var(--font-f1-bold)" }}
         >
           Season {props.season}
         </h2>
@@ -142,7 +142,7 @@ export default function AdminPanel(props: Props) {
       <section className="whiteboard rounded-2xl overflow-hidden">
         <h2
           className="text-lg p-4 border-b border-[var(--color-garage-metal)]/20 text-[var(--color-oil-stain)]"
-          style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.03em" }}
+          style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.03em" }}
         >
           Races
         </h2>
@@ -154,11 +154,11 @@ export default function AdminPanel(props: Props) {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Round</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Name</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Date</th>
-                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Status</th>
-                <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-permanent-marker)", letterSpacing: "0.05em" }}>Actions</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Round</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Name</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Date</th>
+                <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Status</th>
+                <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -206,7 +206,7 @@ export default function AdminPanel(props: Props) {
       <section className="garage-card p-5">
         <h2
           className="text-lg mb-3 text-stone-800"
-          style={{ fontFamily: "var(--font-permanent-marker)" }}
+          style={{ fontFamily: "var(--font-f1-bold)" }}
         >
           Manual results entry
         </h2>

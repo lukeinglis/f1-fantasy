@@ -3,7 +3,7 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-permanent-marker);
+  --font-display: var(--font-f1-bold);
   --font-stencil: var(--font-russo-one);
 
   /* Garage color tokens */

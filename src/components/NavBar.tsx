@@ -35,13 +35,13 @@ export default function NavBar({ user }: { user: NavUser | null }) {
           <Link href="/" className="shrink-0 flex items-center gap-1.5">
             <span
               className="text-[var(--color-racing-red)] text-2xl"
-              style={{ fontFamily: "var(--font-permanent-marker)" }}
+              style={{ fontFamily: "var(--font-f1-bold)" }}
             >
               F1
             </span>
             <span
               className="text-white text-xl"
-              style={{ fontFamily: "var(--font-permanent-marker)" }}
+              style={{ fontFamily: "var(--font-f1-bold)" }}
             >
               Fantasy
             </span>
