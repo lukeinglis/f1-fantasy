@@ -39,7 +39,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
             <Link
               key={zone.href}
               href={zone.href}
-              className="absolute flex items-center justify-center rounded-lg border-2 border-white/10 hover:border-white/50 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:bg-black/50 transition-all duration-200 group cursor-pointer"
+              className="absolute group cursor-pointer transition-all duration-200 hover:brightness-125 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
               style={{
                 top: zone.top,
                 left: zone.left,
@@ -54,18 +54,21 @@ export default function GarageScene({ zones }: GarageSceneProps) {
                 </span>
               )}
 
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center">
-                <div className="bg-black/70 rounded-lg px-3 py-1.5 inline-block">
+              {/* Floating label — appears above the zone on hover */}
+              <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20">
+                <div className="bg-black/80 backdrop-blur-sm rounded-lg px-3 py-1.5 whitespace-nowrap shadow-lg">
                   <div
                     className="text-white text-sm uppercase tracking-wider"
                     style={{ fontFamily: "var(--font-f1-bold)" }}
                   >
                     {zone.label}
                   </div>
-                  <div className="text-white/70 text-xs mt-0.5">
+                  <div className="text-white/60 text-xs mt-0.5">
                     {zone.description}
                   </div>
                 </div>
+                {/* Arrow pointing down to the object */}
+                <div className="w-0 h-0 mx-auto border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black/80" />
               </div>
             </Link>
           ))}
