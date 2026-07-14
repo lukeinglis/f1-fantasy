@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Bangers } from "next/font/google";
+import { Geist, Geist_Mono, Permanent_Marker, Russo_One } from "next/font/google";
 import "./globals.css";
 import { auth } from "@/lib/auth";
 import NavBar from "@/components/NavBar";
@@ -15,8 +15,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const bangers = Bangers({
-  variable: "--font-bangers",
+const permanentMarker = Permanent_Marker({
+  variable: "--font-permanent-marker",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const russoOne = Russo_One({
+  variable: "--font-russo-one",
   weight: "400",
   subsets: ["latin"],
 });
@@ -35,10 +41,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bangers.variable} antialiased text-stone-900 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} ${permanentMarker.variable} ${russoOne.variable} antialiased min-h-screen`}
       >
         <Providers>
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-red-600 focus:text-white focus:rounded">Skip to content</a>
+          <a
+            href="#main-content"
+            className="skip-to-content"
+          >
+            Skip to content
+          </a>
           <NavBar
             user={
               session?.user
@@ -50,7 +61,9 @@ export default async function RootLayout({
                 : null
             }
           />
-          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6">{children}</main>
+          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

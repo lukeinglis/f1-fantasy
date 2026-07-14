@@ -3,198 +3,193 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-bangers);
+  --font-display: var(--font-permanent-marker);
+  --font-stencil: var(--font-russo-one);
+
+  /* Garage color tokens */
+  --color-garage-concrete: #b8b5b0;
+  --color-garage-wall: #d4cfc7;
+  --color-garage-wood: #8b6f47;
+  --color-garage-wood-dark: #5c4a2e;
+  --color-garage-metal: #6b7280;
+  --color-garage-metal-dark: #374151;
+  --color-oil-stain: #1c1917;
+  --color-whiteboard: #f8f9fa;
+  --color-corkboard: #c49a6c;
+  --color-racing-red: #dc2626;
+  --color-racing-yellow: #eab308;
 }
 
-/* Warm wood panel body texture */
 body {
-  background-color: #c4956a;
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 12px,
-      rgba(139, 90, 43, 0.15) 12px,
-      rgba(139, 90, 43, 0.15) 14px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 28px,
-      rgba(101, 67, 33, 0.08) 28px,
-      rgba(101, 67, 33, 0.08) 30px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 48px,
-      rgba(160, 110, 60, 0.12) 48px,
-      rgba(160, 110, 60, 0.12) 52px
-    ),
-    linear-gradient(180deg, #d4a574 0%, #c4956a 50%, #b8886a 100%);
+  background-color: var(--color-garage-concrete);
+  color: var(--color-oil-stain);
 }
 
-/* Wood panel texture utility */
-.wood-panel {
-  background-color: #3d2b1f;
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 8px,
-      rgba(255, 255, 255, 0.04) 8px,
-      rgba(255, 255, 255, 0.04) 10px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 22px,
-      rgba(255, 255, 255, 0.02) 22px,
-      rgba(255, 255, 255, 0.02) 24px
-    ),
-    linear-gradient(180deg, #4a3728 0%, #3d2b1f 50%, #35241a 100%);
+/* --- Component classes --- */
+
+.garage-card {
+  background: var(--color-whiteboard);
+  border: 3px solid var(--color-garage-metal-dark);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding: 1.25rem;
 }
 
-/* Cork board texture */
-.cork-board {
-  background-color: #c49a6c;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(180, 140, 90, 0.4) 0%, transparent 2px),
-    radial-gradient(circle at 60% 70%, rgba(160, 120, 70, 0.3) 0%, transparent 1.5px),
-    radial-gradient(circle at 80% 20%, rgba(200, 160, 100, 0.3) 0%, transparent 2px),
-    radial-gradient(circle at 40% 60%, rgba(150, 110, 60, 0.25) 0%, transparent 1px),
-    radial-gradient(circle at 10% 80%, rgba(170, 130, 80, 0.3) 0%, transparent 1.5px),
-    radial-gradient(circle at 90% 50%, rgba(190, 150, 90, 0.2) 0%, transparent 2px),
-    linear-gradient(180deg, #c49a6c 0%, #b8906a 100%);
+.whiteboard {
+  background: var(--color-whiteboard);
+  border: 2px solid var(--color-garage-metal);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
 }
 
-/* Chalkboard texture */
-.chalkboard {
-  background-color: #2d4a3e;
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.015) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 60%);
+.garage-button-primary {
+  background: var(--color-racing-red);
+  color: white;
+  font-weight: 700;
+  border: 3px solid #991b1b;
+  border-radius: 12px;
+  padding: 0.625rem 1.25rem;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 150ms, box-shadow 150ms;
 }
-
-/* Card paper texture */
-.card-paper {
-  background-color: #f5f0e8;
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(180, 160, 130, 0.05) 2px,
-      rgba(180, 160, 130, 0.05) 4px
-    );
-}
-
-/* Cartoon hard drop shadow */
-.cartoon-shadow {
+.garage-button-primary:hover {
+  transform: scale(1.05);
   box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
 }
-
-/* Wobble border — thick irregular-looking */
-.wobble-border {
-  border: 3px solid #3d2b1f;
-  box-shadow:
-    2px 2px 0px rgba(0, 0, 0, 0.2),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05);
+.garage-button-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Sticker badge */
-.sticker {
-  border: 3px solid white;
+.garage-button-secondary {
+  background: var(--color-garage-metal);
+  color: white;
+  font-weight: 700;
+  border: 3px solid var(--color-garage-metal-dark);
+  border-radius: 12px;
+  padding: 0.625rem 1.25rem;
   box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 150ms, box-shadow 150ms;
+}
+.garage-button-secondary:hover {
+  transform: scale(1.05);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+.garage-button-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* Custom scrollbar — wooden brown tones */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #b8906a;
-}
-::-webkit-scrollbar-thumb {
-  background: #6b4c30;
-  border-radius: 5px;
-  border: 2px solid #b8906a;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #8b5e3c;
+.garage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  border: 2px solid white;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
-/* Selection color — bright red */
+.checkered-stripe {
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    #18181b 0px,
+    #18181b 8px,
+    #fafafa 8px,
+    #fafafa 16px
+  );
+}
+
+.concrete-floor {
+  background-color: var(--color-garage-concrete);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+.pegboard-wall {
+  background-color: var(--color-garage-wall);
+  background-image: radial-gradient(
+    circle,
+    var(--color-garage-metal) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+}
+
+/* --- Utilities --- */
+
 ::selection {
-  background-color: rgba(239, 68, 68, 0.5);
-  color: #fff;
+  background-color: rgba(220, 38, 38, 0.3);
+  color: var(--color-oil-stain);
 }
 
-/* Focus-visible outlines for keyboard navigation */
-button:focus-visible, a:focus-visible, [role='button']:focus-visible {
-  outline: 2px solid #f59e0b;
-  outline-offset: 2px;
-}
-
-/* Smooth transitions for interactive elements */
-a, button, select, input {
-  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+a,
+button,
+select,
+input {
+  transition-property: color, background-color, border-color, box-shadow,
+    opacity, transform;
   transition-duration: 150ms;
   transition-timing-function: ease-in-out;
 }
 
-/* Grid cell hover animation */
-td.group:hover {
-  z-index: 10;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
-/* Checkerboard racing stripe — bigger squares */
-.racing-stripe {
-  height: 10px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    #1a1a1a 0px,
-    #1a1a1a 10px,
-    #f5f5f5 10px,
-    #f5f5f5 20px
-  );
+*:focus-visible {
+  outline: 2px solid var(--color-racing-yellow);
+  outline-offset: 2px;
 }
 
-/* Bulletin board pin dot */
-.pin-dot::before {
-  content: "";
+.skip-to-content {
   position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #e8a030, #b45309);
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
-
-/* Chalkboard overrides for countdown text */
-.chalkboard .countdown-value {
-  color: #fff;
-}
-.chalkboard .countdown-label {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Chalk texture overlay for leaderboard */
-.chalk-texture {
-  background-image:
-    radial-gradient(
-      ellipse at 20% 50%,
-      rgba(255, 255, 255, 0.015) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      ellipse at 80% 20%,
-      rgba(255, 255, 255, 0.01) 0%,
-      transparent 40%
-    );
+.skip-to-content:focus {
+  position: absolute;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 50;
+  background-color: var(--color-racing-red);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 700;
 }
