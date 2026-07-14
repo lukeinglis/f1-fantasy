@@ -5,8 +5,7 @@ import Countdown from "@/components/Countdown";
 import { ensureSeasonSynced } from "@/lib/autoSync";
 import { auth } from "@/lib/auth";
 import { getCurrentSeason } from "@/lib/data";
-import GarageScene from "@/components/GarageScene";
-import GarageZone from "@/components/GarageZone";
+import GarageScene, { type GarageZoneConfig } from "@/components/GarageScene";
 
 export const dynamic = "force-dynamic";
 
@@ -67,9 +66,24 @@ async function getGarageData() {
   };
 }
 
+function buildGarageZones(hasPicked: boolean): GarageZoneConfig[] {
+  return [
+    { href: "/grid", label: "Season Grid", description: "Full season standings grid", top: "8%", left: "1%", width: "14%", height: "30%" },
+    { href: "/standings", label: "Standings", description: "League leaderboard", top: "5%", left: "18%", width: "16%", height: "25%" },
+    { href: "/races", label: "Races", description: "Schedule, results & picks", top: "5%", left: "28%", width: "30%", height: "30%", badge: !hasPicked ? "PICK NOW" : undefined },
+    { href: "/stats", label: "Stats", description: "Season statistics", top: "5%", left: "60%", width: "18%", height: "30%" },
+    { href: "/picks", label: "My Picks", description: "Your picks & budget", top: "45%", left: "25%", width: "12%", height: "20%" },
+    { href: "/rules", label: "Rules", description: "How to play", top: "45%", left: "37%", width: "14%", height: "20%" },
+    { href: "/predictions", label: "Predictions", description: "Predict the top 10", top: "45%", left: "52%", width: "14%", height: "20%" },
+    { href: "/game", label: "F1 Dodge", description: "Mini arcade game", top: "25%", left: "78%", width: "14%", height: "40%" },
+  ];
+}
+
 export default async function HomePage() {
   const { season, totalRaces, racesScored, playerCount, nextRace, hasPicked } =
     await getGarageData();
+
+  const zones = buildGarageZones(hasPicked);
 
   return (
     <div className="space-y-6">
@@ -104,51 +118,7 @@ export default async function HomePage() {
       )}
 
       {/* Garage scene */}
-      <GarageScene>
-        <GarageZone
-          href="/standings"
-          icon="trophy"
-          label="Standings"
-          description="League leaderboard & season grid"
-        />
-        <GarageZone
-          href="/races"
-          icon="clipboard"
-          label="Race Calendar"
-          description="Schedule & results"
-          badge={!hasPicked ? "PICK NOW" : undefined}
-        />
-        <GarageZone
-          href="/picks"
-          icon="toolbox"
-          label="My Garage"
-          description="Your picks & driver budget"
-        />
-        <GarageZone
-          href="/predictions"
-          icon="notebook"
-          label="Predictions"
-          description="Predict the top 10"
-        />
-        <GarageZone
-          href="/stats"
-          icon="corkboard"
-          label="Stats & Records"
-          description="Season statistics"
-        />
-        <GarageZone
-          href="/rules"
-          icon="document"
-          label="House Rules"
-          description="How to play"
-        />
-        <GarageZone
-          href="/game"
-          icon="arcade"
-          label="F1 Dodge"
-          description="Mini arcade game"
-        />
-      </GarageScene>
+      <GarageScene zones={zones} />
 
       {/* Season info footer */}
       <div className="text-center text-sm text-[var(--color-garage-metal)]">
