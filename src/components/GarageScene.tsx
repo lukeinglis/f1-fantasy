@@ -23,7 +23,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
     <section>
       {/* Desktop: illustration with clickable overlay zones */}
       <div
-        className="hidden md:block relative w-full rounded-2xl overflow-hidden border-3 border-[var(--color-garage-metal-dark)] shadow-xl"
+        className="hidden md:block relative w-full overflow-hidden rounded-2xl border-3 border-[var(--color-garage-metal-dark)] shadow-xl"
         style={{ aspectRatio: "1672 / 941" }}
       >
         <Image

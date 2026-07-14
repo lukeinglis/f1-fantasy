@@ -86,7 +86,7 @@ export default async function HomePage() {
   const zones = buildGarageZones(hasPicked);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto -mt-6 -mx-4 px-4 md:px-8">
       {/* Countdown banner */}
       {nextRace && (
         <div className="bg-[var(--color-garage-metal-dark)] text-white px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border-2 border-[var(--color-garage-metal)]">
