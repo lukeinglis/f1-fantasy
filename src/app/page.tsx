@@ -72,7 +72,7 @@ function buildGarageZones(hasPicked: boolean): GarageZoneConfig[] {
     { href: "/standings", label: "Standings", description: "League leaderboard", objectImage: "/images/zones/trophy-shelf.png", top: "10%", left: "20%", width: "18%", height: "31%" },
     { href: "/races", label: "Races", description: "Schedule, results & picks", objectImage: "/images/zones/whiteboard.png", top: "13%", left: "40%", width: "28%", height: "33%", badge: !hasPicked ? "PICK NOW" : undefined },
     { href: "/stats", label: "Stats", description: "Season statistics", objectImage: "/images/zones/corkboard.png", top: "12%", left: "70%", width: "18%", height: "30%" },
-    { href: "/game", label: "F1 Dodge", description: "Mini arcade game", objectImage: "/images/zones/arcade.png", top: "40%", left: "76%", width: "14%", height: "35%" },
+    { href: "/game", label: "F1 Dodge", description: "Mini arcade game", objectImage: "/images/zones/arcade.png", top: "43%", left: "79%", width: "12%", height: "32%" },
     { href: "/picks", label: "My Picks", description: "Your picks & budget", objectImage: "/images/zones/clipboard.png", top: "51%", left: "35.3%", width: "8.4%", height: "17%" },
     { href: "/rules", label: "Rules", description: "How to play", objectImage: "/images/zones/toolbox.png", top: "52%", left: "45%", width: "15%", height: "16%" },
     { href: "/predictions", label: "Predictions", description: "Predict the top 10", objectImage: "/images/zones/notebook.png", top: "58%", left: "62%", width: "12%", height: "12%" },
