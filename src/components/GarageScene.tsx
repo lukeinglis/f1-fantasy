@@ -26,7 +26,7 @@ function ZoneOverlay({ zone }: { zone: GarageZoneConfig }) {
       <img
         src={zone.objectImage}
         alt=""
-        className="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:brightness-130 group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+        className="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-100 transition-opacity duration-300 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
       />
       {/* Floating label */}
       {zone.label && (
@@ -57,7 +57,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
       {/* Desktop: illustration with clickable overlay zones */}
       <div
         className="hidden md:block relative w-full overflow-hidden rounded-2xl border-3 border-[var(--color-garage-metal-dark)] shadow-xl"
-        style={{ aspectRatio: "1672 / 941" }}
+        style={{ aspectRatio: "3344 / 1882" }}
       >
         <Image
           src="/images/garage-hub.png"
@@ -112,7 +112,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
       <div className="md:hidden space-y-3">
         <div
           className="relative w-full rounded-2xl overflow-hidden border-3 border-[var(--color-garage-metal-dark)] shadow-xl"
-          style={{ aspectRatio: "1672 / 941" }}
+          style={{ aspectRatio: "3344 / 1882" }}
         >
           <Image
             src="/images/garage-hub.png"
