@@ -80,6 +80,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
                   style={style}
                 >
                   <span className="absolute top-0 left-0 bg-red-500/80 text-white text-[8px] px-1">DECO</span>
+                  <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-red-500 border-2 border-white z-30" />
                   <ZoneOverlay zone={zone} />
                 </div>
               );
@@ -93,6 +94,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
                 style={style}
               >
                 <span className="absolute top-0 left-0 bg-lime-500/90 text-black text-[9px] px-1 font-bold z-30">{zone.label}</span>
+                <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-lime-400 border-2 border-black z-30" />
                 {zone.badge && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 z-10">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-racing-red)] opacity-75" />
