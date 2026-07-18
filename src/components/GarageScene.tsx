@@ -22,12 +22,8 @@ interface GarageSceneProps {
 function ZoneOverlay({ zone }: { zone: GarageZoneConfig }) {
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={zone.objectImage}
-        alt=""
-        className="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-100 transition-opacity duration-300 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-      />
+      {/* Subtle highlight tint — no image overlay, objects stay perfectly still */}
+      <div className="absolute inset-0 rounded-lg bg-white/0 group-hover:bg-white/15 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(255,255,255,0.3)]" />
       {/* Floating label */}
       {zone.label && (
         <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20">
