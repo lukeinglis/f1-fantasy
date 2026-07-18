@@ -68,7 +68,7 @@ async function getGarageData() {
 
 function buildGarageZones(hasPicked: boolean): GarageZoneConfig[] {
   return [
-    { href: "/grid", label: "Season Grid", description: "Full season standings grid", objectImage: "/images/zones/tv.png", top: "7%", left: "5%", width: "14%", height: "24%" },
+    { href: "/grid", label: "Season Grid", description: "Full season standings grid", objectImage: "/images/zones/tv.png", top: "7%", left: "3%", width: "15%", height: "19%" },
     { href: "/standings", label: "Standings", description: "League leaderboard", objectImage: "/images/zones/trophy-shelf.png", top: "8%", left: "20%", width: "18%", height: "31%" },
     { href: "/races", label: "Races", description: "Schedule, results & picks", objectImage: "/images/zones/whiteboard.png", top: "10%", left: "38%", width: "28%", height: "33%", badge: !hasPicked ? "PICK NOW" : undefined },
     { href: "/stats", label: "Stats", description: "Season statistics", objectImage: "/images/zones/corkboard.png", top: "12%", left: "66%", width: "16%", height: "28%" },
