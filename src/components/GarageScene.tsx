@@ -76,9 +76,10 @@ export default function GarageScene({ zones }: GarageSceneProps) {
               return (
                 <div
                   key={zone.objectImage}
-                  className="absolute group cursor-default"
+                  className="absolute group cursor-default border border-red-500/50"
                   style={style}
                 >
+                  <span className="absolute top-0 left-0 bg-red-500/80 text-white text-[8px] px-1">DECO</span>
                   <ZoneOverlay zone={zone} />
                 </div>
               );
@@ -88,9 +89,10 @@ export default function GarageScene({ zones }: GarageSceneProps) {
               <Link
                 key={zone.href}
                 href={zone.href}
-                className="absolute group cursor-pointer"
+                className="absolute group cursor-pointer border-2 border-lime-400/70"
                 style={style}
               >
+                <span className="absolute top-0 left-0 bg-lime-500/90 text-black text-[9px] px-1 font-bold z-30">{zone.label}</span>
                 {zone.badge && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 z-10">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-racing-red)] opacity-75" />
