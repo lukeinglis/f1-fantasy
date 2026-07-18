@@ -74,7 +74,7 @@ function buildGarageZones(hasPicked: boolean): GarageZoneConfig[] {
     { href: "/stats", label: "Stats", description: "Season statistics", objectImage: "/images/zones/corkboard.png", top: "12%", left: "70%", width: "18%", height: "30%" },
     { href: "/game", label: "F1 Dodge", description: "Mini arcade game", objectImage: "/images/zones/arcade.png", top: "43%", left: "79%", width: "12%", height: "32%" },
     { href: "/picks", label: "My Picks", description: "Your picks & budget", objectImage: "/images/zones/clipboard.png", top: "51%", left: "35.3%", width: "8.4%", height: "17%" },
-    { href: "/rules", label: "Rules", description: "How to play", objectImage: "/images/zones/toolbox.png", top: "52%", left: "45%", width: "15%", height: "16%" },
+    { href: "/rules", label: "Rules", description: "How to play", objectImage: "/images/zones/toolbox.png", top: "52%", left: "47%", width: "15%", height: "16%" },
     { href: "/predictions", label: "Predictions", description: "Predict the top 10", objectImage: "/images/zones/notebook.png", top: "58%", left: "62%", width: "14%", height: "12%" },
     { objectImage: "/images/zones/tire-stack.png", top: "53%", left: "23%", width: "9%", height: "27%" },
     { objectImage: "/images/zones/tool-cart.png", top: "56%", left: "1%", width: "12%", height: "35%" },
