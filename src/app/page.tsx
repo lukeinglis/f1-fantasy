@@ -76,7 +76,7 @@ function buildGarageZones(hasPicked: boolean): GarageZoneConfig[] {
     { href: "/picks", label: "My Picks", description: "Your picks & budget", objectImage: "/images/zones/clipboard.png", top: "51%", left: "35.3%", width: "8.4%", height: "17%" },
     { href: "/rules", label: "Rules", description: "How to play", objectImage: "/images/zones/toolbox.png", top: "52%", left: "45%", width: "15%", height: "16%" },
     { href: "/predictions", label: "Predictions", description: "Predict the top 10", objectImage: "/images/zones/notebook.png", top: "58%", left: "62%", width: "12%", height: "12%" },
-    { objectImage: "/images/zones/tire-stack.png", top: "48%", left: "23%", width: "10.5%", height: "27%" },
+    { objectImage: "/images/zones/tire-stack.png", top: "53%", left: "23%", width: "10.5%", height: "27%" },
     { objectImage: "/images/zones/tool-cart.png", top: "42%", left: "2.4%", width: "12%", height: "35%" },
   ];
 }
