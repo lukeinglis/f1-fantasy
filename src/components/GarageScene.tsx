@@ -1,7 +1,11 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+const BASE_WIDTH = 3344;
+const BASE_HEIGHT = 1882;
 
 export interface GarageZoneConfig {
   href?: string;
@@ -19,41 +23,108 @@ interface GarageSceneProps {
   zones: GarageZoneConfig[];
 }
 
-function ZoneOverlay({ zone }: { zone: GarageZoneConfig }) {
+function OverlayImage({
+  zone,
+  visible,
+}: {
+  zone: GarageZoneConfig;
+  visible: boolean;
+}) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [naturalSize, setNaturalSize] = useState<{
+    w: number;
+    h: number;
+  } | null>(null);
+
+  const updateSize = () => {
+    const img = imgRef.current;
+    if (img && img.naturalWidth > 0) {
+      setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight });
+    }
+  };
+
+  useEffect(() => {
+    updateSize();
+  }, []);
+
+  const zoneCenterX =
+    parseFloat(zone.left) + parseFloat(zone.width) / 2;
+  const zoneCenterY =
+    parseFloat(zone.top) + parseFloat(zone.height) / 2;
+
+  let imgStyle: React.CSSProperties;
+  if (naturalSize) {
+    const imgW = (naturalSize.w / BASE_WIDTH) * 100;
+    const imgH = (naturalSize.h / BASE_HEIGHT) * 100;
+    imgStyle = {
+      width: `${imgW}%`,
+      height: `${imgH}%`,
+      top: `${zoneCenterY - imgH / 2}%`,
+      left: `${zoneCenterX - imgW / 2}%`,
+    };
+  } else {
+    imgStyle = {
+      top: zone.top,
+      left: zone.left,
+      width: zone.width,
+      height: zone.height,
+    };
+  }
+
   return (
-    <>
-      {/* Cutout overlay — brightens just this object on hover */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={zone.objectImage}
-        alt=""
-        className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{ filter: "brightness(1.4) drop-shadow(0 0 8px rgba(255,255,255,0.4))" }}
-      />
-      {/* Floating label */}
-      {zone.label && (
-        <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20">
-          <div className="bg-black/80 backdrop-blur-sm rounded-lg px-3 py-1.5 whitespace-nowrap shadow-lg">
-            <div
-              className="text-white text-sm uppercase tracking-wider"
-              style={{ fontFamily: "var(--font-f1-bold)" }}
-            >
-              {zone.label}
-            </div>
-            {zone.description && (
-              <div className="text-white/60 text-xs mt-0.5">
-                {zone.description}
-              </div>
-            )}
-          </div>
-          <div className="w-0 h-0 mx-auto border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black/80" />
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={imgRef}
+      src={zone.objectImage}
+      alt=""
+      onLoad={updateSize}
+      className={`absolute pointer-events-none transition-opacity duration-300 ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
+      style={{
+        ...imgStyle,
+        filter:
+          "brightness(1.4) drop-shadow(0 0 8px rgba(255,255,255,0.4))",
+      }}
+    />
+  );
+}
+
+function FloatingLabel({
+  zone,
+  visible,
+}: {
+  zone: GarageZoneConfig;
+  visible: boolean;
+}) {
+  if (!zone.label) return null;
+  return (
+    <div
+      className={`absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full transition-opacity duration-200 pointer-events-none z-20 ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div className="bg-black/80 backdrop-blur-sm rounded-lg px-3 py-1.5 whitespace-nowrap shadow-lg">
+        <div
+          className="text-white text-sm uppercase tracking-wider"
+          style={{ fontFamily: "var(--font-f1-bold)" }}
+        >
+          {zone.label}
         </div>
-      )}
-    </>
+        {zone.description && (
+          <div className="text-white/60 text-xs mt-0.5">
+            {zone.description}
+          </div>
+        )}
+      </div>
+      <div className="w-0 h-0 mx-auto border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black/80" />
+    </div>
   );
 }
 
 export default function GarageScene({ zones }: GarageSceneProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
     <section>
       {/* Desktop: illustration with clickable overlay zones */}
@@ -69,8 +140,18 @@ export default function GarageScene({ zones }: GarageSceneProps) {
           priority
         />
 
+        {/* Overlay images — rendered at container level, sized from PNG dimensions */}
+        {zones.map((zone, i) => (
+          <OverlayImage
+            key={`overlay-${zone.objectImage}`}
+            zone={zone}
+            visible={hoveredIndex === i}
+          />
+        ))}
+
+        {/* Hit zones — hover/click areas with labels */}
         <div className="absolute inset-0">
-          {zones.map((zone) => {
+          {zones.map((zone, i) => {
             const style = {
               top: zone.top,
               left: zone.left,
@@ -78,14 +159,20 @@ export default function GarageScene({ zones }: GarageSceneProps) {
               height: zone.height,
             };
 
+            const handlers = {
+              onMouseEnter: () => setHoveredIndex(i),
+              onMouseLeave: () => setHoveredIndex(null),
+            };
+
             if (!zone.href) {
               return (
                 <div
                   key={zone.objectImage}
-                  className="absolute group cursor-default"
+                  className="absolute cursor-default"
                   style={style}
+                  {...handlers}
                 >
-                  <ZoneOverlay zone={zone} />
+                  <FloatingLabel zone={zone} visible={hoveredIndex === i} />
                 </div>
               );
             }
@@ -94,8 +181,9 @@ export default function GarageScene({ zones }: GarageSceneProps) {
               <Link
                 key={zone.href}
                 href={zone.href}
-                className="absolute group cursor-pointer"
+                className="absolute cursor-pointer"
                 style={style}
+                {...handlers}
               >
                 {zone.badge && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 z-10">
@@ -103,7 +191,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
                     <span className="relative inline-flex h-4 w-4 rounded-full bg-[var(--color-racing-red)]" />
                   </span>
                 )}
-                <ZoneOverlay zone={zone} />
+                <FloatingLabel zone={zone} visible={hoveredIndex === i} />
               </Link>
             );
           })}
