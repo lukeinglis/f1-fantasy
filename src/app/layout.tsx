@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Russo_One } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { auth } from "@/lib/auth";
 import NavBar from "@/components/NavBar";
+import BottomNav from "@/components/BottomNav";
 import Providers from "@/components/Providers";
 
 const geistSans = Geist({
@@ -40,6 +41,10 @@ const russoOne = Russo_One({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "F1 Fantasy League",
   description: "A use-it-or-lose-it F1 fantasy league with friends",
@@ -74,9 +79,10 @@ export default async function RootLayout({
                 : null
             }
           />
-          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6">
+          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6 pb-20 lg:pb-6">
             {children}
           </main>
+          <BottomNav />
         </Providers>
       </body>
     </html>
