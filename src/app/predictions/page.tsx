@@ -226,9 +226,9 @@ export default async function PredictionsPage() {
         </section>
       )}
 
-      {/* Race-by-race breakdown */}
+      {/* Race-by-race breakdown — hidden on mobile as Season Standings above covers the summary */}
       {rows.length > 0 && (
-        <section>
+        <section className="hidden sm:block">
           <h2
             className="text-xl mb-3 text-[var(--color-oil-stain)]"
             style={{ fontFamily: "var(--font-f1-bold)", textShadow: "1px 1px 0px rgba(0,0,0,0.15)" }}

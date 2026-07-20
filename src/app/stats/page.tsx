@@ -468,9 +468,9 @@ export default async function StatsPage() {
                 <tr className="bg-[var(--color-garage-metal-dark)] text-white uppercase text-xs tracking-wide">
                   <th className="text-left px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Player</th>
                   <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Drivers used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-right px-4 py-2 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
                   <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Constructors used</th>
-                  <th className="text-right px-4 py-2" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
+                  <th className="text-right px-4 py-2 hidden sm:table-cell" style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}>Exhausted</th>
                 </tr>
               </thead>
               <tbody>
@@ -483,7 +483,7 @@ export default async function StatsPage() {
                     <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-oil-stain)]/70">
                       {b.driversUsed}
                     </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">
+                    <td className="px-4 py-2.5 text-right tabular-nums hidden sm:table-cell">
                       {b.driversExhausted > 0 ? (
                         <span className="text-[var(--color-racing-red)]">
                           {b.driversExhausted}
@@ -495,7 +495,7 @@ export default async function StatsPage() {
                     <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-oil-stain)]/70">
                       {b.constructorsUsed}
                     </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">
+                    <td className="px-4 py-2.5 text-right tabular-nums hidden sm:table-cell">
                       {b.constructorsExhausted > 0 ? (
                         <span className="text-[var(--color-racing-red)]">
                           {b.constructorsExhausted}

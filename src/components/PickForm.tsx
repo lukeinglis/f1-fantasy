@@ -88,7 +88,7 @@ export default function PickForm(props: Props) {
                   setDriverId(selected ? "" : d.id);
                   setSavedAt(null);
                 }}
-                className={`flex flex-col items-center garage-card rounded-lg px-2 py-2 text-center transition-all ${
+                className={`flex flex-col items-center garage-card rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] text-center transition-all ${
                   exhausted
                     ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected
@@ -133,7 +133,7 @@ export default function PickForm(props: Props) {
                   setConsId(selected ? "" : c.id);
                   setSavedAt(null);
                 }}
-                className={`flex items-center gap-2 garage-card rounded-lg px-2 py-2 text-left transition-all border-l-4 ${
+                className={`flex items-center gap-2 garage-card rounded-lg px-2 py-2 min-h-[44px] min-w-[44px] text-left transition-all border-l-4 ${
                   exhausted
                     ? "opacity-30 cursor-not-allowed border-stone-300"
                     : selected

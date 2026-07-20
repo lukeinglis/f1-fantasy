@@ -352,12 +352,12 @@ export default async function RaceDetailPage(props: {
                     <th className="text-left px-4 py-2 w-10">#</th>
                   )}
                   <th className="text-left px-4 py-2">Player</th>
-                  <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
+                  <th className="text-left px-4 py-2">Pick</th>
+                  <th className="text-left px-4 py-2 hidden sm:table-cell">Constructor</th>
                   {hasScores && (
                     <>
-                      <th className="text-right px-4 py-2">Drv pts</th>
-                      <th className="text-right px-4 py-2">Con pts</th>
+                      <th className="text-right px-4 py-2 hidden sm:table-cell">Drv pts</th>
+                      <th className="text-right px-4 py-2 hidden sm:table-cell">Con pts</th>
                       <th className="text-right px-4 py-2">Total</th>
                     </>
                   )}
@@ -407,8 +407,19 @@ export default async function RaceDetailPage(props: {
                             {p.driver.code}
                           </span>
                         )}
+                        {p.team && (
+                          <span
+                            className="sm:hidden inline-block ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold align-middle"
+                            style={{
+                              backgroundColor: teamColor(p.team.id),
+                              color: teamTextColor(p.team.id),
+                            }}
+                          >
+                            {teamShort(p.team.id)}
+                          </span>
+                        )}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 hidden sm:table-cell">
                         {p.team ? (
                           <span
                             className="px-2 py-0.5 rounded text-[11px] font-bold"
@@ -425,10 +436,10 @@ export default async function RaceDetailPage(props: {
                       </td>
                       {hasScores && (
                         <>
-                          <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)]">
+                          <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)] hidden sm:table-cell">
                             {p.driverPoints ?? 0}
                           </td>
-                          <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)]">
+                          <td className="px-4 py-3 text-right tabular-nums text-[var(--color-garage-metal)] hidden sm:table-cell">
                             {p.constructorPoints ?? 0}
                           </td>
                           <td className="px-4 py-3 text-right tabular-nums font-bold text-[var(--color-racing-red)]">
@@ -466,8 +477,8 @@ export default async function RaceDetailPage(props: {
                 <tr>
                   <th className="text-left px-4 py-2 w-12">Pos</th>
                   <th className="text-left px-4 py-2">Driver</th>
-                  <th className="text-left px-4 py-2">Constructor</th>
-                  <th className="text-left px-4 py-2 w-20">Status</th>
+                  <th className="text-left px-4 py-2 hidden sm:table-cell">Constructor</th>
+                  <th className="text-left px-4 py-2 w-20 hidden sm:table-cell">Status</th>
                   <th className="text-right px-4 py-2 w-16">Pts</th>
                 </tr>
               </thead>
@@ -503,7 +514,7 @@ export default async function RaceDetailPage(props: {
                       <td className="px-4 py-2.5">
                         {d ? `${d.givenName} ${d.familyName}` : r.driverId}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-2.5 hidden sm:table-cell">
                         {c ? (
                           <span
                             className="px-2 py-0.5 rounded text-[11px] font-bold"
@@ -518,7 +529,7 @@ export default async function RaceDetailPage(props: {
                           <span className="text-[var(--color-garage-metal)]">{r.teamId}</span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-[var(--color-garage-metal)] text-xs">
+                      <td className="px-4 py-2.5 text-[var(--color-garage-metal)] text-xs hidden sm:table-cell">
                         {r.status && r.status !== "Finished" ? r.status : ""}
                       </td>
                       <td className="px-4 py-2.5 text-right tabular-nums text-[var(--color-oil-stain)]">
