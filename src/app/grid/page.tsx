@@ -5,6 +5,7 @@ import { TEAM_COLORS, teamTextColor, teamShort } from "@/lib/f1-meta";
 import { isPreSeasonRound } from "@/lib/season";
 import { DriverAvatar } from "@/components/DriverAvatar";
 import GridCell from "@/components/GridCell";
+import MobileGridView from "@/components/MobileGridView";
 import { getCurrentSeason } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -203,8 +204,61 @@ export default async function GridPage() {
         </div>
       </header>
 
-      {/* Main grid: active races */}
-      <div className="overflow-x-auto pb-4 -mx-4 px-4">
+      {/* Mobile condensed view */}
+      <MobileGridView
+        users={sortedUsers.map((user) => {
+          const total = Math.round((userTotals.get(user.id) ?? 0) * 10) / 10;
+          const userPicks = pickMap.get(user.id);
+
+          const scoredRaces = activeRaces
+            .filter((r) => {
+              const cell = userPicks?.get(r.id);
+              return cell?.totalPoints != null;
+            })
+            .sort((a, b) => b.round - a.round);
+          const latestScoredRace = scoredRaces[0] ?? null;
+          const latestCell = latestScoredRace ? userPicks?.get(latestScoredRace.id) : null;
+
+          return {
+            id: user.id,
+            name: user.name ?? "Unknown",
+            total,
+            latestRace: latestScoredRace && latestCell
+              ? {
+                  raceId: latestScoredRace.id,
+                  raceName: latestScoredRace.name,
+                  round: latestScoredRace.round,
+                  driverCode: latestCell.driverCode,
+                  driverName: latestCell.driverName,
+                  constructorId: latestCell.constructorId,
+                  constructorName: latestCell.constructorName,
+                  totalPoints: latestCell.totalPoints,
+                }
+              : null,
+            picks: activeRaces
+              .filter((r) => {
+                const cell = userPicks?.get(r.id);
+                return cell && (cell.driverCode || cell.constructorId);
+              })
+              .map((r) => {
+                const cell = userPicks!.get(r.id)!;
+                return {
+                  raceId: r.id,
+                  raceName: r.name,
+                  round: r.round,
+                  driverCode: cell.driverCode,
+                  driverName: cell.driverName,
+                  constructorId: cell.constructorId,
+                  constructorName: cell.constructorName,
+                  totalPoints: cell.totalPoints,
+                };
+              }),
+          };
+        })}
+      />
+
+      {/* Desktop grid: active races */}
+      <div className="hidden md:block overflow-x-auto pb-4 -mx-4 px-4">
         <table className="border-separate border-spacing-[3px] text-xs w-auto">
           <thead>
             <tr>
