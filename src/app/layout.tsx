@@ -79,7 +79,7 @@ export default async function RootLayout({
                 : null
             }
           />
-          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6 pb-20 lg:pb-6">
+          <main id="main-content" className="max-w-5xl mx-auto px-4 py-6 pb-20 md:pb-6">
             {children}
           </main>
           <BottomNav />
