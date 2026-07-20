@@ -43,11 +43,23 @@ const russoOne = Russo_One({
 
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: "#1a1a2e",
 };
 
 export const metadata: Metadata = {
   title: "F1 Fantasy League",
   description: "A use-it-or-lose-it F1 fantasy league with friends",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "F1 Fantasy",
+  },
+  icons: {
+    apple: "/icon-192.png",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default async function RootLayout({
