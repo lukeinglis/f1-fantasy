@@ -120,7 +120,14 @@ export default async function HomePage() {
       )}
 
       {/* Garage scene */}
-      <GarageScene zones={zones} />
+      <GarageScene
+        zones={zones}
+        nextRace={nextRace}
+        hasPicked={hasPicked}
+        racesScored={racesScored}
+        totalRaces={totalRaces}
+        playerCount={playerCount}
+      />
 
       {/* Season info footer */}
       <div className="text-center text-sm text-[var(--color-garage-metal)]">

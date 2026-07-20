@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
 interface NavUser {
   name: string;
@@ -22,7 +21,6 @@ const NAV_LINKS = [
 
 export default function NavBar({ user }: { user: NavUser | null }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   const isHome = pathname === "/";
 
   return (
@@ -88,7 +86,7 @@ export default function NavBar({ user }: { user: NavUser | null }) {
             </nav>
           )}
 
-          {/* Auth + mobile hamburger */}
+          {/* Auth */}
           <div className="flex items-center gap-3 text-sm">
             {user ? (
               <>
@@ -110,92 +108,9 @@ export default function NavBar({ user }: { user: NavUser | null }) {
                 Sign in
               </Link>
             )}
-
-            {/* Mobile hamburger — hidden on homepage */}
-            {!isHome && (
-              <button
-                onClick={() => setOpen(!open)}
-                className="md:hidden p-1.5 rounded hover:bg-white/10 text-white"
-                aria-label="Toggle menu"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  {open ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2.5}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
-              </button>
-            )}
           </div>
         </div>
       </div>
-
-      {/* Mobile dropdown */}
-      {!isHome && open && (
-        <nav className="md:hidden bg-[var(--color-garage-metal-dark)] border-b-2 border-[var(--color-garage-metal)] px-4 py-3 space-y-1">
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 rounded-lg text-sm text-[var(--color-racing-yellow)] uppercase tracking-wider font-bold hover:bg-white/10"
-          >
-            &larr; Garage
-          </Link>
-          {NAV_LINKS.map((l) => {
-            const active = pathname?.startsWith(l.href);
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className={`block px-4 py-2.5 rounded-lg text-sm uppercase tracking-wider font-bold transition-colors ${
-                  active
-                    ? "bg-white/10 text-[var(--color-racing-yellow)]"
-                    : "text-white hover:bg-white/10"
-                }`}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
-          {user?.role === "admin" && (
-            <Link
-              href="/admin"
-              onClick={() => setOpen(false)}
-              className={`block px-4 py-2.5 rounded-lg text-sm uppercase tracking-wider font-bold transition-colors ${
-                pathname?.startsWith("/admin")
-                  ? "bg-white/10 text-[var(--color-racing-yellow)]"
-                  : "text-[var(--color-racing-yellow)]/70 hover:bg-white/10"
-              }`}
-            >
-              Admin
-            </Link>
-          )}
-          {user && (
-            <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full text-left px-4 py-2.5 rounded-lg text-sm text-white/50 hover:bg-white/10 uppercase tracking-wider font-bold"
-            >
-              Sign out
-            </button>
-          )}
-        </nav>
-      )}
     </header>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Countdown from "@/components/Countdown";
 
 const BASE_WIDTH = 3344;
 const BASE_HEIGHT = 1882;
@@ -19,8 +20,20 @@ export interface GarageZoneConfig {
   badge?: string;
 }
 
+interface NextRaceData {
+  id: string;
+  name: string;
+  round: number;
+  deadline: string;
+}
+
 interface GarageSceneProps {
   zones: GarageZoneConfig[];
+  nextRace?: NextRaceData | null;
+  hasPicked?: boolean;
+  racesScored?: number;
+  totalRaces?: number;
+  playerCount?: number;
 }
 
 function OverlayImage({
@@ -122,7 +135,14 @@ function FloatingLabel({
   );
 }
 
-export default function GarageScene({ zones }: GarageSceneProps) {
+export default function GarageScene({
+  zones,
+  nextRace,
+  hasPicked,
+  racesScored,
+  totalRaces,
+  playerCount,
+}: GarageSceneProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
@@ -136,6 +156,7 @@ export default function GarageScene({ zones }: GarageSceneProps) {
           src="/images/garage-hub.png"
           alt="F1 Fantasy Garage"
           fill
+          sizes="(max-width: 768px) 0px, 3344px"
           className="object-cover"
           priority
         />
@@ -198,20 +219,66 @@ export default function GarageScene({ zones }: GarageSceneProps) {
         </div>
       </div>
 
-      {/* Mobile: image (decorative) + stacked card list */}
+      {/* Mobile: hero section + stacked card list */}
       <div className="md:hidden space-y-3">
-        <div
-          className="relative w-full rounded-2xl overflow-hidden border-3 border-[var(--color-garage-metal-dark)] shadow-xl"
-          style={{ aspectRatio: "3344 / 1882" }}
-        >
-          <Image
-            src="/images/garage-hub.png"
-            alt="F1 Fantasy Garage"
-            fill
-            className="object-cover"
-          />
+        {/* Hero: countdown, CTA, quick stats */}
+        <div className="bg-[var(--color-garage-metal-dark)] rounded-2xl border-3 border-[var(--color-garage-metal)] p-4 space-y-4">
+          {nextRace ? (
+            <>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span
+                    className="text-xs uppercase tracking-wider text-[var(--color-racing-yellow)]"
+                    style={{ fontFamily: "var(--font-russo-one)" }}
+                  >
+                    Next Race
+                  </span>
+                  <span className="block text-white text-sm mt-0.5">
+                    R{nextRace.round}: {nextRace.name}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-center">
+                <Countdown targetDate={nextRace.deadline} label="Pick deadline" />
+              </div>
+              {!hasPicked && (
+                <Link
+                  href={`/races/${nextRace.id}`}
+                  className="garage-button-primary block w-full text-center text-base py-3"
+                  style={{ background: "var(--color-racing-yellow)", color: "var(--color-oil-stain)", borderColor: "#a16207" }}
+                >
+                  Make Your Picks &rarr;
+                </Link>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-2">
+              <span className="text-white text-sm">Season complete</span>
+            </div>
+          )}
+
+          {/* Quick stats row */}
+          <div className="flex justify-around text-center border-t border-[var(--color-garage-metal)] pt-3">
+            <div>
+              <span className="block text-white text-lg font-bold font-mono tabular-nums">
+                {racesScored ?? 0}/{totalRaces ?? 0}
+              </span>
+              <span className="text-[10px] uppercase tracking-wider text-[var(--color-garage-metal)]">
+                Races Scored
+              </span>
+            </div>
+            <div>
+              <span className="block text-white text-lg font-bold font-mono tabular-nums">
+                {playerCount ?? 0}
+              </span>
+              <span className="text-[10px] uppercase tracking-wider text-[var(--color-garage-metal)]">
+                Players
+              </span>
+            </div>
+          </div>
         </div>
 
+        {/* Navigation cards */}
         <div className="flex flex-col gap-3">
           {zones
             .filter((z) => z.href && z.label)

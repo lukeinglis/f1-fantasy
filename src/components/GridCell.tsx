@@ -35,7 +35,7 @@ export default function GridCell({ tooltipContent, className, style, children }:
     >
       {children}
       <div
-        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none ${
+        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none max-w-[200px] ${
           showTooltip ? "block" : "hidden"
         }`}
       >
