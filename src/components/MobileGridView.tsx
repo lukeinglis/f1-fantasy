@@ -52,7 +52,7 @@ export default function MobileGridView({ users }: MobileGridViewProps) {
                 Player
               </th>
               <th
-                className="text-right px-2 py-2.5 hidden xs:table-cell"
+                className="text-right px-2 py-2.5 hidden sm:table-cell"
                 style={{ fontFamily: "var(--font-f1-bold)", letterSpacing: "0.05em" }}
               >
                 Latest
@@ -119,6 +119,7 @@ function MobileGridRow({
       <tr
         className={`${rowBg} cursor-pointer active:bg-[var(--color-racing-yellow)]/20 transition-colors select-none`}
         onClick={onToggle}
+        aria-expanded={isExpanded}
       >
         <td className="px-3 py-3 tabular-nums text-[var(--color-oil-stain)]">
           {isLeader ? (
@@ -141,7 +142,7 @@ function MobileGridRow({
             </span>
           </div>
         </td>
-        <td className="px-2 py-3 text-right hidden xs:table-cell">
+        <td className="px-2 py-3 text-right hidden sm:table-cell">
           {user.latestRace ? (
             <span
               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold"

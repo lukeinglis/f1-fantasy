@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 const TABS = [
   {
@@ -57,11 +58,11 @@ const MORE_LINKS = [
   { href: "/stats", label: "Stats" },
   { href: "/rules", label: "Rules" },
   { href: "/game", label: "Game" },
-  { href: "/admin", label: "Admin" },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
 
@@ -72,11 +73,22 @@ export default function BottomNav() {
         setMoreOpen(false);
       }
     }
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setMoreOpen(false);
+    }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [moreOpen]);
 
-  const moreActive = MORE_LINKS.some((link) => pathname?.startsWith(link.href));
+  const isAdmin = session?.user?.role === "admin";
+  const isAuthenticated = status === "authenticated";
+  const moreActive =
+    MORE_LINKS.some((link) => pathname?.startsWith(link.href)) ||
+    (isAdmin && pathname?.startsWith("/admin"));
 
   return (
     <nav
@@ -139,6 +151,33 @@ export default function BottomNav() {
                   {link.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  onClick={() => setMoreOpen(false)}
+                  className={`block px-4 py-3 text-xs uppercase tracking-wider font-bold transition-colors ${
+                    pathname?.startsWith("/admin")
+                      ? "text-[var(--color-racing-yellow)] bg-white/5"
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  Admin
+                </Link>
+              )}
+              {isAuthenticated && (
+                <>
+                  <div className="border-t border-white/10" />
+                  <button
+                    onClick={() => {
+                      setMoreOpen(false);
+                      signOut({ callbackUrl: "/login" });
+                    }}
+                    className="block w-full text-left px-4 py-3 text-xs uppercase tracking-wider font-bold text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
