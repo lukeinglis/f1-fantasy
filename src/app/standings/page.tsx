@@ -121,7 +121,9 @@ async function getStandingsData() {
     r.racesScored += 1;
   }
 
+  const usersWithPicks = new Set(picks.map((p) => p.userId));
   const rows = Array.from(m.values())
+    .filter((r) => usersWithPicks.has(r.userId))
     .map((r) => ({
       ...r,
       totalPoints: round1(r.totalPoints),

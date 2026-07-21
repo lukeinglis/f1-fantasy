@@ -16,16 +16,22 @@ export async function GET() {
     orderBy: { name: "asc" },
   });
 
-  const scores = await prisma.score.findMany({
-    where: { race: { season } },
-    select: {
-      userId: true,
-      driverPoints: true,
-      constructorPoints: true,
-      totalPoints: true,
-      raceId: true,
-    },
-  });
+  const [scores, picks] = await Promise.all([
+    prisma.score.findMany({
+      where: { race: { season } },
+      select: {
+        userId: true,
+        driverPoints: true,
+        constructorPoints: true,
+        totalPoints: true,
+        raceId: true,
+      },
+    }),
+    prisma.pick.findMany({
+      where: { race: { season } },
+      select: { userId: true },
+    }),
+  ]);
 
   const totalsByUser = new Map<
     string,
@@ -48,8 +54,9 @@ export async function GET() {
     t.races += 1;
   }
 
+  const usersWithPicks = new Set(picks.map((p) => p.userId));
   const rows = users
-    .filter((u) => u.role !== "admin" || true) // include admins too — they can play
+    .filter((u) => usersWithPicks.has(u.id))
     .map((u) => {
       const t = totalsByUser.get(u.id)!;
       return {

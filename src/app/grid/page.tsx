@@ -115,7 +115,7 @@ async function getGridData(currentUserId: string | null) {
     );
   }
 
-  return { season, races, users, pickMap, userTotals };
+  return { season, races, users, picks, pickMap, userTotals };
 }
 
 // Country code to flag emoji
@@ -161,7 +161,7 @@ function countryFlag(country: string | null): string {
 export default async function GridPage() {
   const session = await auth();
   const currentUserId = session?.user?.id ?? null;
-  const { season, races, users, pickMap, userTotals } = await getGridData(currentUserId);
+  const { season, races, users, picks, pickMap, userTotals } = await getGridData(currentUserId);
   const now = new Date();
 
   if (users.length === 0 || races.length === 0) {
@@ -180,11 +180,14 @@ export default async function GridPage() {
     );
   }
 
-  // Sort users by total points descending
-  const sortedUsers = [...users].sort(
-    (a, b) =>
-      (userTotals.get(b.id) ?? 0) - (userTotals.get(a.id) ?? 0),
-  );
+  // Only show users who have made at least one pick, sorted by total points
+  const usersWithPicks = new Set(picks.map((p) => p.userId));
+  const sortedUsers = [...users]
+    .filter((u) => usersWithPicks.has(u.id))
+    .sort(
+      (a, b) =>
+        (userTotals.get(b.id) ?? 0) - (userTotals.get(a.id) ?? 0),
+    );
 
   const activeRaces = races.filter((r) => !isPreSeasonRound(r.round));
 
